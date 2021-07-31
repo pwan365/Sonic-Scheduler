@@ -10,6 +10,13 @@ import algo.ValidScheduler;
 
 public class Main  {
     public static void main(String[] args) {
+
+
+        InputReader readerr = new InputReader("input.dot");
+        Graph g = readerr.read();
+        System.out.println(g.getNode(0));
+
+
         List<String> commands = Arrays.asList(args);
 
         String fileName = args[0];
@@ -49,5 +56,9 @@ public class Main  {
 
         v.setProcessorList(processorPool);
         Queue<Task> taskQueue = v.topologicalorder(inputGraph);
+
+        v.scheduleTasks();
+        System.out.println(v.getProcessorList());
+
     }
 }

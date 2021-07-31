@@ -1,7 +1,8 @@
 package algo;
 
 import io.InputReader;
-import javafx.util.Pair;
+//import javafx.util.Pair;
+import org.apache.commons.math3.util.Pair;
 import org.graphstream.algorithm.TopologicalSortKahn;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
@@ -26,10 +27,14 @@ public class ValidScheduler {
         List<Node> nodeList = tp.getSortedNodes();
         List<Task> taskList = new ArrayList<Task>();
         for (Node n : nodeList){
+            for (int i = 0; i < g.getNodeCount(); i++){
+                if (g.getNode(i).getId() == n.getId()){
+                    n = g.getNode(i);
+                }
+            }
             Task task = new Task(n);
             taskList.add(task);
             n.setAttribute("task",task);
-
         }
         taskQueue = new LinkedList<>(taskList);
         return taskQueue;
