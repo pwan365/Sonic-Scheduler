@@ -12,11 +12,6 @@ public class Main  {
     public static void main(String[] args) {
 
 
-        InputReader readerr = new InputReader("input.dot");
-        Graph g = readerr.read();
-        System.out.println(g.getNode(0));
-
-
         List<String> commands = Arrays.asList(args);
 
         String fileName = args[0];
@@ -48,6 +43,9 @@ public class Main  {
         } */
 
         Processor[] processorPool  = new Processor[numberOfProcessors];
+        for (int i = 0; i < numberOfProcessors; i++){
+            processorPool[i] = new Processor();
+        }
 
         InputReader reader = new InputReader(fileName);
         Graph inputGraph = reader.read();
