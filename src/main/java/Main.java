@@ -9,13 +9,17 @@ import algo.ValidScheduler;
 
 public class Main  {
     public static void main(String[] args) {
-        List commands = Arrays.asList(args);
+        List<String> commands = Arrays.asList(args);
 
         String fileName = args[0];
         int numberOfProcessors = Integer.parseInt(args[1]);
+        int numberOfCores = 1;
+        String outputFileName = fileName + "-output";
 
         if (commands.contains("-p")){
-            //Parallel option
+            int index = commands.indexOf("-p");
+            numberOfCores = Integer.parseInt(commands.get(index+1));
+            //Parallel code
         }
 
         if (commands.contains("-v")){
@@ -23,7 +27,8 @@ public class Main  {
         }
 
         if (commands.contains("-o")){
-            //Output option
+            int index = commands.indexOf("-o");
+            outputFileName = commands.get(index+1);
         }
 
         /*Scanner scanner = new Scanner(System.in);
