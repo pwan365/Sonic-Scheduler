@@ -10,16 +10,18 @@ public class Task {
     private double finishing_time = -1.0;
     private double starting_time;
     private double duration_time;
-    private List<Node> node_list = new ArrayList<Node>();
+    private List<Node> parent_node_list = new ArrayList<Node>();
+    private List<Edge> parent_edge_list = new ArrayList<Edge>();
     private Node node;
     private Processor allocated_processor;
 
     public Task(Node node){
         this.node = node;
         this.duration_time = (Double)node.getAttribute("Weight");
-        List<Edge> edges = node.leavingEdges().collect(Collectors.toList());
+        List<Edge> edges = node.enteringEdges().collect(Collectors.toList());
         for(Edge e : edges){
-            node_list.add(e.getNode1());
+            parent_node_list.add(e.getNode1());
+            parent_edge_list.add(e);
         }
     }
 
@@ -35,14 +37,17 @@ public class Task {
         return node;
     }
 
+
     public void setNode(Node node) {
         this.node = node;
     }
 
+    // Parent nodes setter and getting
     public List<Node> getNode_list() {
-        return node_list;
+        return parent_node_list;
     }
 
+    // Processor getter and setter
     public Processor getAllocated_processor() {
         return allocated_processor;
     }
@@ -51,11 +56,16 @@ public class Task {
         this.allocated_processor = allocated_processor;
     }
 
+    // Starting time getter and setter
     public double getStarting_time() {
         return starting_time;
     }
 
     public void setStarting_time(double starting_time) {
         this.starting_time = starting_time;
+    }
+
+    public double getDuration_time() {
+        return duration_time;
     }
 }
