@@ -33,6 +33,25 @@ public class ValidScheduler {
 
     }
 
+    public void scheduleTasks() {
+        while (!taskQueue.isEmpty()) {
+            Task candidateTask = taskQueue.remove();
+            Processor candidateProcessor = processorList[0];
+            Double min_time = Double.MAX_VALUE;
+            for (int i = 0; i < processorList.length; i++) {
+                Double candidateTime = processorList[i].getLatest_time();
+                if (candidateTime < min_time) {
+                    min_time = candidateTime;
+                    candidateProcessor = processorList[i];
+                }
+            }
+            candidateTask.setAllocated_processor(candidateProcessor);
+            candidateProcessor.setLatest_time(candidateTask.getFinishing_time()-candidateTask.getStarting_time());
+            candidateProcessor.addTask(candidateTask);
+        }
+
+    }
+
     public Processor[] getProcessorList() {
         return processorList;
     }

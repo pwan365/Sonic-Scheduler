@@ -24,8 +24,8 @@ public class Processor {
         return latest_time;
     }
 
-    public void setLatest_time(Double latest_time) {
-        this.latest_time = latest_time;
+    public void setLatest_time(Double additional_time) {
+        this.latest_time += additional_time;
     }
 
     public HashMap<String, ArrayList<Double>> getNode_table() {
