@@ -41,8 +41,8 @@ public class Task {
     }
 
     // Parent nodes setter and getting
-    public List<Node> getNode_list() {
-        return parent_node_list;
+    public List<Edge> getNode_list() {
+        return parent_edge_list;
     }
 
     // Processor getter and setter
