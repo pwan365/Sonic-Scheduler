@@ -15,8 +15,8 @@ public class Processor {
         return latest_time;
     }
 
-    public void setLatest_time(Double additional_time) {
-        this.latest_time += additional_time;
+    public void setLatest_time(Double latest_time) {
+        this.latest_time = latest_time;
     }
 
 
@@ -32,6 +32,10 @@ public class Processor {
     public Double getTaskLatestTime(Task task) {
         ArrayList<Double> task_info = node_table.get(task);
         return task_info.get(1);
+    }
+
+    public HashMap<Task, ArrayList<Double>> getTasks() {
+        return node_table;
     }
 
 }

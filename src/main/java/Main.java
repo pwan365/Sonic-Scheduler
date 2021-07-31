@@ -63,6 +63,7 @@ public class Main  {
         Processor[] test = v.getProcessorList();
         for (int i = 0;i < processorPool.length; i++) {
             System.out.println(test[i].getLatest_time());
+            System.out.println(test[i].getTasks());
         }
     }
 }

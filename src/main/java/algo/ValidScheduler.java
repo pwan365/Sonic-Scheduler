@@ -48,14 +48,15 @@ public class ValidScheduler {
             Double candidateTime = 0.0;
             for (int i = 0; i < processorList.length; i++) {
                 candidateTime = processorList[i].getLatest_time();
-                Double communicationCost = communicationCost(candidateTask,candidateProcessor);
+                Double communicationCost = communicationCost(candidateTask,processorList[i]);
                 candidateTime = candidateTime + communicationCost;
+
                 if (candidateTime < min_time) {
                     min_time = candidateTime;
                     candidateProcessor = processorList[i];
                 }
             }
-            addTaskToProcessor(candidateTask,candidateProcessor,candidateTime);
+            addTaskToProcessor(candidateTask,candidateProcessor,min_time);
         }
     }
 
