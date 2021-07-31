@@ -11,7 +11,7 @@ public class Task {
     private double finishing_time = -1.0;
     private double starting_time;
     private double duration_time;
-    private ArrayList<Pair<Edge,Task>> parent_edge_list = new ArrayList<Pair<Edge,Task>>();
+    private ArrayList<Edge> parent_edge_list = new ArrayList<Edge>();
     private Node node;
     private Processor allocated_processor;
 
@@ -42,7 +42,7 @@ public class Task {
     }
 
     // Parent nodes setter and getting
-    public ArrayList<Pair<Edge, Task>> getParent_edge_list() {
+    public ArrayList<Edge> getParent_edge_list() {
         return parent_edge_list;
     }
 

@@ -26,7 +26,10 @@ public class ValidScheduler {
         List<Node> nodeList = tp.getSortedNodes();
         List<Task> taskList = new ArrayList<Task>();
         for (Node n : nodeList){
-            taskList.add(new Task(n));
+            Task task = new Task(n);
+            taskList.add(task);
+            n.setAttribute("task",task);
+
         }
         taskQueue = new LinkedList<>(taskList);
         return taskQueue;
@@ -59,11 +62,10 @@ public class ValidScheduler {
     }
 
     public double communicationCost(Task candidateTask,Processor candidateProcessor) {
-        List<Pair<Edge,Task>> parents = candidateTask.getParent_edge_list();
+        List<Edge> parents = candidateTask.getParent_edge_list();
         Double cost = 0.0;
-        for (int i = 0; i < parents.size(); i++) {
-            Edge parentEdge = parents.get(i).getKey();
-            Task parentTask = parents.get(i).getValue();
+        for (Edge parentEdge : parents) {
+            Task parentTask = (Task)parentEdge.getAttribute("task");
             Processor parent_processor = parentTask.getAllocated_processor();
             if (parent_processor != candidateProcessor) {
                 double candidateCost = (Double)parentEdge.getAttribute("Weight") + parent_processor.getTaskLatestTime(candidateTask);

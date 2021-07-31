@@ -20,14 +20,6 @@ public class Processor {
     }
 
 
-    public ArrayList<Task> getTask_list() {
-        return task_list;
-    }
-
-    public void setTask_list(ArrayList<Task> task_list) {
-        this.task_list = task_list;
-    }
-
     public void addTask(Task task, Double start, Double end, Double duration){
         this.task_list.add(task);
         ArrayList<Double> task_info = new ArrayList<>();
@@ -41,14 +33,5 @@ public class Processor {
         ArrayList<Double> task_info = node_table.get(task);
         return task_info.get(1);
     }
-
-    public boolean isEmpty(){
-        if (this.task_list.isEmpty()){
-            return true;
-        }
-        return false;
-    }
-
-
 
 }
