@@ -46,7 +46,7 @@ public class ValidScheduler {
                 }
             }
             candidateTask.setAllocated_processor(candidateProcessor);
-            candidateProcessor.setLatest_time(candidateTask.getFinishing_time()-candidateTask.getStarting_time());
+            candidateProcessor.setLatest_time(candidateTask.getDuration_time());
             candidateProcessor.addTask(candidateTask);
         }
 
