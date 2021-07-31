@@ -72,7 +72,7 @@ public class ValidScheduler {
             Task parentTask = (Task)parentEdge.getNode0().getAttribute("task");
             Processor parent_processor = parentTask.getAllocated_processor();
             if (parent_processor != candidateProcessor) {
-                double candidateCost = (Double)parentEdge.getAttribute("Weight") + parent_processor.getTaskLatestTime(candidateTask);
+                double candidateCost = (Double)parentEdge.getAttribute("Weight") + parent_processor.getTaskLatestTime(parentTask);
                 cost = Math.max(cost,candidateCost - candidateProcessor.getLatest_time());
             }
         }

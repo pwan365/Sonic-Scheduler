@@ -60,5 +60,9 @@ public class Main  {
         Queue<Task> taskQueue = v.topologicalorder(inputGraph);
 
         v.scheduleTasks();
+        Processor[] test = v.getProcessorList();
+        for (int i = 0;i < processorPool.length; i++) {
+            System.out.println(test[i].getLatest_time());
+        }
     }
 }

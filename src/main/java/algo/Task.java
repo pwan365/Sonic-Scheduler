@@ -16,7 +16,7 @@ public class Task {
 
     public Task(Node node){
         this.node = node;
-        //this.duration_time = (Double)node.getAttribute("Weight");
+        this.duration_time = (Double)node.getAttribute("Weight");
         List<Edge> edges = node.enteringEdges().collect(Collectors.toList());
         for(Edge e : edges){
             parent_edge_list.add(e);
