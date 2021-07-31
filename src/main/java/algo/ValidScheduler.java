@@ -15,10 +15,8 @@ public class ValidScheduler {
     private Processor[] processorList;
     private Queue<Task> taskQueue;
 
-    public Queue<Task> topologicalorder(){
+    public Queue<Task> topologicalorder(Graph g){
 
-        InputReader reader = new InputReader("input.dot");
-        Graph g = reader.read();
 
         TopologicalSortKahn tp = new TopologicalSortKahn();
         tp.init(g);

@@ -1,5 +1,6 @@
 import algo.Processor;
 import algo.Task;
+import io.InputReader;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
@@ -41,10 +42,12 @@ public class Main  {
 
         Processor[] processorPool  = new Processor[numberOfProcessors];
 
+        InputReader reader = new InputReader(fileName);
+        Graph inputGraph = reader.read();
 
         ValidScheduler v = new ValidScheduler();
 
         v.setProcessorList(processorPool);
-        Queue<Task> taskQueue = v.topologicalorder();
+        Queue<Task> taskQueue = v.topologicalorder(inputGraph);
     }
 }
