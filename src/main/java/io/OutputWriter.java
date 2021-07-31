@@ -9,6 +9,11 @@ import java.io.IOException;
 public class OutputWriter {
     private String outputFile;
 
+    /**
+     * Method to write a graph to a file with specified file name.
+     * @param g graph to be outputted
+     * @param fileName
+     */
     public void write(Graph g, String fileName){
         String dir = System.getProperty("user.dir");
         outputFile = dir + File.separator + fileName;

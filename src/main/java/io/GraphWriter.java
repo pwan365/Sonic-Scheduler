@@ -11,12 +11,19 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class GraphWriter extends FileSinkDOT {
+    /*
+    This class is used to modify the default graph writer in Graphstream
+     */
     protected String graphName = "";
 
     public void setGraphName(String name){
         this.graphName = name;
     }
 
+    /**
+     * Modified exportGraph, writes the nodes and edges of the output file.
+     * @param graph
+     */
     @Override
     protected void exportGraph(Graph graph) {
         String graphId = graph.getId();
@@ -47,6 +54,11 @@ public class GraphWriter extends FileSinkDOT {
         });
     }
 
+    /**
+     * Modified outputAttributes, writes the attributes of the output file.
+     * @param e
+     * @return
+     */
     @Override
     protected String outputAttributes(Element e) {
         if (e.getAttributeCount() == 0)
@@ -77,6 +89,10 @@ public class GraphWriter extends FileSinkDOT {
         return buffer.append(']').toString();
     }
 
+    /**
+     * Modified outputHeader, writes the header of the output file
+     * @throws IOException
+     */
     @Override
     protected void outputHeader() throws IOException {
         out = (PrintWriter) output;
