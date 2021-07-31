@@ -36,12 +36,15 @@ public class Dfs {
         }
 
         Task temp_task = task_list.get(0);
+        /*
         while (!task_list.isEmpty()){
 
             for (Processor p : root.getProcessors()){
 
             }
         }
+
+         */
 
         root.getProcessors().get(0).addTask(new Task(Starting_node));
         root.getProcessors().get(0).setLatest_time((Double)Starting_node.getAttribute("Weight"));
