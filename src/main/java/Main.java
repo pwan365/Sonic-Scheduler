@@ -1,10 +1,15 @@
 import algo.Processor;
+import algo.Task;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Queue;
+
+import algo.ValidScheduler;
+
 import java.util.Scanner;
 
 public class Main  {
@@ -18,5 +23,9 @@ public class Main  {
         }
 
         Processor[] processorPool  = new Processor[numberOfProcessors];
+      
+      
+        ValidScheduler v = new ValidScheduler();
+        Queue<Task> taskQueue = v.topologicalorder();
     }
 }
