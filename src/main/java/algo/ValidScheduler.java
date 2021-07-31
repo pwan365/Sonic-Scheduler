@@ -61,7 +61,7 @@ public class ValidScheduler {
 
     public void addTaskToProcessor(Task task, Processor processor,Double candidateTime) {
         task.setAllocated_processor(processor);
-        processor.setLatest_time(task.getDuration_time());
+        processor.setLatest_time(candidateTime + task.getDuration_time());
         processor.addTask(task, candidateTime, candidateTime + task.getDuration_time(),task.getDuration_time());
     }
 
