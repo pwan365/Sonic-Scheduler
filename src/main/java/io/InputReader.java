@@ -1,4 +1,5 @@
 package io;
+import java.io.File;
 import java.io.IOException;
 import org.graphstream.graph.*;
 import org.graphstream.graph.implementations.*;
@@ -16,7 +17,7 @@ public class InputReader {
         String dir = System.getProperty("user.dir");
         fs.addSink(g);
         try {
-            fs.readAll(dir + "\\" + input_file);
+            fs.readAll(dir + File.separator + input_file);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

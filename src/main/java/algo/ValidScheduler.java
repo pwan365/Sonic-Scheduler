@@ -19,8 +19,6 @@ public class ValidScheduler {
     private Queue<Task> taskQueue;
 
     public Queue<Task> topologicalorder(Graph g){
-
-
         TopologicalSortKahn tp = new TopologicalSortKahn();
         tp.init(g);
         tp.compute();
@@ -33,8 +31,9 @@ public class ValidScheduler {
                 }
             }
             Task task = new Task(n);
-            taskList.add(task);
             n.setAttribute("task",task);
+            taskList.add(task);
+
         }
         taskQueue = new LinkedList<>(taskList);
         return taskQueue;
@@ -70,7 +69,7 @@ public class ValidScheduler {
         List<Edge> parents = candidateTask.getParent_edge_list();
         Double cost = 0.0;
         for (Edge parentEdge : parents) {
-            Task parentTask = (Task)parentEdge.getAttribute("task");
+            Task parentTask = (Task)parentEdge.getNode0().getAttribute("task");
             Processor parent_processor = parentTask.getAllocated_processor();
             if (parent_processor != candidateProcessor) {
                 double candidateCost = (Double)parentEdge.getAttribute("Weight") + parent_processor.getTaskLatestTime(candidateTask);
