@@ -10,7 +10,6 @@ public class Task {
     private double finishing_time = -1.0;
     private double starting_time;
     private double duration_time;
-    private List<Node> parent_node_list = new ArrayList<Node>();
     private List<Edge> parent_edge_list = new ArrayList<Edge>();
     private Node node;
     private Processor allocated_processor;
@@ -20,7 +19,6 @@ public class Task {
         this.duration_time = (Double)node.getAttribute("Weight");
         List<Edge> edges = node.enteringEdges().collect(Collectors.toList());
         for(Edge e : edges){
-            parent_node_list.add(e.getNode1());
             parent_edge_list.add(e);
         }
     }
