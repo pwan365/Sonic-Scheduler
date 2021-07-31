@@ -23,9 +23,11 @@ public class Main  {
         }
 
         Processor[] processorPool  = new Processor[numberOfProcessors];
-      
-      
+
+
         ValidScheduler v = new ValidScheduler();
+
+        v.setProcessorList(processorPool);
         Queue<Task> taskQueue = v.topologicalorder();
     }
 }

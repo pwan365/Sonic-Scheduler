@@ -1,7 +1,6 @@
 package algo;
 
 import io.InputReader;
-import org.apache.commons.math.random.AbstractRandomGenerator;
 import org.graphstream.algorithm.TopologicalSortKahn;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -13,7 +12,7 @@ import java.util.Queue;
 
 public class ValidScheduler {
 
-    private List<Processor> processorList = new ArrayList<Processor>();
+    private Processor[] processorList;
     private Queue<Task> taskQueue;
 
     public Queue<Task> topologicalorder(){
@@ -34,11 +33,11 @@ public class ValidScheduler {
 
     }
 
-    public List<Processor> getProcessorList() {
+    public Processor[] getProcessorList() {
         return processorList;
     }
 
-    public void setProcessorList(List<Processor> processorList) {
+    public void setProcessorList(Processor[] processorList) {
         this.processorList = processorList;
     }
 }
