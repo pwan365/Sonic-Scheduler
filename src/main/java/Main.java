@@ -51,7 +51,7 @@ public class Main  {
 
         Processor[] processorPool  = new Processor[numberOfProcessors];
         for (int i = 0; i < numberOfProcessors; i ++) {
-            processorPool[i] = new Processor();
+            processorPool[i] = new Processor(i+1);
         }
         InputReader reader = new InputReader(fileName);
         Graph inputGraph = reader.read();

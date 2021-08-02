@@ -7,6 +7,11 @@ import java.util.HashMap;
 public class Processor {
     private Double latest_time = 0.0;
     private HashMap<Task, ArrayList<Double>> node_table = new HashMap<>();
+    private int processNum;
+
+    public Processor(int processNumber) {
+        this.processNum = processNumber;
+    }
 
     public Double getLatestTime() {
         return latest_time;
@@ -27,5 +32,9 @@ public class Processor {
 
     public HashMap<Task, ArrayList<Double>> getTasks() {
         return node_table;
+    }
+
+    public int getProcessNum() {
+        return processNum;
     }
 }
