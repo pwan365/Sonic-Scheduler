@@ -96,7 +96,7 @@ public class TopologicalSort implements Algorithm {
         List<Task> taskList = new ArrayList<Task>();
         for (Node n : sortedNodes){
             Task t = new Task(n);
-            n.setAttribute("task", t);
+            n.setAttribute("Task", t);
             taskList.add(t);
         }
         return new LinkedList<>(taskList);

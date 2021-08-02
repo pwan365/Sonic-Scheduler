@@ -60,16 +60,15 @@ public class Main  {
 
         v.setProcessorList(processorPool);
         Queue<Task> taskQueue = v.topologicalorder(inputGraph);
-
         v.scheduleTasks();
         Processor[] test = v.getProcessorList();
         for (int i = 0;i < processorPool.length; i++) {
             System.out.println("Processor" + Integer.toString(i) + ": ");
-            System.out.println(test[i].getNode_table());
-            for (Task t : test[i].getNode_table().keySet()){
+            System.out.println(test[i].getTasks());
+            for (Task t : test[i].getTasks().keySet()){
                 System.out.println(t.getNode().getId());
             }
-            System.out.println(test[i].getLatest_time());
+            System.out.println(test[i].getLatestTime());
             System.out.println(test[i].getTasks());
         }
 
