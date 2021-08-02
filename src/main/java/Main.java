@@ -1,6 +1,7 @@
 import algo.Processor;
 import algo.Task;
 import io.InputReader;
+import io.OutputWriter;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
@@ -71,6 +72,9 @@ public class Main  {
             System.out.println(test[i].getLatestTime());
             System.out.println(test[i].getTasks());
         }
+
+        OutputWriter writer = new OutputWriter();
+        writer.write(inputGraph, "outputtry.dot");
 
     }
 }

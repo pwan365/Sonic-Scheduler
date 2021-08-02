@@ -1,5 +1,6 @@
 package io;
 
+import algo.Task;
 import org.graphstream.graph.Element;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -69,19 +70,24 @@ public class GraphWriter extends FileSinkDOT {
 
 
         e.attributeKeys().forEach(key -> {
-            boolean quote = true;
             Object value = e.getAttribute(key);
+
 
             if (value instanceof Number) {
                 int weightValue = ((Number) value).intValue();
-                quote = false;
-                buffer.append(String.format("%s%s=%s%s%s", first.get() ? "" : ",", key, quote ? "\"" : "", weightValue,
-                        quote ? "\"" : ""));
+                buffer.append(String.format("%s%s=%s", first.get() ? "" : ",", key, weightValue));
             }else {
-
-                buffer.append(String.format("%s%s=%s%s%s", first.get() ? "" : ",", key, quote ? "\"" : "", value,
-                        quote ? "\"" : ""));
+                //buffer.append(String.format("%s%s=%s", first.get() ? "" : ",", key, value));
             }
+
+            if (key.equals("Task")){
+                Task nodeTask = (Task) e.getAttribute("Task");
+                int startTime = (int) nodeTask.getStartingTime();
+                int processor = nodeTask.getAllocatedProcessor().getProcessNum();
+                buffer.append(String.format("%s%s=%s", first.get() ? "" : ",", "Start", startTime));
+                buffer.append(String.format("%s%s=%s", first.get() ? "" : ",", "Processor", processor));
+            }
+
 
             first.set(false);
         });
