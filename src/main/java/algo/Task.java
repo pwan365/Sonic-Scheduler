@@ -1,34 +1,29 @@
 package algo;
 
 import org.graphstream.graph.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Task {
-    private double finishing_time = -1.0;
-    private double starting_time;
-    private double duration_time;
-    private ArrayList<Edge> parent_edge_list = new ArrayList<Edge>();
+    private double finishingTime = -1.0;
+    private double startingTime;
+    private double durationTime;
+    private ArrayList<Edge> parentEdgeList = new ArrayList<Edge>();
     private Node node;
-    private Processor allocated_processor;
+    private Processor allocatedProcessor;
 
     public Task(Node node){
         this.node = node;
-        this.duration_time = (Double)node.getAttribute("Weight");
+        this.durationTime = (Double)node.getAttribute("Weight");
         List<Edge> edges = node.enteringEdges().collect(Collectors.toList());
         for(Edge e : edges){
-            parent_edge_list.add(e);
+            parentEdgeList.add(e);
         }
     }
 
-    public double getFinishing_time() {
-        return finishing_time;
-    }
-
-    public void setFinishing_time(double finishing_time) {
-        this.finishing_time = finishing_time;
+    public double getFinishingTime() {
+        return finishingTime;
     }
 
     public Node getNode() {
@@ -41,29 +36,27 @@ public class Task {
     }
 
     // Parent nodes setter and getting
-    public ArrayList<Edge> getParent_edge_list() {
-        return parent_edge_list;
+    public ArrayList<Edge> getParentEdgeList() {
+        return parentEdgeList;
     }
 
     // Processor getter and setter
-    public Processor getAllocated_processor() {
-        return allocated_processor;
+    public Processor getAllocatedProcessor() {
+        return allocatedProcessor;
     }
 
-    public void setAllocated_processor(Processor allocated_processor) {
-        this.allocated_processor = allocated_processor;
+    public void setTaskDetails(Processor allocated_processor,Double finishing_time,Double starting_time) {
+        this.allocatedProcessor = allocated_processor;
+        this.finishingTime = finishing_time;
+        this.startingTime = starting_time;
     }
 
     // Starting time getter and setter
-    public double getStarting_time() {
-        return starting_time;
+    public double getStartingTime() {
+        return startingTime;
     }
 
-    public void setStarting_time(double starting_time) {
-        this.starting_time = starting_time;
-    }
-
-    public double getDuration_time() {
-        return duration_time;
+    public double getDurationTime() {
+        return durationTime;
     }
 }

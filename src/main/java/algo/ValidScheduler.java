@@ -1,15 +1,7 @@
 package algo;
 
-import io.InputReader;
-//import javafx.util.Pair;
-import org.apache.commons.math3.util.Pair;
-import org.graphstream.algorithm.TopologicalSortKahn;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
-import org.graphstream.graph.Node;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
@@ -27,53 +19,92 @@ public class ValidScheduler {
         return taskQueue;
     }
 
+    /**
+     * Schedules tasks onto processors using a greedy method of scheduling tasks, tasks are scheduled on the processor
+     * in which it can be scheduled earliest.
+     */
     public void scheduleTasks() {
 
         while (!taskQueue.isEmpty()) {
             Task candidateTask = taskQueue.remove();
             Processor candidateProcessor = processorList[0];
-            Double min_time = Double.MAX_VALUE;
-            Double candidateTime = 0.0;
-            for (int i = 0; i < processorList.length; i++) {
-                candidateTime = processorList[i].getLatest_time();
-                Double communicationCost = communicationCost(candidateTask,processorList[i]);
-                candidateTime = candidateTime + communicationCost;
+            Double minTime = Double.MAX_VALUE;
+            Double startTime = 0.0;
 
-                if (candidateTime < min_time) {
-                    min_time = candidateTime;
+            for (int i = 0; i < processorList.length; i++) {
+                startTime = processorList[i].getLatestTime();
+                Double communicationCost = communicationCost(candidateTask,processorList[i]);
+                startTime += communicationCost;
+
+                if (startTime < minTime) {
+                    minTime = startTime;
                     candidateProcessor = processorList[i];
                 }
             }
-            addTaskToProcessor(candidateTask,candidateProcessor,min_time);
+            scheduleTask(candidateTask,candidateProcessor,minTime);
         }
     }
 
-    public void addTaskToProcessor(Task task, Processor processor,Double candidateTime) {
-        task.setAllocated_processor(processor);
-        processor.setLatest_time(candidateTime + task.getDuration_time());
-        processor.addTask(task, candidateTime, candidateTime + task.getDuration_time(),task.getDuration_time());
+    /**
+     * Adds a task to a processor, as well start and finishing times to the task.
+     *
+     * @param task
+     * @param processor
+     * @param candidateTime
+     */
+    public void scheduleTask(Task task, Processor processor,Double candidateTime) {
+        System.out.println(processor.getTasks());
+        System.out.println(processor.getLatestTime());
+        Double taskDurationTime = task.getDurationTime();
+        Double startTime = candidateTime;
+        Double endTime = startTime + taskDurationTime;
+
+        task.setTaskDetails(processor, endTime, startTime);
+        processor.setLatestTime(endTime);
+        processor.addTask(task, startTime, endTime,endTime);
     }
 
+    /**
+     * Calculates any extra time a Processor has to wait before scheduling a given task due to communication costs
+     * of dependent tasks.
+     *
+     * @param candidateTask Task that we wish to calculate the communication cost for.
+     * @param candidateProcessor Processor that we wish to calculate the communication cost for.
+     * @return cost Extra communication cost that the processor must wait before scheduling the task.
+     */
     public double communicationCost(Task candidateTask,Processor candidateProcessor) {
-        List<Edge> parents = candidateTask.getParent_edge_list();
+        List<Edge> parents = candidateTask.getParentEdgeList();
         Double cost = 0.0;
+        Double candidateProcessorLatestTime = candidateProcessor.getLatestTime();
+
         for (Edge parentEdge : parents) {
-            Task parentTask = (Task)parentEdge.getNode0().getAttribute("task");
-            Processor parent_processor = parentTask.getAllocated_processor();
-            if (parent_processor != candidateProcessor) {
-                double candidateCost = (Double)parentEdge.getAttribute("Weight") + parent_processor.getTaskLatestTime(parentTask);
-                cost = Math.max(cost,candidateCost - candidateProcessor.getLatest_time());
+            // Gets the parent task of the candidate task, getNode0 returns the parent of an edge.
+            Task parentTask = (Task)parentEdge.getNode0().getAttribute("Task");
+            Processor parentProcessor = parentTask.getAllocatedProcessor();
+
+            if (parentProcessor != candidateProcessor) {
+                Double parentEndTime = parentTask.getFinishingTime();
+                Double commCost = (Double)parentEdge.getAttribute("Weight");
+                Double candidateCost = parentEndTime + commCost;
+                cost = Math.max(cost,candidateCost - candidateProcessorLatestTime);
             }
         }
         return cost;
     }
 
-
-    public Processor[] getProcessorList() {
-        return processorList;
-    }
-
+    /**
+     * For testing purposes.
+     * @param processorList
+     */
     public void setProcessorList(Processor[] processorList) {
         this.processorList = processorList;
+    }
+
+    /**
+     * For testing purposes.
+     * @return
+     */
+    public Processor[] getProcessorList() {
+        return processorList;
     }
 }
