@@ -27,9 +27,13 @@ public class Processor {
         task_info.add(end);
         task_info.add(duration);
         this.node_table.put(task,task_info);
+        System.out.println(task);
+        System.out.println(node_table);
     }
 
     public Double getTaskLatestTime(Task task) {
+        System.out.println(node_table.get(task));
+        System.out.println(task);
         ArrayList<Double> task_info = node_table.get(task);
         return task_info.get(1);
     }
@@ -38,4 +42,7 @@ public class Processor {
         return node_table;
     }
 
+    public HashMap<Task, ArrayList<Double>> getNode_table() {
+        return node_table;
+    }
 }

@@ -4,6 +4,8 @@ import io.InputReader;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
+import algo.TopologicalSort;
+
 import java.util.*;
 
 import algo.ValidScheduler;
@@ -62,8 +64,14 @@ public class Main  {
         v.scheduleTasks();
         Processor[] test = v.getProcessorList();
         for (int i = 0;i < processorPool.length; i++) {
+            System.out.println("Processor" + Integer.toString(i) + ": ");
+            System.out.println(test[i].getNode_table());
+            for (Task t : test[i].getNode_table().keySet()){
+                System.out.println(t.getNode().getId());
+            }
             System.out.println(test[i].getLatest_time());
             System.out.println(test[i].getTasks());
         }
+
     }
 }

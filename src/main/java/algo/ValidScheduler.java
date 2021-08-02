@@ -13,34 +13,22 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+
 public class ValidScheduler {
 
     private Processor[] processorList;
     private Queue<Task> taskQueue;
 
     public Queue<Task> topologicalorder(Graph g){
-        TopologicalSortKahn tp = new TopologicalSortKahn();
-        tp.init(g);
-        tp.compute();
-        List<Node> nodeList = tp.getSortedNodes();
-        List<Task> taskList = new ArrayList<Task>();
-        for (Node n : nodeList){
-            for (int i = 0; i < g.getNodeCount(); i++){
-                if (g.getNode(i).getId() == n.getId()){
-                    n = g.getNode(i);
-                }
-            }
-            Task task = new Task(n);
-            n.setAttribute("task",task);
-            taskList.add(task);
-
-        }
-        taskQueue = new LinkedList<>(taskList);
+        TopologicalSort ts = new TopologicalSort();
+        ts.init(g);
+        ts.compute();
+        taskQueue = ts.getSortedTasks();
         return taskQueue;
-
     }
 
     public void scheduleTasks() {
+
         while (!taskQueue.isEmpty()) {
             Task candidateTask = taskQueue.remove();
             Processor candidateProcessor = processorList[0];
