@@ -53,8 +53,6 @@ public class ValidScheduler {
      * @param candidateTime
      */
     public void scheduleTask(Task task, Processor processor,Double candidateTime) {
-        System.out.println(processor.getTasks());
-        System.out.println(processor.getLatestTime());
         Double taskDurationTime = task.getDurationTime();
         Double startTime = candidateTime;
         Double endTime = startTime + taskDurationTime;
