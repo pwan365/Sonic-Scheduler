@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
 public class Validator {
     private int numOfTasks;
     private int numOfOutputTasks;
-    private Node[] inputTasks;
-    private Node[] outputTasks;
-    private int[][] communicationCosts;
+    private Node[] inputTasks = new Node[20];
+    private Node[] outputTasks = new Node[20];
+    private int[][] communicationCosts = new int[40][40];
     private List<List<Integer>> startTimes = new ArrayList<>();
     private List<List<Integer>> endTimes = new ArrayList<>();
 
@@ -23,21 +23,38 @@ public class Validator {
         numOfTasks = inputGraph.getNodeCount();
         numOfOutputTasks = outputGraph.getNodeCount();
         inputTasks = new Node[numOfTasks];
-        outputTasks = new Node[numOfTasks];
+//        change number of tasks to numberofOutputTasks for outputTask init
+        outputTasks = new Node[numOfOutputTasks];
 
         // Set up input and output information arrays
         for (int i = 0; i < numOfTasks; i++) {
             Node inputNode = inputGraph.getNode(String.valueOf(i));
             Node outputNode = outputGraph.getNode(String.valueOf(i));
+//            System.out.println(outputGraph);
             inputTasks[i] = inputNode;
             outputTasks[i] = outputNode;
+//            System.out.println(outputNode.getOutDegree());
+            if (outputNode.getOutDegree() > 0) {
+                List<Edge> edges = outputNode.leavingEdges().collect(Collectors.toList());
+//                System.out.println("lllllllllllllllllll");
+//                System.out.println(edges.toString());
+//                System.out.println("lllllllllllllllllll");
+                if (edges.isEmpty()) {
+                    for (Edge edge : edges) {
+                        int parent = edge.getNode0().getIndex();
+                        int child = edge.getNode1().getIndex();
+//                        System.out.println("----------------------");
+//                        System.out.println(parent);
+//                        System.out.println(child);
+//                        System.out.println(((Double) edge.getAttribute("Weight")).intValue());
+//                        System.out.println("----------------------");
 
-            List<Edge> edges = outputNode.leavingEdges().collect(Collectors.toList());
-            for (Edge edge : edges){
-                int parent = edge.getNode0().getIndex();
-                int child = edge.getNode1().getIndex();
-                communicationCosts[parent][child] = ((Double) edge.getAttribute("Weight")).intValue();
+                        communicationCosts[parent][child] = ((Double) edge.getAttribute("Weight")).intValue();
+                    }
+                }
             }
+
+
         }
     }
 
@@ -54,20 +71,23 @@ public class Validator {
         }
 
         // Check scheduling against the constraints
-        for (int i = 0; i < numOfTasks; i++){
+        for (int i = 0; i < numOfTasks; i++) {
             // Check if two tasks are in the same processor at the same time
+
             Node task = outputTasks[i];
-            int processorNumber = ((Double)task.getAttribute("Processor")).intValue();
+            System.out.println(task.getAttributeCount());
+            System.out.println(outputTasks[i].getAttribute("Weight"));
+            int processorNumber = ((Double) task.getAttribute("Processor")).intValue();
             List<Integer> processorStartTimes = startTimes.get(processorNumber);
             List<Integer> processorEndTimes = endTimes.get(processorNumber);
 
-            int startTime = ((Double)task.getAttribute("Start")).intValue();
-            int finishTime = startTime + ((Double)task.getAttribute("Weight")).intValue();
+            int startTime = ((Double) task.getAttribute("Start")).intValue();
+            int finishTime = startTime + ((Double) task.getAttribute("Weight")).intValue();
 
-            for (int j = 0; j < startTimes.size(); j++){
+            for (int j = 0; j < startTimes.size(); j++) {
                 int scheduledStartTime = processorStartTimes.get(i);
                 int scheduledEndTime = processorEndTimes.get(i);
-                if(startTime < scheduledStartTime && finishTime > scheduledEndTime) {
+                if (startTime < scheduledStartTime && finishTime > scheduledEndTime) {
                     System.out.println("The processor has already been occupied");
                     return false; // Overlapping schedules
                 }
@@ -77,17 +97,17 @@ public class Validator {
         }
 
         // Check if parents are scheduled before children
-        for (int parent = 0; parent < numOfTasks; parent++){
-            for (int child = parent + 1; child < numOfTasks; child++){
+        for (int parent = 0; parent < numOfTasks; parent++) {
+            for (int child = parent + 1; child < numOfTasks; child++) {
                 Node parentNode = outputTasks[parent];
                 Node childNode = outputTasks[child];
                 if (communicationCosts[parent][child] != 0) {
                     int communicationCost = 0;
-                    if ((Double)parentNode.getAttribute("Processor") != (Double)childNode.getAttribute("Processor")) {
+                    if ((Double) parentNode.getAttribute("Processor") != (Double) childNode.getAttribute("Processor")) {
                         communicationCost = communicationCosts[parent][child];
                     }
 
-                    if(((Double)parentNode.getAttribute("Start")).intValue() + ((Double)parentNode.getAttribute("Weight")).intValue() + communicationCost > (Double)childNode.getAttribute("Start")){
+                    if (((Double) parentNode.getAttribute("Start")).intValue() + ((Double) parentNode.getAttribute("Weight")).intValue() + communicationCost > (Double) childNode.getAttribute("Start")) {
                         System.out.println("child start before parent");
                         return false;
                     }
