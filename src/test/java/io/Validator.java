@@ -76,8 +76,9 @@ public class Validator {
 
             Node task = outputTasks[i];
             System.out.println(task.getAttributeCount());
-            System.out.println(outputTasks[i].getAttribute("Weight"));
+            System.out.println(outputTasks[i].getAttribute("Processor"));
             int processorNumber = ((Double) task.getAttribute("Processor")).intValue();
+
             List<Integer> processorStartTimes = startTimes.get(processorNumber);
             List<Integer> processorEndTimes = endTimes.get(processorNumber);
 

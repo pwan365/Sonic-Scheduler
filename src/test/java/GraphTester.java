@@ -23,7 +23,10 @@ public class GraphTester {
         InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
 
         Graph inputGraph = reader.read();
-        Graph outputGraph = scheduleHelper(inputGraph, 2);
+        String outputGraphFilename = scheduleHelper(inputGraph, 2);
+        InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
+
+        Graph outputGraph = outputReader.read();
 
         Validator validator = new Validator();
         validator.initialize(inputGraph, outputGraph, 2);
@@ -36,7 +39,10 @@ public class GraphTester {
         InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
 
         Graph inputGraph = reader.read();
-        Graph outputGraph = scheduleHelper(inputGraph, 2);
+        String outputGraphFilename = scheduleHelper(inputGraph, 2);
+        InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
+
+        Graph outputGraph = outputReader.read();
 
         Validator validator = new Validator();
         validator.initialize(inputGraph, outputGraph, 2);
@@ -49,7 +55,10 @@ public class GraphTester {
         InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
 
         Graph inputGraph = reader.read();
-        Graph outputGraph = scheduleHelper(inputGraph, 2);
+        String outputGraphFilename = scheduleHelper(inputGraph, 2);
+        InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
+
+        Graph outputGraph = outputReader.read();
 
         Validator validator = new Validator();
         validator.initialize(inputGraph, outputGraph, 2);
@@ -62,7 +71,10 @@ public class GraphTester {
         InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
 
         Graph inputGraph = reader.read();
-        Graph outputGraph = scheduleHelper(inputGraph, 2);
+        String outputGraphFilename = scheduleHelper(inputGraph, 2);
+        InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
+
+        Graph outputGraph = outputReader.read();
 
         Validator validator = new Validator();
         validator.initialize(inputGraph, outputGraph, 2);
@@ -75,8 +87,10 @@ public class GraphTester {
         InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
 
         Graph inputGraph = reader.read();
-        Graph outputGraph = scheduleHelper(inputGraph, 2);
+        String outputGraphFilename = scheduleHelper(inputGraph, 2);
+        InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
 
+        Graph outputGraph = outputReader.read();
         Validator validator = new Validator();
         validator.initialize(inputGraph, outputGraph, 2);
         assertTrue(validator.validate());
@@ -92,7 +106,7 @@ public class GraphTester {
         return graphDir + filename;
     }
 
-    private static Graph scheduleHelper(Graph input, int numberOfProcessors) {
+    private static String scheduleHelper(Graph input, int numberOfProcessors) {
         Graph copyOfInput = input;
         Processor[] processorPool = new Processor[numberOfProcessors];
         for (int i = 0; i < numberOfProcessors; i++) {
@@ -104,9 +118,11 @@ public class GraphTester {
         Queue<Task> taskQueue = v.topologicalorder(copyOfInput);
         v.scheduleTasks();
         Processor[] test = v.getProcessorList();
-        return copyOfInput;
-//        OutputWriter writer = new OutputWriter();
-//        writer.write(copyOfInput,"outputTest.dot");
+        OutputWriter writer = new OutputWriter();
+        writer.write(copyOfInput,"outputTest.dot");
+
+        return "outputTest.dot";
+
     }
 
 }
