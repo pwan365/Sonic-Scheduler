@@ -26,6 +26,19 @@ public class Validator {
 //        change number of tasks to numberofOutputTasks for outputTask init
         outputTasks = new Node[numOfOutputTasks];
 
+        //John's Initialization Starts Here---------
+        for (int i = 0; i<numOfProcessors; i++){
+            List<Integer> stl = new ArrayList<Integer>();
+            List<Integer> sel = new ArrayList<Integer>();
+            for (int j = 0; j < numOfOutputTasks; j++){
+                stl.add(((Double)outputGraph.getNode(j).getAttribute("Start")).intValue());
+                sel.add( ((Double)((Double)outputGraph.getNode(j).getAttribute("Start") + (Double)outputGraph.getNode(j).getAttribute("Weight"))).intValue());
+            }
+            startTimes.add(stl);
+            endTimes.add(sel);
+        }
+        //John's initialization Ends Here------------
+
         // Set up input and output information arrays
         for (int i = 0; i < numOfTasks; i++) {
             Node inputNode = inputGraph.getNode(String.valueOf(i));
@@ -77,7 +90,9 @@ public class Validator {
             Node task = outputTasks[i];
             System.out.println(task.getAttributeCount());
             System.out.println(outputTasks[i].getAttribute("Processor"));
-            int processorNumber = ((Double) task.getAttribute("Processor")).intValue();
+
+            // John's Implementation: The processor number should minus 1 to fit the index of the array.
+            int processorNumber = ((Double) task.getAttribute("Processor")).intValue() - 1;
 
             List<Integer> processorStartTimes = startTimes.get(processorNumber);
             List<Integer> processorEndTimes = endTimes.get(processorNumber);
