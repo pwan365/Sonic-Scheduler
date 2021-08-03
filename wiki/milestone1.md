@@ -5,10 +5,10 @@ For this milestone our goal was to design an algorithm that would produce a vali
 
 ### Planning
 ### Outcomes
-•Read the input file and convert this to a `Graph` using graphstream.
-•Apply a topological sort on the graph to get an order of nodes to be scheduled that respect dependencies between tasks.
-•Implementation of the List scheduler.
-•Creating an output file with the schedule produced by the algorithm.
+• Read the input file and convert this to a `Graph` using graphstream.
+• Apply a topological sort on the graph to get an order of nodes to be scheduled that respect dependencies between tasks.
+• Implementation of the List scheduler.
+• Creating an output file with the schedule produced by the algorithm.
 
 ### UML diagram
 to be inserted later
