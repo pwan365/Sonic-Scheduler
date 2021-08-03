@@ -15,9 +15,8 @@ public class Main  {
     public static void main(String[] args) {
 
 
-        InputReader readerr = new InputReader("input.dot");
+        InputReader readerr = new InputReader("try.dot");
         Graph g = readerr.read();
-        System.out.println(g.getNode(0));
 
 
         List<String> commands = Arrays.asList(args);
@@ -61,6 +60,7 @@ public class Main  {
 
         v.setProcessorList(processorPool);
         Queue<Task> taskQueue = v.topologicalorder(inputGraph);
+
         v.scheduleTasks();
         Processor[] test = v.getProcessorList();
         for (int i = 0;i < processorPool.length; i++) {
@@ -71,6 +71,14 @@ public class Main  {
             }
             System.out.println(test[i].getLatestTime());
             System.out.println(test[i].getTasks());
+        }
+
+        TopologicalSort ts = new TopologicalSort();
+        ts.init(g);
+        ts.compute();
+        Queue<Task> qt = ts.getSortedTasks();
+        for (Task t : qt){
+            System.out.println(t.getNode().getId());
         }
 
         OutputWriter writer = new OutputWriter();

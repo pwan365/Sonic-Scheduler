@@ -20,6 +20,7 @@ public class InputReader {
             while ((line = br.readLine()) != null ){
                 if (line.contains("digraph")){
                     graphName = line.split("\"")[1];
+                    break;
                 }
             }
         } catch (FileNotFoundException e) {
