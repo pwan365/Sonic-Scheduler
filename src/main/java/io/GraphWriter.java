@@ -8,6 +8,7 @@ import org.graphstream.stream.file.FileSinkDOT;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -102,7 +103,7 @@ public class GraphWriter extends FileSinkDOT {
     @Override
     protected void outputHeader() throws IOException {
         out = (PrintWriter) output;
-        out.printf("%s \"%s\"{%n", digraph ? "digraph" : "graph", graphName);
+        out.printf("%s \"%s\"{%n", digraph ? "digraph" : "graph", "output" + graphName.substring(0,1).toUpperCase() + graphName.substring(1));
 
 
     }
