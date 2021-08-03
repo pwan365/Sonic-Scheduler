@@ -8,23 +8,30 @@ import org.graphstream.stream.file.FileSinkDOT;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * This class modifies some methods of FileSinkDOT class in GraphStream and make a custom format for the output .dot
+ * file.
+ *
+ * @author Jason Wang
+ */
 public class GraphWriter extends FileSinkDOT {
-    /*
-    This class is used to modify the default graph writer in Graphstream
-     */
-    protected String graphName = "";
 
+    private String graphName = "";
+
+    /**
+     * This method is used to set the graph name that will be written to the output file.
+     * @param name Name of the graph.
+     */
     public void setGraphName(String name){
         this.graphName = name;
     }
 
     /**
-     * Modified exportGraph, writes the nodes and edges of the output file.
-     * @param graph
+     * Modified exportGraph, scan through every node and edge of the graph and outputs them.
+     * @param graph Graph to be outputted.
      */
     @Override
     protected void exportGraph(Graph graph) {
@@ -34,11 +41,13 @@ public class GraphWriter extends FileSinkDOT {
         graph.attributeKeys()
                 .forEach(key -> graphAttributeAdded(graphId, timeId.getAndIncrement(), key, graph.getAttribute(key)));
 
+        //Outputting every node
         for (Node node : graph) {
             String nodeId = node.getId();
             out.printf("\t%s %s;%n", nodeId, outputAttributes(node));
         }
 
+        //Outputting every edge
         graph.edges().forEach(edge -> {
             String fromNodeId = edge.getNode0().getId();
             String toNodeId = edge.getNode1().getId();
@@ -57,9 +66,9 @@ public class GraphWriter extends FileSinkDOT {
     }
 
     /**
-     * Modified outputAttributes, writes the attributes of the output file.
-     * @param e
-     * @return
+     * Modified outputAttributes, writes the attributes of the given element into a string.
+     * @param e The element of the graph to be outputted.
+     * @return a string that represents all attributes of an element.
      */
     @Override
     protected String outputAttributes(Element e) {
@@ -69,26 +78,22 @@ public class GraphWriter extends FileSinkDOT {
         StringBuilder buffer = new StringBuilder("[");
         AtomicBoolean first = new AtomicBoolean(true);
 
-
+        //Loop through every attribute of an element.
         e.attributeKeys().forEach(key -> {
             Object value = e.getAttribute(key);
 
-
             if (value instanceof Number) {
+                //Formatting for the "Weight" of the element.
                 int weightValue = ((Number) value).intValue();
                 buffer.append(String.format("%s%s=%s", first.get() ? "" : ",", key, weightValue));
-            }else {
-                //buffer.append(String.format("%s%s=%s", first.get() ? "" : ",", key, value));
-            }
-
-            if (key.equals("Task")){
+            }else if (key.equals("Task")){
+                //Formatting if the element contains its start time and processor information.
                 Task nodeTask = (Task) e.getAttribute("Task");
                 int startTime = (int) nodeTask.getStartingTime();
                 int processor = nodeTask.getAllocatedProcessor().getProcessNum();
                 buffer.append(String.format("%s%s=%s", first.get() ? "" : ",", "Start", startTime));
                 buffer.append(String.format("%s%s=%s", first.get() ? "" : ",", "Processor", processor));
             }
-
 
             first.set(false);
         });
@@ -102,9 +107,9 @@ public class GraphWriter extends FileSinkDOT {
      */
     @Override
     protected void outputHeader() throws IOException {
+        //Formatting the output graph name. Adds "output" at the start and capitalizes first letter.
+        String outputName = "output" + graphName.substring(0,1).toUpperCase() + graphName.substring(1);
         out = (PrintWriter) output;
-        out.printf("%s \"%s\"{%n", digraph ? "digraph" : "graph", "output" + graphName.substring(0,1).toUpperCase() + graphName.substring(1));
-
-
+        out.printf("%s \"%s\"{%n", digraph ? "digraph" : "graph", outputName);
     }
 }
