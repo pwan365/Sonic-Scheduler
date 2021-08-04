@@ -5,10 +5,10 @@ For this milestone our goal was to design an algorithm that would produce a vali
 
 ### Planning
 ### Outcomes
-• Read the input file and convert this to a `Graph` using graphstream.
-• Apply a topological sort on the graph to get an order of nodes to be scheduled that respect dependencies between tasks.
-• Implementation of the List scheduler.
-• Creating an output file with the schedule produced by the algorithm.
+- Read the input file and convert this to a `Graph` using graphstream.
+- Apply a topological sort on the graph to get an order of nodes to be scheduled that respect dependencies between tasks.
+- Implementation of the List scheduler.
+- Creating an output file with the schedule produced by the algorithm.
 
 ### UML diagram
 to be inserted later
@@ -31,17 +31,14 @@ To achieve these goals, we used GraphStream to read from and write to a dot file
 - Overrides methods in Graphstream.Algorithm and implemented a new DFS topological ordering algorithm to generate a topologically ordered task queue and support valid scheduling.
 2. Use of an array to store the Processors.
 3. while queue ≠ empty, we pop the first element and iterate over every Processor finding the earliest time this task can be scheduled.
-    • Involves calculating the communication cost between a node and its parents.
-    • Every task has a list of parent `Edges`, as such we can retrieve the node of the parent through the `Edge`.
-    • Every task has an allocated processor and its finishing time, as such we can get the weight of the edge and the parent's finishing time. This addition will be the 
-      communication cost for the child task if it is scheduled on a processor that is different to its parents.
-    • We only need to know the maximum of all communication costs involving a child node and its parent to know its earliest time to be scheduled on a processor, thus we 
-      declare an integer to keep track of this.
+- Involves calculating the communication cost between a node and its parents.
+- Every task has a list of parent `Edges`, as such we can retrieve the node of the parent through the `Edge`.
+- Every task has an allocated processor and its finishing time, as such we can get the weight of the edge and the parent's finishing time. This addition will be the communication cost for the child task if it is scheduled on a processor that is different to its parents.
+- We only need to know the maximum of all communication costs involving a child node and its parent to know its earliest time to be scheduled on a processor, thus we declare an integer to keep track of this.
 4. All nodes have their processor, starting time, duration time and finishing time and so we can iterate through the nodes to output the results.
 
 ### Future Issues
-• Whilst alot of the code used for a valid schedule is going to remain, i.e. Communication costs, using a Topological Order and a Queue for this order will not be sufficient to
-  obtain an optimal solution. We must iterate over all possible orders that tasks can be scheduled.
+- Whilst alot of the code used for a valid schedule is going to remain, i.e. Communication costs, using a Topological Order and a Queue for this order will not be sufficient to obtain an optimal solution. We must iterate over all possible orders that tasks can be scheduled.
 
 ---
 ### Validity Testing
