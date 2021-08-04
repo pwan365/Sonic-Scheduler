@@ -13,9 +13,22 @@ For this milestone our goal was to design an algorithm that would produce a vali
 ### UML diagram
 to be inserted later
 
+### I/O
+The InputReader.java is implemented to achieve these goals:
+- Read the arguments from the command line. 
+- Read the information from the input dot file and convert it to an acceptable data structure for valid scheduling algorithm to run.
+
+The OutputReader.java is implemented to achieve these goals:
+- Write the scheduled data to a formatted dot file which includes multiple attributes that required.
+
+To achieve these goals, we used GraphStream to read from and write to a dot file. Specifically, we also created a file named GraphWriter that extends the FileSinkDOT class and overrides multiple methods to fit our requirements. The I/O related classes are included in io package and designed not to effect the scheduling.
+
+
+
+
 ### Valid Solution
 1. Topological sort the graph,(Uses a graphstream library although some methods had to be override.)
-    •
+- Overrides methods in Graphstream.Algorithm and implemented a new DFS topological ordering algorithm to generate a topologically ordered task queue and support valid scheduling.
 2. Use of an array to store the Processors.
 3. while queue ≠ empty, we pop the first element and iterate over every Processor finding the earliest time this task can be scheduled.
     • Involves calculating the communication cost between a node and its parents.
@@ -31,10 +44,10 @@ to be inserted later
   obtain an optimal solution. We must iterate over all possible orders that tasks can be scheduled.
 
 ---
-###Validity Testing
+### Validity Testing
 - Used example graphs provided by the client to initiate the testing. And we then added more boundary and extreme cases on our own.
 - We created a Validator class to validate all the constraints of the output graph.
 - We used `Junit` as the testing framework.
-####Issues
+#### Issues
 - found it difficult to implement the validator class due to unfamiliarity with the `GraphStream` library.
 
