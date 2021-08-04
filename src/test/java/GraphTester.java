@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GraphTester {
+//    client test cases-----------------------------
     @Test
     public void test7N_2P() {
         String inputGraphPath = pathGetter("Nodes_7_OutTree.dot");
@@ -35,6 +36,24 @@ public class GraphTester {
     }
 
     @Test
+    public void test7N_4P() {
+        String inputGraphPath = pathGetter("Nodes_7_OutTree.dot");
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+
+        Graph inputGraph = reader.read();
+        String outputGraphFilename = scheduleHelper(inputGraph, 4);
+        InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
+
+        Graph outputGraph = outputReader.read();
+
+        Validator validator = new Validator();
+        validator.initialize(inputGraph, outputGraph, 4);
+        assertTrue(validator.validate());
+    }
+
+
+
+    @Test
     public void test8N_2P() {
         String inputGraphPath = pathGetter("Nodes_8_Random.dot");
         InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
@@ -47,6 +66,22 @@ public class GraphTester {
 
         Validator validator = new Validator();
         validator.initialize(inputGraph, outputGraph, 2);
+        assertTrue(validator.validate());
+    }
+
+    @Test
+    public void test8N_4P() {
+        String inputGraphPath = pathGetter("Nodes_8_Random.dot");
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+
+        Graph inputGraph = reader.read();
+        String outputGraphFilename = scheduleHelper(inputGraph, 4);
+        InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
+
+        Graph outputGraph = outputReader.read();
+
+        Validator validator = new Validator();
+        validator.initialize(inputGraph, outputGraph, 4);
         assertTrue(validator.validate());
     }
 
@@ -67,6 +102,22 @@ public class GraphTester {
     }
 
     @Test
+    public void test9N_4P() {
+        String inputGraphPath = pathGetter("Nodes_9_SeriesParallel.dot");
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+
+        Graph inputGraph = reader.read();
+        String outputGraphFilename = scheduleHelper(inputGraph, 4);
+        InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
+
+        Graph outputGraph = outputReader.read();
+
+        Validator validator = new Validator();
+        validator.initialize(inputGraph, outputGraph, 4);
+        assertTrue(validator.validate());
+    }
+
+    @Test
     public void test10N_2P() {
         String inputGraphPath = pathGetter("Nodes_10_Random.dot");
         InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
@@ -83,6 +134,22 @@ public class GraphTester {
     }
 
     @Test
+    public void test10N_4P() {
+        String inputGraphPath = pathGetter("Nodes_10_Random.dot");
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+
+        Graph inputGraph = reader.read();
+        String outputGraphFilename = scheduleHelper(inputGraph, 4);
+        InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
+
+        Graph outputGraph = outputReader.read();
+
+        Validator validator = new Validator();
+        validator.initialize(inputGraph, outputGraph, 4);
+        assertTrue(validator.validate());
+    }
+
+    @Test
     public void test11N_2P() {
         String inputGraphPath = pathGetter("Nodes_11_OutTree.dot");
         InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
@@ -94,6 +161,21 @@ public class GraphTester {
         Graph outputGraph = outputReader.read();
         Validator validator = new Validator();
         validator.initialize(inputGraph, outputGraph, 2);
+        assertTrue(validator.validate());
+    }
+
+    @Test
+    public void test11N_4P() {
+        String inputGraphPath = pathGetter("Nodes_11_OutTree.dot");
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+
+        Graph inputGraph = reader.read();
+        String outputGraphFilename = scheduleHelper(inputGraph, 4);
+        InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
+
+        Graph outputGraph = outputReader.read();
+        Validator validator = new Validator();
+        validator.initialize(inputGraph, outputGraph, 4);
         assertTrue(validator.validate());
     }
 
