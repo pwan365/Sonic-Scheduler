@@ -107,7 +107,7 @@ public class Validator {
                 }
                 int scheduledStartTime = processorStartTimes.get(j);
                 int scheduledEndTime = processorEndTimes.get(j);
-                if (startTime <= scheduledStartTime && finishTime >= scheduledEndTime) {
+                if ((startTime >= scheduledStartTime && startTime < scheduledEndTime) || (scheduledStartTime >= startTime && scheduledStartTime < finishTime)) {
                     System.out.println("The processor has already been occupied");
                     return false; // Overlapping schedules
                 }
