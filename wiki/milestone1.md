@@ -19,7 +19,7 @@ to be inserted later
 2. Use of an array to store the Processors.
 3. while queue ≠ empty, we pop the first element and iterate over every Processor finding the earliest time this task can be scheduled.
     • Involves calculating the communication cost between a node and its parents.
-    • Every task has a list of parent `Edges`, as such we can retrieve the node of the parent through thhe `Edge`.
+    • Every task has a list of parent `Edges`, as such we can retrieve the node of the parent through the `Edge`.
     • Every task has an allocated processor and its finishing time, as such we can get the weight of the edge and the parent's finishing time. This addition will be the 
       communication cost for the child task if it is scheduled on a processor that is different to its parents.
     • We only need to know the maximum of all communication costs involving a child node and its parent to know its earliest time to be scheduled on a processor, thus we 
@@ -30,5 +30,11 @@ to be inserted later
 • Whilst alot of the code used for a valid schedule is going to remain, i.e. Communication costs, using a Topological Order and a Queue for this order will not be sufficient to
   obtain an optimal solution. We must iterate over all possible orders that tasks can be scheduled.
 
-
+---
+###Validity Testing
+- Used example graphs provided by the client to initiate the testing. And we then added more boundary and extreme cases on our own.
+- We created a Validator class to validate all the constraints of the output graph.
+- We used `Junit` as the testing framework.
+####Issues
+- found it difficult to implement the validator class due to unfamiliarity with the `GraphStream` library.
 
