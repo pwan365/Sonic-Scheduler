@@ -56,8 +56,8 @@ public class Validator {
 
         // Set up input and output information arrays
         for (int i = 0; i < numOfTasks; i++) {
-            Node inputNode = inputGraph.getNode(String.valueOf(i));
-            Node outputNode = outputGraph.getNode(String.valueOf(i));
+            Node inputNode = inputGraph.getNode(i);
+            Node outputNode = outputGraph.getNode(i);
 //            System.out.println(outputGraph);
             inputTasks[i] = inputNode;
             outputTasks[i] = outputNode;
@@ -67,7 +67,7 @@ public class Validator {
 //                System.out.println("lllllllllllllllllll");
 //                System.out.println(edges.toString());
 //                System.out.println("lllllllllllllllllll");
-                if (edges.isEmpty()) {
+                if (!edges.isEmpty()) {
                     for (Edge edge : edges) {
                         int parent = edge.getNode0().getIndex();
                         int child = edge.getNode1().getIndex();
@@ -123,7 +123,7 @@ public class Validator {
                 Node childNode = outputTasks[child];
                 if (communicationCosts[parent][child] != 0) {
                     int communicationCost = 0;
-                    if ((Double) parentNode.getAttribute("Processor") != (Double) childNode.getAttribute("Processor")) {
+                    if (((Double)parentNode.getAttribute("Processor")).intValue() != ((Double)childNode.getAttribute("Processor")).intValue()) {
                         communicationCost = communicationCosts[parent][child];
                     }
 
