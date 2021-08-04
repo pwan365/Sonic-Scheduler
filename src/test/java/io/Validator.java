@@ -18,8 +18,12 @@ public class Validator {
     private int[][] communicationCosts = new int[40][40];
     private List<List<Integer>> startTimes = new ArrayList<>();
     private List<List<Integer>> endTimes = new ArrayList<>();
+    private Graph inputGraph;
+    private Graph outputGraph;
 
-    public void initialize(Graph inputGraph, Graph outputGraph, int numOfProcessors) {
+    public void initialize(Graph input, Graph output, int numOfProcessors) {
+        inputGraph = input;
+        outputGraph = output;
         numOfTasks = inputGraph.getNodeCount();
         numOfOutputTasks = outputGraph.getNodeCount();
         inputTasks = new Node[numOfTasks];
@@ -27,17 +31,28 @@ public class Validator {
         outputTasks = new Node[numOfOutputTasks];
 
         //John's Initialization Starts Here---------
-        for (int i = 0; i<numOfProcessors; i++){
-            List<Integer> stl = new ArrayList<Integer>();
-            List<Integer> sel = new ArrayList<Integer>();
-            for (int j = 0; j < numOfOutputTasks; j++){
-                stl.add(((Double)outputGraph.getNode(j).getAttribute("Start")).intValue());
-                sel.add( ((Double)((Double)outputGraph.getNode(j).getAttribute("Start") + (Double)outputGraph.getNode(j).getAttribute("Weight"))).intValue());
-            }
+        for (int i = 0; i < numOfProcessors; i++){
+            List<Integer> stl = new ArrayList<>();
+            List<Integer> sel = new ArrayList<>();
             startTimes.add(stl);
             endTimes.add(sel);
         }
         //John's initialization Ends Here------------
+
+    }
+
+    public boolean validate() {
+
+        // Check whether the number of nodes is different in input and output
+        if (numOfTasks != numOfOutputTasks) {
+            System.out.println("The number of tasks is not equal in input and output graphs");
+            return false;
+        }
+
+        // If there is no nodes in input graph, the schedule should be valid by default
+        if (numOfTasks == 0) {
+            return true;
+        }
 
         // Set up input and output information arrays
         for (int i = 0; i < numOfTasks; i++) {
@@ -66,22 +81,8 @@ public class Validator {
                     }
                 }
             }
-
-
-        }
-    }
-
-    public boolean validate() {
-        // Check whether the number of nodes is different in input and output
-        if (numOfTasks != numOfOutputTasks) {
-            System.out.println("The number of tasks is not equal in input and output graphs");
-            return false;
         }
 
-        // If there is no nodes in input graph, the schedule should be valid by default
-        if (numOfTasks == 0) {
-            return true;
-        }
 
         // Check scheduling against the constraints
         for (int i = 0; i < numOfTasks; i++) {
@@ -100,10 +101,13 @@ public class Validator {
             int startTime = ((Double) task.getAttribute("Start")).intValue();
             int finishTime = startTime + ((Double) task.getAttribute("Weight")).intValue();
 
-            for (int j = 0; j < startTimes.size(); j++) {
-                int scheduledStartTime = processorStartTimes.get(i);
-                int scheduledEndTime = processorEndTimes.get(i);
-                if (startTime < scheduledStartTime && finishTime > scheduledEndTime) {
+            for (int j = 0; j < processorStartTimes.size(); j++) {
+                if(processorStartTimes.size() == 0 || processorEndTimes.size()==0){
+                    break;
+                }
+                int scheduledStartTime = processorStartTimes.get(j);
+                int scheduledEndTime = processorEndTimes.get(j);
+                if (startTime <= scheduledStartTime && finishTime >= scheduledEndTime) {
                     System.out.println("The processor has already been occupied");
                     return false; // Overlapping schedules
                 }
