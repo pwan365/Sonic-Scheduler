@@ -97,23 +97,8 @@ public class GraphTester {
         assertTrue(validator.validate());
     }
 
-    @Test
-    public void testInputDot() {
-//        String inputGraphPath = pathGetter("Nodes_11_OutTree.dot");
-//        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
-        System.out.println("new test start here");
-        InputReader reader = new InputReader("input.dot");
 
-        Graph inputGraph = reader.read();
-//        String outputGraphFilename = scheduleHelper(inputGraph, 2);
-//        InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
-        InputReader outputReader = new InputReader("outputtry.dot");
 
-        Graph outputGraph = outputReader.read();
-        Validator validator = new Validator();
-        validator.initialize(inputGraph, outputGraph, 2);
-        assertTrue(validator.validate());
-    }
 
     //----------------------------------helper--------------------------------------------
     private static String pathGetter(String filename) {
