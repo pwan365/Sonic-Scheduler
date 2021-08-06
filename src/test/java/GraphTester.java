@@ -1,11 +1,8 @@
 import algo.Processor;
 import algo.Task;
 import algo.ValidScheduler;
-import com.sun.org.apache.xpath.internal.objects.XString;
-import io.InputReader;
 import io.OutputWriter;
 import io.Validator;
-import jdk.internal.util.xml.impl.Input;
 import org.graphstream.graph.Graph;
 
 import org.junit.jupiter.api.Test;
@@ -13,35 +10,39 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.util.Queue;
 
-import org.junit.jupiter.api.Assertions.*;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GraphTester {
+    //If wanting to see certain output.dot file for following test, comment out removeOutput function
 //    client test cases-----------------------------
     @Test
     public void test7N_2P() {
-        String inputGraphPath = pathGetter("Nodes_7_OutTree.dot");
+        String inputFileName ="Nodes_7_OutTree.dot";
+        int numProc = 2;
+        String inputGraphPath = pathGetter(inputFileName);
         InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
 
         Graph inputGraph = reader.read();
-        String outputGraphFilename = scheduleHelper(inputGraph, 2);
+        String outputGraphFilename = outputGenerator(inputGraph, inputFileName, numProc);
         InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
 
         Graph outputGraph = outputReader.read();
 
         Validator validator = new Validator();
-        validator.initialize(inputGraph, outputGraph, 2);
+        validator.initialize(inputGraph, outputGraph, numProc);
         assertTrue(validator.validate());
+        removeOutput(outputGraphFilename);
     }
 
     @Test
     public void test7N_4P() {
-        String inputGraphPath = pathGetter("Nodes_7_OutTree.dot");
+        String inputFileName ="Nodes_7_OutTree.dot";
+        int numProc = 4;
+        String inputGraphPath = pathGetter(inputFileName);
         InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
 
         Graph inputGraph = reader.read();
-        String outputGraphFilename = scheduleHelper(inputGraph, 4);
+        String outputGraphFilename = outputGenerator(inputGraph, inputFileName, numProc);
         InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
 
         Graph outputGraph = outputReader.read();
@@ -49,136 +50,291 @@ public class GraphTester {
         Validator validator = new Validator();
         validator.initialize(inputGraph, outputGraph, 4);
         assertTrue(validator.validate());
+        removeOutput(outputGraphFilename);
     }
 
 
 
     @Test
     public void test8N_2P() {
-        String inputGraphPath = pathGetter("Nodes_8_Random.dot");
+        String inputFileName ="Nodes_8_Random.dot";
+        int numProc = 2;
+        String inputGraphPath = pathGetter(inputFileName);
         InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
 
         Graph inputGraph = reader.read();
-        String outputGraphFilename = scheduleHelper(inputGraph, 2);
+        String outputGraphFilename = outputGenerator(inputGraph, inputFileName, numProc);
         InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
 
         Graph outputGraph = outputReader.read();
 
         Validator validator = new Validator();
-        validator.initialize(inputGraph, outputGraph, 2);
+        validator.initialize(inputGraph, outputGraph, numProc);
         assertTrue(validator.validate());
+        removeOutput(outputGraphFilename);
     }
 
     @Test
     public void test8N_4P() {
-        String inputGraphPath = pathGetter("Nodes_8_Random.dot");
+        String inputFileName ="Nodes_8_Random.dot";
+        int numProc = 4;
+        String inputGraphPath = pathGetter(inputFileName);
         InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
 
         Graph inputGraph = reader.read();
-        String outputGraphFilename = scheduleHelper(inputGraph, 4);
+        String outputGraphFilename = outputGenerator(inputGraph, inputFileName, numProc);
         InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
 
         Graph outputGraph = outputReader.read();
 
         Validator validator = new Validator();
-        validator.initialize(inputGraph, outputGraph, 4);
+        validator.initialize(inputGraph, outputGraph, numProc);
         assertTrue(validator.validate());
+        removeOutput(outputGraphFilename);
     }
 
     @Test
     public void test9N_2P() {
-        String inputGraphPath = pathGetter("Nodes_9_SeriesParallel.dot");
+        String inputFileName ="Nodes_9_SeriesParallel.dot";
+        int numProc = 2;
+        String inputGraphPath = pathGetter(inputFileName);
         InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
 
         Graph inputGraph = reader.read();
-        String outputGraphFilename = scheduleHelper(inputGraph, 2);
+        String outputGraphFilename = outputGenerator(inputGraph, inputFileName, numProc);
         InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
 
         Graph outputGraph = outputReader.read();
 
         Validator validator = new Validator();
-        validator.initialize(inputGraph, outputGraph, 2);
+        validator.initialize(inputGraph, outputGraph, numProc);
         assertTrue(validator.validate());
+        removeOutput(outputGraphFilename);
     }
 
     @Test
     public void test9N_4P() {
-        String inputGraphPath = pathGetter("Nodes_9_SeriesParallel.dot");
+        String inputFileName ="Nodes_9_SeriesParallel.dot";
+        int numProc = 4;
+        String inputGraphPath = pathGetter(inputFileName);
         InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
 
         Graph inputGraph = reader.read();
-        String outputGraphFilename = scheduleHelper(inputGraph, 4);
+        String outputGraphFilename = outputGenerator(inputGraph, inputFileName, numProc);
         InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
 
         Graph outputGraph = outputReader.read();
 
         Validator validator = new Validator();
-        validator.initialize(inputGraph, outputGraph, 4);
+        validator.initialize(inputGraph, outputGraph, numProc);
         assertTrue(validator.validate());
+        removeOutput(outputGraphFilename);
     }
 
     @Test
     public void test10N_2P() {
-        String inputGraphPath = pathGetter("Nodes_10_Random.dot");
+        String inputFileName ="Nodes_10_Random.dot";
+        int numProc = 2;
+        String inputGraphPath = pathGetter(inputFileName);
         InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
 
         Graph inputGraph = reader.read();
-        String outputGraphFilename = scheduleHelper(inputGraph, 2);
+        String outputGraphFilename = outputGenerator(inputGraph, inputFileName, numProc);
         InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
 
         Graph outputGraph = outputReader.read();
 
         Validator validator = new Validator();
-        validator.initialize(inputGraph, outputGraph, 2);
+        validator.initialize(inputGraph, outputGraph, numProc);
         assertTrue(validator.validate());
+        removeOutput(outputGraphFilename);
     }
 
     @Test
     public void test10N_4P() {
-        String inputGraphPath = pathGetter("Nodes_10_Random.dot");
+        String inputFileName ="Nodes_10_Random.dot";
+        int numProc = 4;
+        String inputGraphPath = pathGetter(inputFileName);
         InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
 
         Graph inputGraph = reader.read();
-        String outputGraphFilename = scheduleHelper(inputGraph, 4);
+        String outputGraphFilename = outputGenerator(inputGraph, inputFileName, numProc);
         InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
 
         Graph outputGraph = outputReader.read();
 
         Validator validator = new Validator();
-        validator.initialize(inputGraph, outputGraph, 4);
+        validator.initialize(inputGraph, outputGraph, numProc);
         assertTrue(validator.validate());
+        removeOutput(outputGraphFilename);
     }
 
     @Test
     public void test11N_2P() {
-        String inputGraphPath = pathGetter("Nodes_11_OutTree.dot");
+        String inputFileName ="Nodes_11_OutTree.dot";
+        int numProc = 2;
+        String inputGraphPath = pathGetter(inputFileName);
         InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
 
         Graph inputGraph = reader.read();
-        String outputGraphFilename = scheduleHelper(inputGraph, 2);
+        String outputGraphFilename = outputGenerator(inputGraph, inputFileName, numProc);
         InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
 
         Graph outputGraph = outputReader.read();
         Validator validator = new Validator();
-        validator.initialize(inputGraph, outputGraph, 2);
+        validator.initialize(inputGraph, outputGraph, numProc);
         assertTrue(validator.validate());
+        removeOutput(outputGraphFilename);
     }
 
     @Test
     public void test11N_4P() {
-        String inputGraphPath = pathGetter("Nodes_11_OutTree.dot");
+        String inputFileName ="Nodes_11_OutTree.dot";
+        int numProc = 4;
+        String inputGraphPath = pathGetter(inputFileName);
         InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
 
         Graph inputGraph = reader.read();
-        String outputGraphFilename = scheduleHelper(inputGraph, 4);
+        String outputGraphFilename = outputGenerator(inputGraph, inputFileName, numProc);
         InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
 
         Graph outputGraph = outputReader.read();
         Validator validator = new Validator();
-        validator.initialize(inputGraph, outputGraph, 4);
+        validator.initialize(inputGraph, outputGraph, numProc);
         assertTrue(validator.validate());
+        removeOutput(outputGraphFilename);
     }
 
+    //-------------------------------customer test case------------------------------------
+    @Test
+    public void test1N_4P() {
+        String inputFileName ="1Node.dot";
+        int numProc = 4;
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+
+        Graph inputGraph = reader.read();
+        String outputGraphFilename = outputGenerator(inputGraph, inputFileName, numProc);
+        InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
+
+        Graph outputGraph = outputReader.read();
+        Validator validator = new Validator();
+        validator.initialize(inputGraph, outputGraph, numProc);
+        assertTrue(validator.validate());
+        removeOutput(outputGraphFilename);
+    }
+
+    @Test
+    public void test1N_2P() {
+        String inputFileName ="1Node.dot";
+        int numProc = 2;
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+
+        Graph inputGraph = reader.read();
+        String outputGraphFilename = outputGenerator(inputGraph, inputFileName, numProc);
+        InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
+
+        Graph outputGraph = outputReader.read();
+        Validator validator = new Validator();
+        validator.initialize(inputGraph, outputGraph, numProc);
+        assertTrue(validator.validate());
+        removeOutput(outputGraphFilename);
+    }
+
+    @Test
+    public void test0N_2P() {
+        String inputFileName ="EmptyGraph.dot";
+        int numProc = 2;
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+
+        Graph inputGraph = reader.read();
+        String outputGraphFilename = outputGenerator(inputGraph, inputFileName, numProc);
+        InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
+
+        Graph outputGraph = outputReader.read();
+        Validator validator = new Validator();
+        validator.initialize(inputGraph, outputGraph, numProc);
+        assertTrue(validator.validate());
+        removeOutput(outputGraphFilename);
+    }
+
+
+    @Test
+    public void test0N_4P() {
+        String inputFileName ="EmptyGraph.dot";
+        int numProc = 4;
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+
+        Graph inputGraph = reader.read();
+        String outputGraphFilename = outputGenerator(inputGraph, inputFileName, numProc);
+        InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
+
+        Graph outputGraph = outputReader.read();
+        Validator validator = new Validator();
+        validator.initialize(inputGraph, outputGraph, numProc);
+        assertTrue(validator.validate());
+        removeOutput(outputGraphFilename);
+    }
+
+
+    @Test
+    public void test5N_MaxEdge_2P() {
+        String inputFileName ="5NodesMaximalEdges.dot";
+        int numProc = 2;
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+
+        Graph inputGraph = reader.read();
+        String outputGraphFilename = outputGenerator(inputGraph, inputFileName, numProc);
+        InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
+
+        Graph outputGraph = outputReader.read();
+        Validator validator = new Validator();
+        validator.initialize(inputGraph, outputGraph, numProc);
+        assertTrue(validator.validate());
+        removeOutput(outputGraphFilename);
+    }
+
+    @Test
+    public void test5N_MaxEdge_4P() {
+        String inputFileName ="5NodesMaximalEdges.dot";
+        int numProc = 4;
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+
+        Graph inputGraph = reader.read();
+        String outputGraphFilename = outputGenerator(inputGraph, inputFileName, numProc);
+        InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
+
+        Graph outputGraph = outputReader.read();
+        Validator validator = new Validator();
+        validator.initialize(inputGraph, outputGraph, numProc);
+        assertTrue(validator.validate());
+        removeOutput(outputGraphFilename);
+    }
+
+
+    @Test
+    public void test6N_NoBranch_2P() {
+
+        String inputFileName = "5NodesMaximalEdges.dot";
+        int numProc = 2;
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        String outputGraphFilename = outputGenerator(inputGraph, inputFileName, numProc);
+        InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
+
+        Graph outputGraph = outputReader.read();
+        Validator validator = new Validator();
+        validator.initialize(inputGraph, outputGraph, numProc);
+        assertTrue(validator.validate());
+        removeOutput(outputGraphFilename);
+    }
 
 
 
@@ -192,8 +348,9 @@ public class GraphTester {
         return graphDir + filename;
     }
 
-    private static String scheduleHelper(Graph input, int numberOfProcessors) {
+    private static String outputGenerator(Graph input, String inputFileName, int numberOfProcessors) {
         Graph copyOfInput = input;
+
         Processor[] processorPool = new Processor[numberOfProcessors];
         for (int i = 0; i < numberOfProcessors; i++) {
             processorPool[i] = new Processor(i + 1);
@@ -205,10 +362,14 @@ public class GraphTester {
         v.scheduleTasks();
         Processor[] test = v.getProcessorList();
         OutputWriter writer = new OutputWriter();
-        writer.write(copyOfInput,"outputTest.dot");
+        writer.write(copyOfInput,inputFileName.replace(".dot", "-output.dot"));
 
-        return "outputTest.dot";
+        return inputFileName.replace(".dot", "-output.dot");
 
+    }
+
+    private void removeOutput(String outputFileName) {
+        new File(outputFileName).delete();
     }
 
 }
