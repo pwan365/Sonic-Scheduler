@@ -1,7 +1,6 @@
 package io;
 
 import org.graphstream.graph.Graph;
-import org.graphstream.stream.file.FileSinkDOT;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +11,6 @@ import java.io.IOException;
  * @author Jason Wang
  */
 public class OutputWriter {
-    private String outputFile;
 
     /**
      * Method to write a graph to a file with specified file name.
@@ -22,7 +20,7 @@ public class OutputWriter {
     public void write(Graph g, String fileName){
         String dir = System.getProperty("user.dir");
         //Construct full path name to the file.
-        outputFile = dir + File.separator + fileName;
+        String outputFile = dir + File.separator + fileName;
         //Calling a helper class to format the graph data.
         GraphWriter fs = new GraphWriter();
         fs.setGraphName(g.getId());

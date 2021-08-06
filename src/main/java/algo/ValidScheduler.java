@@ -11,12 +11,15 @@ public class ValidScheduler {
     private Processor[] processorList;
     private Queue<Task> taskQueue;
 
-    public Queue<Task> topologicalorder(Graph g){
+    /**
+     * Generates a topological order of task queue to support valid scheduling.
+     * @param g Input Graph
+     */
+    public void topologicalorder(Graph g){
         TopologicalSort ts = new TopologicalSort();
         ts.init(g);
         ts.compute();
         taskQueue = ts.getSortedTasks();
-        return taskQueue;
     }
 
     /**

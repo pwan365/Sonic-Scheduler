@@ -13,7 +13,7 @@ import org.graphstream.stream.file.FileSourceDOT;
  */
 public class InputReader {
 
-    private String filePath;
+    private final String filePath;
 
     /**
      * The constructor of InputReader.
@@ -21,6 +21,7 @@ public class InputReader {
      */
     public InputReader(String input_file){
         String dir = System.getProperty("user.dir");
+
         //Construct full path name to the file.
         this.filePath = dir + File.separator + input_file;
     }
@@ -32,7 +33,6 @@ public class InputReader {
     public Graph read() {
         String line;
         String graphName = "";
-
         //Extracting the title of the graph.
         try {
             BufferedReader br = new BufferedReader(new FileReader(filePath));

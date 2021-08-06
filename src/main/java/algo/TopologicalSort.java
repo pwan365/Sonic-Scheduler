@@ -51,6 +51,9 @@ public class TopologicalSort implements Algorithm {
     }
 
 
+    /**
+     * Compute a DFS topological ordering
+     */
     private void computeDFS() {
         if (graph == null) {
             throw new NotInitializedException(this);
@@ -64,6 +67,11 @@ public class TopologicalSort implements Algorithm {
         }
     }
 
+    /**
+     * Get the first unmarked node.
+     * @param marks list of marks
+     * @return An unmarked node
+     */
     private Node getUnmarkedNode(int[] marks) {
         for (int i = 0; i < marks.length; i++) {
             if (marks[i] == MARK_UNMARKED) {
@@ -73,6 +81,11 @@ public class TopologicalSort implements Algorithm {
         return null;
     }
 
+    /**
+     * Visit Nodes.
+     * @param node Node that needs to be visited
+     * @param marks list of marks
+     */
     private void visitNode(Node node, int[] marks) {
         int mark = marks[node.getIndex()];
 
@@ -92,8 +105,13 @@ public class TopologicalSort implements Algorithm {
         }
     }
 
+    /**
+     *
+     * Generate a queue of sorted tasks.
+     * @return A Queue of tasks that has has been sorted using sorted Nodes.
+     */
     public Queue<Task> getSortedTasks() {
-        List<Task> taskList = new ArrayList<Task>();
+        List<Task> taskList = new ArrayList<>();
         for (Node n : sortedNodes){
             Task t = new Task(n);
             n.setAttribute("Task", t);
