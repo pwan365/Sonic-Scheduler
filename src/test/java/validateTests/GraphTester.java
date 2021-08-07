@@ -11,9 +11,18 @@ import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * This is the JUnit test suite for the validation of the scheduler
+ *
+ * @author Samuel Chen, Wayne Yao
+ */
 public class GraphTester {
     //If wanting to see certain output.dot file for following test, comment out removeOutput function
     // --------------------------------   client test cases-----------------------------
+
+    /**
+     * Test the 7 nodes graph provided by the client with two processors
+     */
     @Test
     public void test7N_2P() {
         String inputFileName ="Nodes_7_OutTree.dot";
@@ -37,6 +46,10 @@ public class GraphTester {
         removeOutput(outputGraphFilename);
     }
 
+
+    /**
+     * Test the 7 nodes graph provided by the client with four processors
+     */
     @Test
     public void test7N_4P() {
         String inputFileName ="Nodes_7_OutTree.dot";
@@ -58,6 +71,9 @@ public class GraphTester {
 
 
 
+    /**
+     * Test the 8 nodes graph provided by the client with two processors
+     */
     @Test
     public void test8N_2P() {
         String inputFileName ="Nodes_8_Random.dot";
@@ -77,6 +93,10 @@ public class GraphTester {
         removeOutput(outputGraphFilename);
     }
 
+
+    /**
+     * Test the 8 nodes graph provided by the client with four processors
+     */
     @Test
     public void test8N_4P() {
         String inputFileName ="Nodes_8_Random.dot";
@@ -96,6 +116,10 @@ public class GraphTester {
         removeOutput(outputGraphFilename);
     }
 
+
+    /**
+     * Test the 9 nodes graph provided by the client with two processors
+     */
     @Test
     public void test9N_2P() {
         String inputFileName ="Nodes_9_SeriesParallel.dot";
@@ -115,6 +139,9 @@ public class GraphTester {
         removeOutput(outputGraphFilename);
     }
 
+    /**
+     * Test the 9 nodes graph provided by the client with four processors
+     */
     @Test
     public void test9N_4P() {
         String inputFileName ="Nodes_9_SeriesParallel.dot";
@@ -134,6 +161,9 @@ public class GraphTester {
         removeOutput(outputGraphFilename);
     }
 
+    /**
+     * Test the 10 nodes graph provided by the client with two processors
+     */
     @Test
     public void test10N_2P() {
         String inputFileName ="Nodes_10_Random.dot";
@@ -153,6 +183,9 @@ public class GraphTester {
         removeOutput(outputGraphFilename);
     }
 
+    /**
+     * Test the 10 nodes graph provided by the client with four processors
+     */
     @Test
     public void test10N_4P() {
         String inputFileName ="Nodes_10_Random.dot";
@@ -172,6 +205,9 @@ public class GraphTester {
         removeOutput(outputGraphFilename);
     }
 
+    /**
+     * Test the 11 nodes graph provided by the client with two processors
+     */
     @Test
     public void test11N_2P() {
         String inputFileName ="Nodes_11_OutTree.dot";
@@ -190,6 +226,9 @@ public class GraphTester {
         removeOutput(outputGraphFilename);
     }
 
+    /**
+     * Test the 11 nodes graph provided by the client with four processors
+     */
     @Test
     public void test11N_4P() {
         String inputFileName ="Nodes_11_OutTree.dot";
@@ -209,6 +248,10 @@ public class GraphTester {
     }
 
     //-------------------------------customer test case------------------------------------
+
+    /**
+     * Test a one node graph with four processors
+     */
     @Test
     public void test1N_4P() {
         String inputFileName ="1Node.dot";
@@ -227,6 +270,9 @@ public class GraphTester {
         removeOutput(outputGraphFilename);
     }
 
+    /**
+     * Test a one node graph with two processors
+     */
     @Test
     public void test1N_2P() {
         String inputFileName ="1Node.dot";
@@ -245,6 +291,9 @@ public class GraphTester {
         removeOutput(outputGraphFilename);
     }
 
+    /**
+     * Test an empty graph with two processors
+     */
     @Test
     public void test0N_2P() {
         String inputFileName ="EmptyGraph.dot";
@@ -263,7 +312,9 @@ public class GraphTester {
         removeOutput(outputGraphFilename);
     }
 
-
+    /**
+     * Test an empty graph with four processors
+     */
     @Test
     public void test0N_4P() {
         String inputFileName ="EmptyGraph.dot";
@@ -282,7 +333,9 @@ public class GraphTester {
         removeOutput(outputGraphFilename);
     }
 
-
+    /**
+     *
+     */
     @Test
     public void test5N_MaxEdge_2P() {
         String inputFileName ="5NodesMaximalEdges.dot";
@@ -301,6 +354,9 @@ public class GraphTester {
         removeOutput(outputGraphFilename);
     }
 
+    /**
+     *
+     */
     @Test
     public void test5N_MaxEdge_4P() {
         String inputFileName ="5NodesMaximalEdges.dot";
@@ -319,11 +375,13 @@ public class GraphTester {
         removeOutput(outputGraphFilename);
     }
 
-
+    /**
+     *  Test a graph where each child other than root has one and only one parent with two processors
+     */
     @Test
     public void test6N_NoBranch_2P() {
 
-        String inputFileName = "5NodesMaximalEdges.dot";
+        String inputFileName = "6NodesNoBranch.dot";
         int numProc = 2;
         String inputGraphPath = pathGetter(inputFileName);
         InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
@@ -342,6 +400,7 @@ public class GraphTester {
 
 
     //----------------------------------helper--------------------------------------------
+
     private static String pathGetter(String filename) {
         String graphDir;
 
@@ -364,6 +423,10 @@ public class GraphTester {
 
     }
 
+    /**
+     * Remove testing output files
+     * @param outputFileName
+     */
     private void removeOutput(String outputFileName) {
         String filename = System.getProperty("user.dir") + System.getProperty("file.separator") + outputFileName;
         try{
