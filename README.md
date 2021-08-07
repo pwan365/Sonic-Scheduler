@@ -1,5 +1,4 @@
-# project-1-project-1-team-3
-project-1-project-1-team-3 created by GitHub Classroom
+# Team 3 - Sonic Schedulers
 
 ## Project description
 The project is about using artificial intelligence and parallel processing to solve a difficult NP scheduling problem for Big-As Parallel Computing Centre.
