@@ -24,19 +24,15 @@ public class TopologicalSort implements Algorithm {
     private final static int MARK_TEMP = 1;
     private final static int MARK_PERM = 2;
 
-    /**
-     * graph to calculate a topological ordering
-     */
+
+    // graph to calculate a topological ordering
     private Graph graph;
 
-    /**
-     * collection containing sorted nodes after calculation
-     */
+
+    // collection containing sorted nodes after calculation
     private Node[] sortedNodes;
 
-    /**
-     * Next index to populated in sortedNodes
-     */
+    // Next index to populated in sortedNodes
     private int index;
 
 
