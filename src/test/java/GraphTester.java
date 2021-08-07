@@ -358,7 +358,7 @@ public class GraphTester {
 
         ValidScheduler v = new ValidScheduler();
         v.setProcessorList(processorPool);
-        Queue<Task> taskQueue = v.topologicalorder(copyOfInput);
+        v.topologicalorder(copyOfInput);
         v.scheduleTasks();
         Processor[] test = v.getProcessorList();
         OutputWriter writer = new OutputWriter();
