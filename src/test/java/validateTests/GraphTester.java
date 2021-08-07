@@ -334,7 +334,7 @@ public class GraphTester {
     }
 
     /**
-     *
+     *Test a graph with 5 nodes that contains maximal amount of edges with 2 processors
      */
     @Test
     public void test5N_MaxEdge_2P() {
@@ -355,7 +355,7 @@ public class GraphTester {
     }
 
     /**
-     *
+     *Test a graph with 5 nodes that contains maximal amount of edges with 4 processors
      */
     @Test
     public void test5N_MaxEdge_4P() {
