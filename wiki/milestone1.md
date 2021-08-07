@@ -19,7 +19,7 @@ For milestone 1, our plan is to research and develop a valid scheduler while imp
 - Creating an output file with the schedule produced by the algorithm.
 
 ### UML diagram
-![uml diagram](https://github.com/SoftEng306-2021/project-1-project-1-team-3/blob/GitWiki/wiki/img/UML%20diagram.png)
+![uml diagram](https://github.com/SoftEng306-2021/project-1-project-1-team-3/blob/master/wiki/img/UML%20diagram.png)
 
 ### I/O
 The InputReader.java is implemented to achieve these goals:
