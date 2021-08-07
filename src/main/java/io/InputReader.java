@@ -42,6 +42,7 @@ public class InputReader {
                     break;
                 }
             }
+            br.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

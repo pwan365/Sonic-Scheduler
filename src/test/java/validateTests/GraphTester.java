@@ -372,7 +372,16 @@ public class GraphTester {
     }
 
     private void removeOutput(String outputFileName) {
-        new File(outputFileName).delete();
+        String filename = System.getProperty("user.dir") + System.getProperty("file.separator") + outputFileName;
+        try{
+            File file = new File(filename);
+            if (!file.delete()){
+                System.gc();
+                file.delete();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 }
