@@ -11,15 +11,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GraphTester {
     //If wanting to see certain output.dot file for following test, comment out removeOutput function
-//    client test cases-----------------------------
+    // --------------------------------   client test cases-----------------------------
     @Test
     public void test7N_2P() {
         String inputFileName ="Nodes_7_OutTree.dot";
         int numProc = 2;
+        //read the graph using the absolute path
         String inputGraphPath = pathGetter(inputFileName);
         InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
 
         Graph inputGraph = reader.read();
+        //generate a output graph
         String outputGraphFilename = outputGenerator(inputGraph, inputFileName, numProc);
         InputReaderHelper outputReader = new InputReaderHelper(outputGraphFilename);
 
@@ -28,6 +30,8 @@ public class GraphTester {
         Validator validator = new Validator();
         validator.initialize(inputGraph, outputGraph, numProc);
         assertTrue(validator.validate());
+
+        //delete generated output file
         removeOutput(outputGraphFilename);
     }
 
