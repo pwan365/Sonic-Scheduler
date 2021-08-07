@@ -1,14 +1,11 @@
 import algo.Processor;
-import algo.Task;
 import algo.ValidScheduler;
 import io.OutputWriter;
-import io.Validator;
 import org.graphstream.graph.Graph;
 
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.util.Queue;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
