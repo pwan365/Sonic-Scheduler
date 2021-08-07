@@ -10,7 +10,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Reference
+ * The helper Class that performs topological sort of a graph and generates a Queue of Tasks
+ * @author John Jia
+ *
+ * Reference:
  * https://www.javatips.net/api/gs-algo-master/src/org/graphstream/algorithm/TopologicalSort.java
  */
 
@@ -37,13 +40,19 @@ public class TopologicalSort implements Algorithm {
     private int index;
 
 
-
+    /**
+     * Override method from Algorithm. Initialize the algorithm
+     * @param theGraph Input Graph
+     */
     @Override
     public void init(Graph theGraph) {
         sortedNodes = new Node[theGraph.getNodeCount()];
         graph = theGraph;
     }
 
+    /**
+     * Override method from Algorithm. Compute the algorithm
+     */
     @Override
     public void compute() {
         index = sortedNodes.length - 1;
@@ -52,7 +61,7 @@ public class TopologicalSort implements Algorithm {
 
 
     /**
-     * Compute a DFS topological ordering
+     * Compute a DFS topological ordering.
      */
     private void computeDFS() {
         if (graph == null) {
