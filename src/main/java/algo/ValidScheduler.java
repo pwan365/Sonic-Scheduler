@@ -5,12 +5,24 @@ import org.graphstream.graph.Graph;
 import java.util.List;
 import java.util.Queue;
 
-
+/**
+ * This class implements a simple greedy List scheduling algorithm to topologically sort tasks and place them on
+ * the processor which would result in the earliest start time.
+ *
+ * @author Luxman Jeyarajah, John Jia
+ */
 public class ValidScheduler {
 
     private Processor[] processorList;
     private Queue<Task> taskQueue;
 
+    public ValidScheduler(int numProcessors) {
+        //Initialize Processor Pool
+        processorList  = new Processor[numProcessors];
+        for (int i = 0; i < numProcessors; i ++) {
+            processorList[i] = new Processor(i+1);
+        }
+    }
     /**
      * Generates a topological order of task queue to support valid scheduling.
      * @param g Input Graph
@@ -62,7 +74,6 @@ public class ValidScheduler {
 
         task.setTaskDetails(processor, endTime, startTime);
         processor.setLatestTime(endTime);
-        processor.addTask(task, startTime, endTime,endTime);
     }
 
     /**
@@ -71,7 +82,7 @@ public class ValidScheduler {
      *
      * @param candidateTask Task that we wish to calculate the communication cost for.
      * @param candidateProcessor Processor that we wish to calculate the communication cost for.
-     * @return cost Extra communication cost that the processor must wait before scheduling the task.
+     * @return Extra communication cost that the processor must wait before scheduling the task.
      */
     public int communicationCost(Task candidateTask,Processor candidateProcessor) {
         List<Edge> parents = candidateTask.getParentEdgeList();
@@ -91,21 +102,5 @@ public class ValidScheduler {
             }
         }
         return cost;
-    }
-
-    /**
-     * For testing purposes.
-     * @param processorList
-     */
-    public void setProcessorList(Processor[] processorList) {
-        this.processorList = processorList;
-    }
-
-    /**
-     * For testing purposes.
-     * @return
-     */
-    public Processor[] getProcessorList() {
-        return processorList;
     }
 }

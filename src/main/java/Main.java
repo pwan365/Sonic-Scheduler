@@ -49,20 +49,12 @@ public class Main  {
             }
         }
 
-
-        // Initialize processor pool
-        Processor[] processorPool  = new Processor[numberOfProcessors];
-        for (int i = 0; i < numberOfProcessors; i ++) {
-            processorPool[i] = new Processor(i+1);
-        }
-
         // Read and perform valid sorting of graph.
         InputReader reader = new InputReader(fileName);
         Graph inputGraph = reader.read();
 
-        ValidScheduler v = new ValidScheduler();
+        ValidScheduler v = new ValidScheduler(numberOfProcessors);
 
-        v.setProcessorList(processorPool);
         v.topologicalorder(inputGraph);
         v.scheduleTasks();
 

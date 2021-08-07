@@ -6,13 +6,11 @@ import java.util.HashMap;
 /**
  * The Processor class is used to represent a processor that can run Tasks.
  *
- * @author
+ * @author John Jia, Luxman Jeyarajah
  */
 public class Processor {
     //The time when the processor is free.
     private int latestTime = 0;
-    //A map to store the nodes running on this process and their information.
-    private HashMap<Task, ArrayList<Integer>> nodeTable = new HashMap<>();
     //The id of the processor.
     private int processNum;
 
@@ -38,29 +36,6 @@ public class Processor {
      */
     public void setLatestTime(int latestTime) {
         this.latestTime = latestTime;
-    }
-
-    /**
-     * This method is used to add a task to this processor.
-     * @param task The task object to be added to the processor.
-     * @param start The start time of the task.
-     * @param end The end time of the task.
-     * @param duration The duration of the task.
-     */
-    public void addTask(Task task, int start, int end, int duration){
-        ArrayList<Integer> task_info = new ArrayList<>();
-        task_info.add(start);
-        task_info.add(end);
-        task_info.add(duration);
-        this.nodeTable.put(task,task_info);
-    }
-
-    /**
-     * This method returns all the tasks that run on this processor and their information.
-     * @return A hashmap containing the task and their timings.
-     */
-    public HashMap<Task, ArrayList<Integer>> getTasks() {
-        return nodeTable;
     }
 
     /**

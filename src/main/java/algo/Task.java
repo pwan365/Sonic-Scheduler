@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 /**
  * This class is used to record a Node from the graph and its relative information.
  *
- * @author
+ * @author John Jia, Wayne Yao, Luxman Jeyarajah
  */
 public class Task {
     private int finishingTime = -1;

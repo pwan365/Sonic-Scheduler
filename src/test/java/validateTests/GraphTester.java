@@ -354,16 +354,9 @@ public class GraphTester {
     private static String outputGenerator(Graph input, String inputFileName, int numberOfProcessors) {
         Graph copyOfInput = input;
 
-        Processor[] processorPool = new Processor[numberOfProcessors];
-        for (int i = 0; i < numberOfProcessors; i++) {
-            processorPool[i] = new Processor(i + 1);
-        }
-
-        ValidScheduler v = new ValidScheduler();
-        v.setProcessorList(processorPool);
+        ValidScheduler v = new ValidScheduler(numberOfProcessors);
         v.topologicalorder(copyOfInput);
         v.scheduleTasks();
-        Processor[] test = v.getProcessorList();
         OutputWriter writer = new OutputWriter();
         writer.write(copyOfInput,inputFileName.replace(".dot", "-output.dot"));
 
