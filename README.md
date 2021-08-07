@@ -11,7 +11,7 @@ java -jar scheduler.jar input.dot P
 ```
 `scheduler.jar` - the jar program name (*.jar)
 `input.dot` - the input graph dot file (*.dot)
-`P` - the number of processor (interger)
+`P` - the number of processors (interger)
 
 ## Requirement
 
