@@ -1,7 +1,5 @@
 package io;
 
-import algo.Processor;
-import algo.Task;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -10,10 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Validator class is used to test if the output graph violates the constrains of the scheduling
+ */
 public class Validator {
     private int numOfTasks;
     private int numOfOutputTasks;
-    private Node[] inputTasks = new Node[20];
     private Node[] outputTasks = new Node[20];
     private int[][] communicationCosts = new int[40][40];
     private List<List<Integer>> startTimes = new ArrayList<>();
@@ -21,26 +21,32 @@ public class Validator {
     private Graph inputGraph;
     private Graph outputGraph;
 
+    /**
+     * Initialize all the fields by reading the input and output graph
+     * @param input input graph object
+     * @param output output graph object after scheduling
+     * @param numOfProcessors number of processors needed
+     */
     public void initialize(Graph input, Graph output, int numOfProcessors) {
         inputGraph = input;
         outputGraph = output;
         numOfTasks = inputGraph.getNodeCount();
         numOfOutputTasks = outputGraph.getNodeCount();
-        inputTasks = new Node[numOfTasks];
-//        change number of tasks to numberofOutputTasks for outputTask init
         outputTasks = new Node[numOfOutputTasks];
 
-        //John's Initialization Starts Here---------
         for (int i = 0; i < numOfProcessors; i++){
             List<Integer> stl = new ArrayList<>();
             List<Integer> sel = new ArrayList<>();
             startTimes.add(stl);
             endTimes.add(sel);
         }
-        //John's initialization Ends Here------------
 
     }
 
+    /**
+     * Check if the output graph violates the constrains
+     * @return a boolean value, true if the graph passes the test, false otherwise
+     */
     public boolean validate() {
 
         // Check whether the number of nodes is different in input and output
@@ -54,45 +60,51 @@ public class Validator {
             return true;
         }
 
+        popularizeCommunicationCost();
+
+        // Check scheduling against the constraints
+        if(!validateProcessor()){
+            return false;
+        }
+
+        // Check if parents are scheduled before children
+        return validateParentChild();
+    }
+
+    /**
+     * Popularize the communication costs array so it can be easier to take out later
+     */
+    public void popularizeCommunicationCost() {
         // Set up input and output information arrays
         for (int i = 0; i < numOfTasks; i++) {
             Node inputNode = inputGraph.getNode(i);
             Node outputNode = outputGraph.getNode(i);
-//            System.out.println(outputGraph);
-            inputTasks[i] = inputNode;
             outputTasks[i] = outputNode;
-//            System.out.println(outputNode.getOutDegree());
             if (outputNode.getOutDegree() > 0) {
                 List<Edge> edges = outputNode.leavingEdges().collect(Collectors.toList());
-//                System.out.println("lllllllllllllllllll");
-//                System.out.println(edges.toString());
-//                System.out.println("lllllllllllllllllll");
                 if (!edges.isEmpty()) {
                     for (Edge edge : edges) {
                         int parent = edge.getNode0().getIndex();
                         int child = edge.getNode1().getIndex();
-//                        System.out.println("----------------------");
-//                        System.out.println(parent);
-//                        System.out.println(child);
-//                        System.out.println(((Double) edge.getAttribute("Weight")).intValue());
-//                        System.out.println("----------------------");
-
-                        communicationCosts[parent][child] = ((Double) edge.getAttribute("Weight")).intValue();
+                        int edgeWeight = ((Double) edge.getAttribute("Weight")).intValue();
+                        communicationCosts[parent][child] = edgeWeight;
                     }
                 }
             }
         }
+    }
 
-
-        // Check scheduling against the constraints
+    /**
+     * Validate the scheduling so that no two tasks are scheduled at the same time in the same processor
+     * @return a boolean value, true if it passes the test, false otherwise
+     */
+    public boolean validateProcessor() {
         for (int i = 0; i < numOfTasks; i++) {
             // Check if two tasks are in the same processor at the same time
-
             Node task = outputTasks[i];
             System.out.println(task.getAttributeCount());
             System.out.println(outputTasks[i].getAttribute("Processor"));
 
-            // John's Implementation: The processor number should minus 1 to fit the index of the array.
             int processorNumber = ((Double) task.getAttribute("Processor")).intValue() - 1;
 
             List<Integer> processorStartTimes = startTimes.get(processorNumber);
@@ -102,12 +114,10 @@ public class Validator {
             int finishTime = startTime + ((Double) task.getAttribute("Weight")).intValue();
 
             for (int j = 0; j < processorStartTimes.size(); j++) {
-                if(processorStartTimes.size() == 0 || processorEndTimes.size()==0){
-                    break;
-                }
                 int scheduledStartTime = processorStartTimes.get(j);
                 int scheduledEndTime = processorEndTimes.get(j);
-                if ((startTime >= scheduledStartTime && startTime < scheduledEndTime) || (scheduledStartTime >= startTime && scheduledStartTime < finishTime)) {
+                if ((startTime >= scheduledStartTime && startTime < scheduledEndTime) ||
+                        (scheduledStartTime >= startTime && scheduledStartTime < finishTime)) {
                     System.out.println("The processor has already been occupied");
                     return false; // Overlapping schedules
                 }
@@ -115,26 +125,37 @@ public class Validator {
             processorStartTimes.add(startTime);
             processorEndTimes.add(finishTime);
         }
+        return true;
+    }
 
-        // Check if parents are scheduled before children
+    /**
+     * Validate the scheduling so that child can only be scheduled if its parents are all scheduled
+     * @return a boolean value, true if it passes the test, false otherwise.
+     */
+    public boolean validateParentChild(){
         for (int parent = 0; parent < numOfTasks; parent++) {
             for (int child = parent + 1; child < numOfTasks; child++) {
                 Node parentNode = outputTasks[parent];
                 Node childNode = outputTasks[child];
                 if (communicationCosts[parent][child] != 0) {
                     int communicationCost = 0;
-                    if (((Double)parentNode.getAttribute("Processor")).intValue() != ((Double)childNode.getAttribute("Processor")).intValue()) {
+
+                    int parentProcessor = ((Double)parentNode.getAttribute("Processor")).intValue();
+                    int childProcessor = ((Double)childNode.getAttribute("Processor")).intValue();
+                    if (parentProcessor != childProcessor) {
                         communicationCost = communicationCosts[parent][child];
                     }
 
-                    if (((Double) parentNode.getAttribute("Start")).intValue() + ((Double) parentNode.getAttribute("Weight")).intValue() + communicationCost > (Double) childNode.getAttribute("Start")) {
+                    int parentStartTime = ((Double) parentNode.getAttribute("Start")).intValue();
+                    int parentDuration = ((Double) parentNode.getAttribute("Weight")).intValue();
+                    int childStartTime = ((Double)childNode.getAttribute("Start")).intValue();
+                    if (parentStartTime + parentDuration + communicationCost > childStartTime) {
                         System.out.println("child start before parent");
                         return false;
                     }
                 }
             }
         }
-
         return true;
     }
 }
