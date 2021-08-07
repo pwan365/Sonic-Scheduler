@@ -401,6 +401,11 @@ public class GraphTester {
 
     //----------------------------------helper--------------------------------------------
 
+    /**
+     * The method will get the full path for the filename pass into the method
+     * @param filename
+     * @return full path of file
+     */
     private static String pathGetter(String filename) {
         String graphDir;
 
@@ -410,6 +415,13 @@ public class GraphTester {
         return graphDir + filename;
     }
 
+    /**
+     * The method takes the input Graph and generate a output graph with processor assigned to each task
+     * @param input
+     * @param inputFileName
+     * @param numberOfProcessors
+     * @return a string of the name of the output file
+     */
     private static String outputGenerator(Graph input, String inputFileName, int numberOfProcessors) {
         Graph copyOfInput = input;
 
