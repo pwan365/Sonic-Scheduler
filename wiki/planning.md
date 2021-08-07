@@ -2,7 +2,7 @@ The following content is from Project1 - Planning
 
 ## Work Breakdown Structure
 
-img here
+![Work breakdown structure](https://github.com/SoftEng306-2021/project-1-project-1-team-3/blob/Milestone1/wiki/img/WBS.png)
 
 Develop project schedule: Establish what tasks need to be completed and at what stage of the project in order to meet the deadline. This will be done by creating a Work Breakdown Structure, Network Diagram and Gantt Chart.
 
@@ -28,7 +28,7 @@ GitHub Wiki: A wiki will be utilised in the repository to inform people on how t
 
 ## Project Network
 
-img here
+![Project Network](https://github.com/SoftEng306-2021/project-1-project-1-team-3/blob/Milestone1/wiki/img/Project%20network.png)
 
 ‘Develop project schedule’ and ‘Setup working environment’ can be done concurrently as the two tasks do not interfere nor depend on each other.
 
@@ -40,7 +40,7 @@ Unit testing requires each code section to be done, hence is scheduled after the
 
 ## Gantt Chart
 
-img here
+![Gantt Chart](https://github.com/SoftEng306-2021/project-1-project-1-team-3/blob/Milestone1/wiki/img/Gantt.png)
 
 The Gantt Chart is made based on the Project Network. The tasks in different branches can be done without interfering with each other; therefore, it made sense to complete multiple tasks simultaneously since the Milestone 1 due date is very close. 
 
