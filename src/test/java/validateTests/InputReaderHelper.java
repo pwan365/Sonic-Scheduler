@@ -5,6 +5,11 @@ import org.graphstream.graph.*;
 import org.graphstream.graph.implementations.*;
 import org.graphstream.stream.file.FileSource;
 import org.graphstream.stream.file.FileSourceDOT;
+
+/**
+ * A input reader that read input graph from a sub directory
+ * @author Samuel Chen
+ */
 public class InputReaderHelper {
 
     private String input_file;
