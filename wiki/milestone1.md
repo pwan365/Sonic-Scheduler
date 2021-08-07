@@ -65,9 +65,10 @@ To achieve these goals, we used GraphStream to read from and write to a dot file
 - The validator is designed to test these constrains
 
 ### Validator
-- Validator consists of two main methods and some helper methods. First the tester can call the ==initialize()== method, which initilized the fields.
-- Then the tester call the ==validate()==  which calls all the helper methods to test if the scheduling violates the constrains
+- Validator consists of two main methods and some helper methods. First the tester can call the `initialize()` method, which initilized the fields.
+- Then the tester call the `validate()`  which calls all the helper methods to test if the scheduling violates the constrains
 - If it returns true, then it means the scheduling is valid. If it returns false, then it means the scheudling has fault and the console should print out the error message
+* A lot of debugging went into the validator since it is quite a complicated class
 
 #### Issues
 - found it difficult to implement the validator class due to unfamiliarity with the `GraphStream` library.
