@@ -77,7 +77,6 @@ public class Validator {
     public void popularizeCommunicationCost() {
         // Set up input and output information arrays
         for (int i = 0; i < numOfTasks; i++) {
-            Node inputNode = inputGraph.getNode(i);
             Node outputNode = outputGraph.getNode(i);
             outputTasks[i] = outputNode;
             if (outputNode.getOutDegree() > 0) {
