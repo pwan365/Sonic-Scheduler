@@ -31,12 +31,12 @@ public class ValidScheduler {
         while (!taskQueue.isEmpty()) {
             Task candidateTask = taskQueue.remove();
             Processor candidateProcessor = processorList[0];
-            Double minTime = Double.MAX_VALUE;
-            Double startTime = 0.0;
+            int minTime = Integer.MAX_VALUE;
+            int startTime = 0;
 
             for (int i = 0; i < processorList.length; i++) {
                 startTime = processorList[i].getLatestTime();
-                Double communicationCost = communicationCost(candidateTask,processorList[i]);
+                int communicationCost = communicationCost(candidateTask,processorList[i]);
                 startTime += communicationCost;
 
                 if (startTime < minTime) {
@@ -55,10 +55,10 @@ public class ValidScheduler {
      * @param processor
      * @param candidateTime
      */
-    public void scheduleTask(Task task, Processor processor,Double candidateTime) {
-        Double taskDurationTime = task.getDurationTime();
-        Double startTime = candidateTime;
-        Double endTime = startTime + taskDurationTime;
+    public void scheduleTask(Task task, Processor processor,int candidateTime) {
+        int taskDurationTime = task.getDurationTime();
+        int startTime = candidateTime;
+        int endTime = startTime + taskDurationTime;
 
         task.setTaskDetails(processor, endTime, startTime);
         processor.setLatestTime(endTime);
@@ -73,10 +73,10 @@ public class ValidScheduler {
      * @param candidateProcessor Processor that we wish to calculate the communication cost for.
      * @return cost Extra communication cost that the processor must wait before scheduling the task.
      */
-    public double communicationCost(Task candidateTask,Processor candidateProcessor) {
+    public int communicationCost(Task candidateTask,Processor candidateProcessor) {
         List<Edge> parents = candidateTask.getParentEdgeList();
-        Double cost = 0.0;
-        Double candidateProcessorLatestTime = candidateProcessor.getLatestTime();
+        int cost = 0;
+        int candidateProcessorLatestTime = candidateProcessor.getLatestTime();
 
         for (Edge parentEdge : parents) {
             // Gets the parent task of the candidate task, getNode0 returns the parent of an edge.
@@ -84,9 +84,9 @@ public class ValidScheduler {
             Processor parentProcessor = parentTask.getAllocatedProcessor();
 
             if (parentProcessor != candidateProcessor) {
-                Double parentEndTime = parentTask.getFinishingTime();
-                Double commCost = (Double)parentEdge.getAttribute("Weight");
-                Double candidateCost = parentEndTime + commCost;
+                int parentEndTime = parentTask.getFinishingTime();
+                int commCost = ((Double)parentEdge.getAttribute("Weight")).intValue();
+                int candidateCost = parentEndTime + commCost;
                 cost = Math.max(cost,candidateCost - candidateProcessorLatestTime);
             }
         }

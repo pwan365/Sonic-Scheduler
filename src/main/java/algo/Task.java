@@ -11,9 +11,9 @@ import java.util.stream.Collectors;
  * @author
  */
 public class Task {
-    private double finishingTime = -1.0;
-    private double startingTime;
-    private double durationTime;
+    private int finishingTime = -1;
+    private int startingTime;
+    private int durationTime;
     //This is the list of edges that connects to the parent of the node of this task.
     private ArrayList<Edge> parentEdgeList = new ArrayList<Edge>();
     //The node that represents this task in a graph.
@@ -27,7 +27,7 @@ public class Task {
      */
     public Task(Node node){
         this.node = node;
-        this.durationTime = (Double)node.getAttribute("Weight");
+        this.durationTime = ((Double)node.getAttribute("Weight")).intValue();
         List<Edge> edges = node.enteringEdges().collect(Collectors.toList());
         for(Edge e : edges){
             parentEdgeList.add(e);
@@ -38,7 +38,7 @@ public class Task {
      * This method returns the finishing time for a task on the assigned processor. Returns -1.0 if not set.
      * @return Task finishing time.
      */
-    public double getFinishingTime() {
+    public int getFinishingTime() {
         return finishingTime;
     }
 
@@ -80,7 +80,7 @@ public class Task {
      * @param finishing_time The finished time of this task on the scheduled processor.
      * @param starting_time The start time of this task on the scheduled processor.
      */
-    public void setTaskDetails(Processor allocated_processor,Double finishing_time,Double starting_time) {
+    public void setTaskDetails(Processor allocated_processor,int finishing_time,int starting_time) {
         this.allocatedProcessor = allocated_processor;
         this.finishingTime = finishing_time;
         this.startingTime = starting_time;
@@ -90,7 +90,7 @@ public class Task {
      * The getter for the starting time of this task.
      * @return Starting time of this task.
      */
-    public double getStartingTime() {
+    public int getStartingTime() {
         return startingTime;
     }
 
@@ -98,7 +98,7 @@ public class Task {
      * The getter for the duration of this task.
      * @return Duration of this task.
      */
-    public double getDurationTime() {
+    public int getDurationTime() {
         return durationTime;
     }
 }

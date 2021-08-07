@@ -10,9 +10,9 @@ import java.util.HashMap;
  */
 public class Processor {
     //The time when the processor is free.
-    private Double latestTime = 0.0;
+    private int latestTime = 0;
     //A map to store the nodes running on this process and their information.
-    private HashMap<Task, ArrayList<Double>> nodeTable = new HashMap<>();
+    private HashMap<Task, ArrayList<Integer>> nodeTable = new HashMap<>();
     //The id of the processor.
     private int processNum;
 
@@ -28,7 +28,7 @@ public class Processor {
      * This method returns the latest time this processor is free.
      * @return The latest time this processor is free.
      */
-    public Double getLatestTime() {
+    public int getLatestTime() {
         return latestTime;
     }
 
@@ -36,7 +36,7 @@ public class Processor {
      * This method sets the latest time this processor is free.
      * @param latestTime The new latest time.
      */
-    public void setLatestTime(Double latestTime) {
+    public void setLatestTime(int latestTime) {
         this.latestTime = latestTime;
     }
 
@@ -47,8 +47,8 @@ public class Processor {
      * @param end The end time of the task.
      * @param duration The duration of the task.
      */
-    public void addTask(Task task, Double start, Double end, Double duration){
-        ArrayList<Double> task_info = new ArrayList<>();
+    public void addTask(Task task, int start, int end, int duration){
+        ArrayList<Integer> task_info = new ArrayList<>();
         task_info.add(start);
         task_info.add(end);
         task_info.add(duration);
@@ -59,7 +59,7 @@ public class Processor {
      * This method returns all the tasks that run on this processor and their information.
      * @return A hashmap containing the task and their timings.
      */
-    public HashMap<Task, ArrayList<Double>> getTasks() {
+    public HashMap<Task, ArrayList<Integer>> getTasks() {
         return nodeTable;
     }
 
