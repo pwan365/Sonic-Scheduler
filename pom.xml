@@ -33,12 +33,6 @@
 
         <dependency>
             <groupId>org.graphstream</groupId>
-            <artifactId>gs-ui-swing</artifactId>
-            <version>2.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.graphstream</groupId>
             <artifactId>gs-algo</artifactId>
             <version>2.0</version>
         </dependency>
@@ -54,15 +48,9 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.5.3</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>Main</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
                 <executions>
                     <execution>
                         <id>make-assembly</id>
@@ -70,6 +58,19 @@
                         <goals>
                             <goal>single</goal>
                         </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}</outputDirectory>
+                            <finalName>scheduler</finalName>
+                            <archive>
+                                <manifest>
+                                    <mainClass>Main</mainClass>
+                                </manifest>
+                            </archive>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                            <appendAssemblyId>false</appendAssemblyId>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
