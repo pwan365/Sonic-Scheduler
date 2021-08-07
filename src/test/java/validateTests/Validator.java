@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Validator class is used to test if the output graph violates the constrains of the scheduling
+ * Validator class is used to test if the final scheduling violates the constrains
+ *
+ * @author Wayne Yao, Samuel Chen, John Jia
  */
 public class Validator {
     private int numOfTasks;
@@ -44,7 +46,8 @@ public class Validator {
     }
 
     /**
-     * Check if the output graph violates the constrains
+     * test if the output graph violates the two main constrains: overlapping tasks
+     * and the sequence of parent and children tasks.
      * @return a boolean value, true if the graph passes the test, false otherwise
      */
     public boolean validate() {
@@ -72,7 +75,7 @@ public class Validator {
     }
 
     /**
-     * Popularize the communication costs array so it can be easier to take out later
+     * Popularize the communication costs array so it can be taken out easier later
      */
     public void popularizeCommunicationCost() {
         // Set up input and output information arrays
@@ -94,7 +97,7 @@ public class Validator {
     }
 
     /**
-     * Validate the scheduling so that no two tasks are scheduled at the same time in the same processor
+     * test the scheduling so that no two tasks are scheduled at the same time in the same processor
      * @return a boolean value, true if it passes the test, false otherwise
      */
     public boolean validateProcessor() {
@@ -126,7 +129,7 @@ public class Validator {
     }
 
     /**
-     * Validate the scheduling so that child can only be scheduled if its parents are all scheduled
+     * test the scheduling to find if there are child tasks scheduled before parent tasks.
      * @return a boolean value, true if it passes the test, false otherwise.
      */
     public boolean validateParentChild(){
