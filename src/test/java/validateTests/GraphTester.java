@@ -1,3 +1,5 @@
+package validateTests;
+
 import algo.Processor;
 import algo.ValidScheduler;
 import io.OutputWriter;
