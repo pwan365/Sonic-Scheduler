@@ -16,9 +16,10 @@ public class Main  {
         String fileName = args[0];
         int numberOfProcessors = Integer.parseInt(args[1]);
         int numberOfCores = 1;
-        String outputFileName = fileName + "-output";
+        //Formatting output name
+        String outputFileName = fileName.replace(".dot", "-output.dot");
 
-        /**
+        /*
          * Parallel code
          * TODO Implement Parallel Code by Milestone 2
          */
@@ -27,7 +28,7 @@ public class Main  {
             numberOfCores = Integer.parseInt(commands.get(index+1));
         }
 
-        /**
+        /*
          * Visualization Code
          * TODO Implement Visualization by Milestone 2
          */
@@ -35,9 +36,17 @@ public class Main  {
             //Visualize option
         }
 
+        /*
+         * Output Code
+         * Used if the user specifies an output name
+         */
         if (commands.contains("-o")){
             int index = commands.indexOf("-o");
             outputFileName = commands.get(index+1);
+            if (!outputFileName.contains(".dot")){
+                //Add .dot if the user did not enter the file extension
+                outputFileName += ".dot";
+            }
         }
 
 
@@ -59,7 +68,7 @@ public class Main  {
 
         // Write the scheduled graph to a file.
         OutputWriter writer = new OutputWriter();
-        writer.write(inputGraph, "outputtry.dot");
+        writer.write(inputGraph, outputFileName);
 
     }
 }
