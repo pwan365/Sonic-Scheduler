@@ -55,6 +55,20 @@ To achieve these goals, we used GraphStream to read from and write to a dot file
 - Used example graphs provided by the client to initiate the testing. And we then added more boundary and extreme cases on our own.
 - We created a Validator class to validate all the constraints of the output graph.
 - We used `Junit` as the testing framework.
+
+
+### Constrains for validity
+- The main constrains are:
+    1. Parents have to be scheduled before children can be scheduled
+    2. After a task is scheduled in a processor, no other tasks can go before that task in that processor
+    3. In the same processor no two tasks can be overlapping with each other
+- The validator is designed to test these constrains
+
+### Validator
+- Validator consists of two main methods and some helper methods. First the tester can call the ==initialize()== method, which initilized the fields.
+- Then the tester call the ==validate()==  which calls all the helper methods to test if the scheduling violates the constrains
+- If it returns true, then it means the scheduling is valid. If it returns false, then it means the scheudling has fault and the console should print out the error message
+
 #### Issues
 - found it difficult to implement the validator class due to unfamiliarity with the `GraphStream` library.
 
