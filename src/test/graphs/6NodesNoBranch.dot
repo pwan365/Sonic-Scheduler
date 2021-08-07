@@ -1,0 +1,13 @@
+digraph "6NodesNoBranch" {
+	0	    [Weight=20];
+	1       [Weight=30];
+    2       [Weight=32];
+    3    	[Weight=46];
+    4    	[Weight=26];
+    5       [Weight=42];
+	0 -> 1	[Weight=32];
+	1 -> 2	[Weight=12];
+	2 -> 3	[Weight=56];
+	3 -> 4	[Weight=15];
+	4 -> 5  [Weight=69];
+}

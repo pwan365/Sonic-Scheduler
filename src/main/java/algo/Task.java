@@ -1,61 +1,104 @@
 package algo;
 
 import org.graphstream.graph.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * This class is used to record a Node from the graph and its relative information.
+ *
+ * @author John Jia, Wayne Yao, Luxman Jeyarajah
+ */
 public class Task {
-    private double finishing_time = -1.0;
-    private double starting_time;
-    private double duration_time;
-    private List<Node> node_list = new ArrayList<Node>();
+    private int finishingTime = -1;
+    private int startingTime;
+    private int durationTime;
+    //This is the list of edges that connects to the parent of the node of this task.
+    private ArrayList<Edge> parentEdgeList = new ArrayList<Edge>();
+    //The node that represents this task in a graph.
     private Node node;
-    private Processor allocated_processor;
+    //The processor this task is allocated to.
+    private Processor allocatedProcessor;
 
+    /**
+     * The constructor of Task.
+     * @param node The node to be referenced with this task.
+     */
     public Task(Node node){
         this.node = node;
-        this.duration_time = (Double)node.getAttribute("Weight");
-        List<Edge> edges = node.leavingEdges().collect(Collectors.toList());
+        this.durationTime = ((Double)node.getAttribute("Weight")).intValue();
+        List<Edge> edges = node.enteringEdges().collect(Collectors.toList());
         for(Edge e : edges){
-            node_list.add(e.getNode1());
+            parentEdgeList.add(e);
         }
     }
 
-    public double getFinishing_time() {
-        return finishing_time;
+    /**
+     * This method returns the finishing time for a task on the assigned processor. Returns -1.0 if not set.
+     * @return Task finishing time.
+     */
+    public int getFinishingTime() {
+        return finishingTime;
     }
 
-    public void setFinishing_time(double finishing_time) {
-        this.finishing_time = finishing_time;
-    }
-
+    /**
+     * This method return the node that represents the task in a graph.
+     * @return Node associated with this task.
+     */
     public Node getNode() {
         return node;
     }
 
+    /**
+     * This method sets the node that represents the task in a graph.
+     * @param node The node to be associated with this task.
+     */
     public void setNode(Node node) {
         this.node = node;
     }
 
-    public List<Node> getNode_list() {
-        return node_list;
+    /**
+     * Returns the arraylist of edges going into the referenced node of this task.
+     * @return Arraylist of edges from parents.
+     */
+    public ArrayList<Edge> getParentEdgeList() {
+        return parentEdgeList;
     }
 
-    public Processor getAllocated_processor() {
-        return allocated_processor;
+    /**
+     * Getter for the processor this task is allocated to.
+     * @return The allocated processor.
+     */
+    public Processor getAllocatedProcessor() {
+        return allocatedProcessor;
     }
 
-    public void setAllocated_processor(Processor allocated_processor) {
-        this.allocated_processor = allocated_processor;
+    /**
+     * This method is used to set the data of this task when it is scheduled to a processor.
+     * @param allocated_processor The processor this task is scheduled in.
+     * @param finishing_time The finished time of this task on the scheduled processor.
+     * @param starting_time The start time of this task on the scheduled processor.
+     */
+    public void setTaskDetails(Processor allocated_processor,int finishing_time,int starting_time) {
+        this.allocatedProcessor = allocated_processor;
+        this.finishingTime = finishing_time;
+        this.startingTime = starting_time;
     }
 
-    public double getStarting_time() {
-        return starting_time;
+    /**
+     * The getter for the starting time of this task.
+     * @return Starting time of this task.
+     */
+    public int getStartingTime() {
+        return startingTime;
     }
 
-    public void setStarting_time(double starting_time) {
-        this.starting_time = starting_time;
+    /**
+     * The getter for the duration of this task.
+     * @return Duration of this task.
+     */
+    public int getDurationTime() {
+        return durationTime;
     }
 }
