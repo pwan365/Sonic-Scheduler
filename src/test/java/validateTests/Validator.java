@@ -101,8 +101,6 @@ public class Validator {
         for (int i = 0; i < numOfTasks; i++) {
             // Check if two tasks are in the same processor at the same time
             Node task = outputTasks[i];
-            System.out.println(task.getAttributeCount());
-            System.out.println(outputTasks[i].getAttribute("Processor"));
 
             int processorNumber = ((Double) task.getAttribute("Processor")).intValue() - 1;
 
