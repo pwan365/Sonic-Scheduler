@@ -4,21 +4,20 @@ import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class dfs {
 
     private Schedule schedule;
     private Schedule bestSchedule;
-    private int numProcessors;
     private Graph graph;
-    public dfs(int processors) {
+    private int numProcessors;
+    public dfs(int processors,Graph inputGraph) {
         schedule = new Schedule(processors);
-        schedule.setLatestScheduleTime(Integer.MAX_VALUE);
+        bestSchedule = new Schedule(processors);
+        graph = inputGraph;
+        bestSchedule.setLatestScheduleTime(Integer.MAX_VALUE);
         numProcessors = processors;
     }
     /**
@@ -65,26 +64,28 @@ public class dfs {
         return result;
     }
 
-    public void branchBound(Task task, int processor) {
-        /**
-         * TODO Schedule task here.
-         */
-        ArrayList<Task> allPossibilities = validOrder(null);
+    public void branchBound(Task task, int processor) throws CloneNotSupportedException {
+        schedule.scheduleTask(task,processor);
+        Stack scheduledTasks = schedule.getScheduledTasks();
+        ArrayList<Task> sT = new ArrayList<>(scheduledTasks);
+        ArrayList<Task> allPossibilities = validOrder(sT);
 
         if (allPossibilities.isEmpty()) {
             int currentBest = bestSchedule.getLatestScheduleTime();
             int candidateBest = schedule.getLatestScheduleTime();
             if (candidateBest < currentBest) {
-                bestSchedule = schedule;
+                bestSchedule = (Schedule)schedule.clone();
             }
         }
         for(int i = 0; i < allPossibilities.size(); i++) {
             for (int j = 0; j < numProcessors; j++) {
                 branchBound(allPossibilities.get(i),j);
             }
-            /**
-             * TODO After all children have been exhausted, remove the task from the schedule.
-             */
+            schedule.removeTasks();
         }
+    }
+
+    public Schedule getBestSchedule() {
+        return bestSchedule;
     }
 }

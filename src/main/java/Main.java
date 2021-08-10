@@ -1,15 +1,12 @@
-import algo.Processor;
-import algo.Task;
+import algo.*;
 import io.InputReader;
 import io.OutputWriter;
 import org.graphstream.graph.Graph;
 
 import java.util.*;
 
-import algo.ValidScheduler;
-
 public class Main  {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws CloneNotSupportedException {
 
         List<String> commands = Arrays.asList(args);
 
@@ -50,17 +47,22 @@ public class Main  {
         }
 
         // Read and perform valid sorting of graph.
+
         InputReader reader = new InputReader(fileName);
         Graph inputGraph = reader.read();
 
-        ValidScheduler v = new ValidScheduler(numberOfProcessors);
-
+        ValidScheduler v = new ValidScheduler(1);
         v.topologicalorder(inputGraph);
-        v.scheduleTasks();
 
+        dfs d = new dfs(numberOfProcessors,inputGraph);
+        ArrayList<Task> empty = new ArrayList<>();
+        ArrayList<Task> start = d.validOrder(empty);
+        d.branchBound(start.get(0),1);
+        Schedule best = d.getBestSchedule();
+        System.out.println(best.getLatestScheduleTime());
         // Write the scheduled graph to a file.
-        OutputWriter writer = new OutputWriter();
-        writer.write(inputGraph, outputFileName);
+//        OutputWriter writer = new OutputWriter();
+//        writer.write(inputGraph, outputFileName);
 
     }
 }
