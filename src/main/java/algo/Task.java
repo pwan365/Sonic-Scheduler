@@ -14,6 +14,7 @@ public class Task {
     private int finishingTime = -1;
     private int startingTime;
     private int durationTime;
+    private int communicationCost;
     //This is the list of edges that connects to the parent of the node of this task.
     private ArrayList<Edge> parentEdgeList = new ArrayList<Edge>();
     //The node that represents this task in a graph.
@@ -100,5 +101,23 @@ public class Task {
      */
     public int getDurationTime() {
         return durationTime;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int getCommunicationCost() {
+        return communicationCost;
+    }
+
+    /**
+     * Remove this task from a Processor.
+     */
+    public void unSchedule() {
+        finishingTime = -1;
+        startingTime = -1;
+        allocatedProcessor.removeLatestTask(this);
+        allocatedProcessor = null;
     }
 }
