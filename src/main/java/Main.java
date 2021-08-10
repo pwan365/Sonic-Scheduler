@@ -57,12 +57,13 @@ public class Main  {
         dfs d = new dfs(numberOfProcessors,inputGraph);
         ArrayList<Task> empty = new ArrayList<>();
         ArrayList<Task> start = d.validOrder(empty);
-        d.branchBound(start.get(0),1);
+        d.branchBound(null, 0);
         Schedule best = d.getBestSchedule();
         System.out.println(best.getLatestScheduleTime());
         // Write the scheduled graph to a file.
 //        OutputWriter writer = new OutputWriter();
 //        writer.write(inputGraph, outputFileName);
+        // 27 seconds
 
     }
 }

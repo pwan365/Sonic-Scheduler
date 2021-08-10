@@ -28,25 +28,18 @@ public class dfs {
         // hashMap and return list, and graph
         Map<Task, Boolean> map = new HashMap<>();
         ArrayList<Task> result = new ArrayList<>();
-        int numberOfTasks = graph.getNodeCount();
-
-        // if input is 0 size, find all root tasks
-        if(scheduledTasks.size() == 0){
-            for(int i = 0; i < numberOfTasks; i++){
-                Node node = graph.getNode(i);
-                List<Edge> edges = node.enteringEdges().collect(Collectors.toList());
-                if(edges.size() == 0){
-                    Task nodeTask = (Task)node.getAttribute("Task");
-                    result.add(nodeTask);
-                }
-            }
-            return result;
-        }
 
         for(int i = 0; i < graph.getNodeCount(); i++){
             Node node = graph.getNode(i);
             Task task = (Task)node.getAttribute("Task");
             List<Edge> parentEdges = task.getParentEdgeList();
+
+            // if input is 0 size, find all root tasks
+            if(parentEdges.size() == 0 && !scheduledTasks.contains(task)){
+                result.add(task);
+                continue;
+            }
+
             boolean flag = true;
             for(Edge edge: parentEdges){
                 Node parent = edge.getNode0();
@@ -65,10 +58,31 @@ public class dfs {
     }
 
     public void branchBound(Task task, int processor) throws CloneNotSupportedException {
-        schedule.scheduleTask(task,processor);
+        if(task != null){
+            schedule.scheduleTask(task,processor);
+        }
+        System.out.print("Processor: ");
+        System.out.print(processor);
+        System.out.print("    Task: ");
+        if(task != null){
+            System.out.println(task.getNode().getIndex());
+        } else{
+            System.out.println("NULL");
+        }
         Stack scheduledTasks = schedule.getScheduledTasks();
         ArrayList<Task> sT = new ArrayList<>(scheduledTasks);
         ArrayList<Task> allPossibilities = validOrder(sT);
+
+        System.out.print("All possiblities:    ");
+        for(Task temp: allPossibilities){
+            System.out.print(temp.getNode().getIndex());
+        }
+        System.out.println("");
+        System.out.print("st:    ");
+        for(Task temp: sT){
+            System.out.print(temp.getNode().getIndex());
+        }
+        System.out.println("");
 
         if (allPossibilities.isEmpty()) {
             int currentBest = bestSchedule.getLatestScheduleTime();
@@ -77,7 +91,9 @@ public class dfs {
                 bestSchedule = (Schedule)schedule.clone();
             }
         }
+
         for(int i = 0; i < allPossibilities.size(); i++) {
+            scheduledTasks.push(allPossibilities.get(i));
             for (int j = 0; j < numProcessors; j++) {
                 branchBound(allPossibilities.get(i),j);
             }

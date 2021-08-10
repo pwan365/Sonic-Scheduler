@@ -24,15 +24,16 @@ public class Schedule implements Cloneable {
 
     public void scheduleTask(Task task, int processorID) {
         processorList[processorID].addTask(task);
-        scheduledTasks.push(task);
+
         int candidateScheduleTime = processorList[processorID].getLatestTime();
         if (candidateScheduleTime > latestScheduleTime) {
             latestScheduleTime = candidateScheduleTime;
         }
     }
     public void removeTasks() {
-        Task removedTask = scheduledTasks.pop();
-        removedTask.unSchedule();
+        Task removedTask1 = scheduledTasks.pop();
+
+        removedTask1.unSchedule();
     }
     public Stack getScheduledTasks() {
         return this.scheduledTasks;
