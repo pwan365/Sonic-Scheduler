@@ -13,11 +13,11 @@ public class dfs {
     private Schedule bestSchedule;
     private Graph graph;
     private int numProcessors;
+    private int bestTime = Integer.MAX_VALUE;
     public dfs(int processors,Graph inputGraph) {
         schedule = new Schedule(processors);
-        bestSchedule = new Schedule(processors);
         graph = inputGraph;
-        bestSchedule.setLatestScheduleTime(Integer.MAX_VALUE);
+        bestSchedule = null;
         numProcessors = processors;
     }
     /**
@@ -58,19 +58,20 @@ public class dfs {
     }
 
     public void branchBound(Task task, int processor) throws CloneNotSupportedException {
-        schedule.scheduleTask(task,processor);
         System.out.print("Processor: ");
         System.out.print(processor);
         System.out.print("    Task: ");
         System.out.println(task.getNode().getIndex());
+        schedule.scheduleTask(task,processor);
+
         Stack scheduledTasks = schedule.getScheduledTasks();
         ArrayList<Task> sT = new ArrayList<>(scheduledTasks);
         ArrayList<Task> allPossibilities = validOrder(sT);
 
 //        System.out.print("All possiblities:    ");
-        for(Task temp: allPossibilities){
-            System.out.print(temp.getNode().getIndex());
-        }
+//        for(Task temp: allPossibilities){
+//            System.out.print(temp.getNode().getIndex());
+//        }
 //        System.out.println("");
 //        System.out.print("st:    ");
         for(Task temp: sT){
@@ -79,11 +80,25 @@ public class dfs {
 //        System.out.println("");
 
         if (allPossibilities.isEmpty()) {
-            int currentBest = bestSchedule.getLatestScheduleTime();
-            int candidateBest = schedule.getLatestScheduleTime();
-            if (candidateBest < currentBest) {
-                bestSchedule = (Schedule)schedule.clone();
+            if (bestSchedule == null) {
+                bestSchedule = schedule;
+                System.out.println("Best Time");
+                System.out.println(bestSchedule.getLatestScheduleTime());
+                bestTime = schedule.getLatestScheduleTime();
             }
+            else {
+                int currentBest = bestSchedule.getLatestScheduleTime();
+                int candidateBest = schedule.getLatestScheduleTime();
+                if (candidateBest < bestTime) {
+                    bestSchedule = schedule;
+                    bestTime = schedule.getLatestScheduleTime();
+                }
+                System.out.println("Best Time");
+                System.out.println(bestSchedule.getLatestScheduleTime());
+                System.out.println("Candidate Best");
+                System.out.println(schedule.getLatestScheduleTime());
+            }
+
         }
 
         for(int i = 0; i < allPossibilities.size(); i++) {
@@ -101,7 +116,7 @@ public class dfs {
 //        }
     }
 
-    public Schedule getBestSchedule() {
-        return bestSchedule;
+    public int getBestSchedule() {
+        return bestTime;
     }
 }

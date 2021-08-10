@@ -58,8 +58,8 @@ public class Main  {
         ArrayList<Task> empty = new ArrayList<>();
         ArrayList<Task> start = d.validOrder(empty);
         d.branchBound(start.get(0), 0);
-        Schedule best = d.getBestSchedule();
-        System.out.println(best.getLatestScheduleTime());
+        int best = d.getBestSchedule();
+        System.out.println(best);
         // Write the scheduled graph to a file.
 //        OutputWriter writer = new OutputWriter();
 //        writer.write(inputGraph, outputFileName);

@@ -17,11 +17,13 @@ public class Schedule implements Cloneable {
     public int getLatestScheduleTime() {
         int time = 0;
         for (int i =0; i < processorList.length; i++) {
+//            System.out.println("Processor Time: ");
+//            System.out.println(processorList[i].getProcessNum());
+//            System.out.println(processorList[i].getLatestTime());
             time = Math.max(time,processorList[i].getLatestTime());
         }
         return time;
     }
-
     public void setLatestScheduleTime(int latestTime) {
         latestScheduleTime = latestTime;
     }
@@ -35,12 +37,14 @@ public class Schedule implements Cloneable {
         }
     }
     public void removeTasks() {
+//        System.out.println("Removed");
         Task removedTask1 = scheduledTasks.pop();
         removedTask1.unSchedule();
     }
     public Stack getScheduledTasks() {
         return this.scheduledTasks;
     }
+
     protected Object clone() throws CloneNotSupportedException {
         return super.clone();
     }

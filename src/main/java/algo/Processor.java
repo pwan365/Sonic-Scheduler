@@ -58,14 +58,16 @@ public class Processor {
      */
     public void addTask(Task task) {
         int communicationCost = communicationCost(task);
-        int latestProcessorTime = getLatestTime();
+        int latestProcessorTime = latestTime;
+
         int taskStartTime = communicationCost + latestProcessorTime;
         int taskDurationTime = task.getDurationTime();
         int taskEndTime = taskStartTime + taskDurationTime;
         task.setTaskDetails(this, taskEndTime, taskStartTime);
         task.setCommunicationCost(communicationCost);
-        setLatestTime(taskEndTime);
+        latestTime = taskEndTime;
         System.out.println(latestTime);
+//        System.out.println(latestProcessorTime);
     }
 
     /**
