@@ -58,31 +58,25 @@ public class dfs {
     }
 
     public void branchBound(Task task, int processor) throws CloneNotSupportedException {
-        if(task != null){
-            schedule.scheduleTask(task,processor);
-        }
+        schedule.scheduleTask(task,processor);
         System.out.print("Processor: ");
         System.out.print(processor);
         System.out.print("    Task: ");
-        if(task != null){
-            System.out.println(task.getNode().getIndex());
-        } else{
-            System.out.println("NULL");
-        }
+        System.out.println(task.getNode().getIndex());
         Stack scheduledTasks = schedule.getScheduledTasks();
         ArrayList<Task> sT = new ArrayList<>(scheduledTasks);
         ArrayList<Task> allPossibilities = validOrder(sT);
 
-        System.out.print("All possiblities:    ");
+//        System.out.print("All possiblities:    ");
         for(Task temp: allPossibilities){
             System.out.print(temp.getNode().getIndex());
         }
-        System.out.println("");
-        System.out.print("st:    ");
+//        System.out.println("");
+//        System.out.print("st:    ");
         for(Task temp: sT){
-            System.out.print(temp.getNode().getIndex());
+//            System.out.print(temp.getNode().getIndex());
         }
-        System.out.println("");
+//        System.out.println("");
 
         if (allPossibilities.isEmpty()) {
             int currentBest = bestSchedule.getLatestScheduleTime();
@@ -93,12 +87,18 @@ public class dfs {
         }
 
         for(int i = 0; i < allPossibilities.size(); i++) {
-            scheduledTasks.push(allPossibilities.get(i));
             for (int j = 0; j < numProcessors; j++) {
                 branchBound(allPossibilities.get(i),j);
             }
-            schedule.removeTasks();
         }
+        schedule.removeTasks();
+
+//        Stack scheduledTasks1 = schedule.getScheduledTasks();
+//        ArrayList<Task> sT1 = new ArrayList<>(scheduledTasks1);
+//        System.out.print("st deletion:    ");
+//        for(Task temp : sT1){
+//            System.out.print(temp.getNode().getIndex());
+//        }
     }
 
     public Schedule getBestSchedule() {

@@ -63,7 +63,9 @@ public class Processor {
         int taskDurationTime = task.getDurationTime();
         int taskEndTime = taskStartTime + taskDurationTime;
         task.setTaskDetails(this, taskEndTime, taskStartTime);
+        task.setCommunicationCost(communicationCost);
         setLatestTime(taskEndTime);
+        System.out.println(latestTime);
     }
 
     /**

@@ -107,6 +107,9 @@ public class Task {
      *
      * @return
      */
+    public void setCommunicationCost(int cost) {
+        communicationCost = cost;
+    }
     public int getCommunicationCost() {
         return communicationCost;
     }
@@ -119,5 +122,6 @@ public class Task {
         startingTime = -1;
         allocatedProcessor.removeLatestTask(this);
         allocatedProcessor = null;
+        communicationCost = 0;
     }
 }

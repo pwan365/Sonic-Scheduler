@@ -15,7 +15,11 @@ public class Schedule implements Cloneable {
     }
 
     public int getLatestScheduleTime() {
-        return this.latestScheduleTime;
+        int time = 0;
+        for (int i =0; i < processorList.length; i++) {
+            time = Math.max(time,processorList[i].getLatestTime());
+        }
+        return time;
     }
 
     public void setLatestScheduleTime(int latestTime) {
@@ -24,7 +28,7 @@ public class Schedule implements Cloneable {
 
     public void scheduleTask(Task task, int processorID) {
         processorList[processorID].addTask(task);
-
+        scheduledTasks.push(task);
         int candidateScheduleTime = processorList[processorID].getLatestTime();
         if (candidateScheduleTime > latestScheduleTime) {
             latestScheduleTime = candidateScheduleTime;
@@ -32,7 +36,6 @@ public class Schedule implements Cloneable {
     }
     public void removeTasks() {
         Task removedTask1 = scheduledTasks.pop();
-
         removedTask1.unSchedule();
     }
     public Stack getScheduledTasks() {
