@@ -5,9 +5,11 @@ import java.util.ArrayList;
 public class dfs {
 
     private Schedule schedule;
+    private Schedule bestSchedule;
     private int numProcessors;
     public dfs(int processors) {
         schedule = new Schedule(processors);
+        schedule.setLatestScheduleTime(Integer.MAX_VALUE);
         numProcessors = processors;
     }
     /**
@@ -17,24 +19,25 @@ public class dfs {
     public ArrayList<Task> validOrder(ArrayList<Task> scheduledTasks) {
         return null;
     }
-    public void branchBound(Task task, int processor,int scheduledTasks) {
+    public void branchBound(Task task, int processor) {
         /**
          * TODO Schedule task here.
          */
-
-        /**
-         * TODO If condition, if scheduledTasks == the number of tasks(all tasks have been scheduled), then check whether
-         * this schedule is better than the current best schedule, if it is update it.
-         */
-
         ArrayList<Task> allPossibilities = validOrder(null);
+
+        if (allPossibilities.isEmpty()) {
+            int currentBest = bestSchedule.getLatestScheduleTime();
+            int candidateBest = schedule.getLatestScheduleTime();
+            if (candidateBest < currentBest) {
+                bestSchedule = schedule;
+            }
+        }
         for(int i = 0; i < allPossibilities.size(); i++) {
             for (int j = 0; j < numProcessors; j++) {
-                branchBound(allPossibilities.get(i),j,scheduledTasks + 1);
+                branchBound(allPossibilities.get(i),j);
             }
             /**
-             * TODO After all children have been exhausted, remove the task from the schedule, subtract 1 from scheduled
-             * tasks.
+             * TODO After all children have been exhausted, remove the task from the schedule.
              */
         }
     }

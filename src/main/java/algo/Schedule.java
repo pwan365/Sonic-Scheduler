@@ -10,4 +10,12 @@ public class Schedule {
             processorList[i] = new Processor(i+1);
         }
     }
+
+    public int getLatestScheduleTime() {
+        return this.latestScheduleTime;
+    }
+
+    public void setLatestScheduleTime(int latestTime) {
+        latestScheduleTime = latestTime;
+    }
 }
