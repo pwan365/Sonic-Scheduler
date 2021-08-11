@@ -1,6 +1,5 @@
-package validateTests;
+package graphTests.validateTests;
 
-import algo.Processor;
 import algo.ValidScheduler;
 import io.OutputWriter;
 import org.graphstream.graph.Graph;

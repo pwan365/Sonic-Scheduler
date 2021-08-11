@@ -1,4 +1,4 @@
-package validateTests;//package io;
+package graphTests.validateTests;//package io;
 import java.io.*;
 
 import org.graphstream.graph.*;

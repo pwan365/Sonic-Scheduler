@@ -1,5 +1,8 @@
 package algo;
 
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
+
 import java.util.HashSet;
 
 public class Schedule {
@@ -7,12 +10,19 @@ public class Schedule {
     private Processor[] processorList;
     private int latestScheduleTime = 0;
     private HashSet<Task> scheduledSet = new HashSet<>();
+    private HashSet<Task> unscheduledSet = new HashSet<>();
 
-    public Schedule(int numProcessors) {
+    public Schedule(int numProcessors,Graph graph) {
         //Initialize Processor Pool
         processorList  = new Processor[numProcessors];
         for (int i = 0; i < numProcessors; i ++) {
             processorList[i] = new Processor(i+1);
+        }
+        //Initialize Unscheduled Tasks Set
+        for(int i = 0; i < graph.getNodeCount(); i++) {
+            Node node = graph.getNode(i);
+            Task task = (Task) node.getAttribute("Task");
+            unscheduledSet.add(task);
         }
     }
 
@@ -27,6 +37,7 @@ public class Schedule {
     public void scheduleTask(Task task, int processorID) {
         processorList[processorID].addTask(task);
         scheduledSet.add(task);
+        unscheduledSet.remove(task);
         int candidateScheduleTime = processorList[processorID].getLatestTime();
         if (candidateScheduleTime > latestScheduleTime) {
             latestScheduleTime = candidateScheduleTime;
@@ -34,6 +45,7 @@ public class Schedule {
     }
     public void removeTasks(Task task) {
         scheduledSet.remove(task);
+        unscheduledSet.add(task);
         task.unSchedule();
     }
 
@@ -41,5 +53,19 @@ public class Schedule {
         return this.scheduledSet;
     }
 
+    public int getNumProcessors() {
+        return this.processorList.length;
+    }
 
+    public HashSet getUnscheduledTasks() {
+        return this.unscheduledSet;
+    }
+
+    public int getEarliestProcessorTime() {
+        int time = Integer.MAX_VALUE;
+        for (int i =0; i < processorList.length; i++) {
+            time = Math.min(time,processorList[i].getLatestTime());
+        }
+        return time;
+    }
 }
