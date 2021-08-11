@@ -1,5 +1,6 @@
 package algo;
 
+import algo.CostFunctions.CriticalPath;
 import algo.CostFunctions.LoadBalancer;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;

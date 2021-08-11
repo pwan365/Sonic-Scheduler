@@ -1,4 +1,5 @@
 import algo.*;
+import algo.CostFunctions.CriticalPath;
 import io.InputReader;
 import io.OutputWriter;
 import org.graphstream.graph.Graph;
@@ -57,9 +58,21 @@ public class Main  {
         dfs d = new dfs(numberOfProcessors,inputGraph);
         HashSet<Task> empty = new HashSet<>();
         ArrayList<Task> start = d.validOrder(empty);
-        d.branchBound(start.get(0), 0);
-        int best = d.getBestSchedule();
-        System.out.println(best);
+        HashMap<Task,Integer> memo = new CriticalPath(inputGraph).getMemo();
+        for (Map.Entry<Task, Integer> entry : memo.entrySet()){
+            Task task = entry.getKey();
+            int value = entry.getValue();
+            System.out.println("Task:");
+            System.out.println(task.getNode().getId());
+            System.out.println("Critical Path");
+            System.out.println(value);
+
+        }
+
+
+//        d.branchBound(start.get(0), 0);
+//        int best = d.getBestSchedule();
+//        System.out.println(best);
         // Write the scheduled graph to a file.
 //        OutputWriter writer = new OutputWriter();
 //        writer.write(inputGraph, outputFileName);
