@@ -14,17 +14,19 @@ public class dfs {
     private Graph graph;
     private int numProcessors;
     private int bestTime = Integer.MAX_VALUE;
+    private HashMap<HashSet,ArrayList<Task>> memoOrder = new HashMap<>();
+
     public dfs(int processors,Graph inputGraph) {
         schedule = new Schedule(processors,inputGraph);
         graph = inputGraph;
         bestSchedule = null;
         numProcessors = processors;
     }
-    /**
-     * TODO Given a list of tasks already scheduled, calculate all the possible tasks that can be scheduled. Ideally
-     * TODO should memoize the solution into a hashmap so there are no repeated calculations.
-     */
+
     public ArrayList<Task> validOrder(HashSet<Task> scheduledTasks) {
+        if (memoOrder.containsKey(scheduledTasks)) {
+            return memoOrder.get(scheduledTasks);
+        }
         ArrayList<Task> result = new ArrayList<>();
 
         for(int i = 0; i < graph.getNodeCount(); i++){
@@ -51,6 +53,7 @@ public class dfs {
                 result.add(task);
             }
         }
+        memoOrder.put(scheduledTasks,result);
         return result;
     }
 
