@@ -2,6 +2,7 @@ package algo;
 
 import org.graphstream.graph.Edge;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +20,6 @@ public class Processor {
 
     /**
      * The constructor of Processor.
-     *
      * @param processNumber The given id to this processor.
      */
     public Processor(int processNumber) {
@@ -66,8 +66,6 @@ public class Processor {
         task.setTaskDetails(this, taskEndTime, taskStartTime);
         task.setCommunicationCost(communicationCost);
         latestTime = taskEndTime;
-        System.out.println(latestTime);
-//        System.out.println(latestProcessorTime);
     }
 
     /**

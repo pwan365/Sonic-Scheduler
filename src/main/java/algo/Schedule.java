@@ -1,11 +1,13 @@
 package algo;
 
-import java.util.Stack;
+import java.util.HashSet;
 
-public class Schedule implements Cloneable {
+public class Schedule {
+
     private Processor[] processorList;
     private int latestScheduleTime = 0;
-    private Stack<Task> scheduledTasks = new Stack<>();
+    private HashSet<Task> scheduledSet = new HashSet<>();
+
     public Schedule(int numProcessors) {
         //Initialize Processor Pool
         processorList  = new Processor[numProcessors];
@@ -17,35 +19,27 @@ public class Schedule implements Cloneable {
     public int getLatestScheduleTime() {
         int time = 0;
         for (int i =0; i < processorList.length; i++) {
-//            System.out.println("Processor Time: ");
-//            System.out.println(processorList[i].getProcessNum());
-//            System.out.println(processorList[i].getLatestTime());
             time = Math.max(time,processorList[i].getLatestTime());
         }
         return time;
     }
-    public void setLatestScheduleTime(int latestTime) {
-        latestScheduleTime = latestTime;
-    }
 
     public void scheduleTask(Task task, int processorID) {
         processorList[processorID].addTask(task);
-        scheduledTasks.push(task);
+        scheduledSet.add(task);
         int candidateScheduleTime = processorList[processorID].getLatestTime();
         if (candidateScheduleTime > latestScheduleTime) {
             latestScheduleTime = candidateScheduleTime;
         }
     }
-    public void removeTasks() {
-//        System.out.println("Removed");
-        Task removedTask1 = scheduledTasks.pop();
-        removedTask1.unSchedule();
-    }
-    public Stack getScheduledTasks() {
-        return this.scheduledTasks;
+    public void removeTasks(Task task) {
+        scheduledSet.remove(task);
+        task.unSchedule();
     }
 
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
+    public HashSet<Task> getScheduledTasks() {
+        return this.scheduledSet;
     }
+
+
 }

@@ -5,7 +5,6 @@ import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class dfs {
 
@@ -24,7 +23,7 @@ public class dfs {
      * TODO Given a list of tasks already scheduled, calculate all the possible tasks that can be scheduled. Ideally
      * TODO should memoize the solution into a hashmap so there are no repeated calculations.
      */
-    public ArrayList<Task> validOrder(ArrayList<Task> scheduledTasks) {
+    public ArrayList<Task> validOrder(HashSet<Task> scheduledTasks) {
         // hashMap and return list, and graph
         Map<Task, Boolean> map = new HashMap<>();
         ArrayList<Task> result = new ArrayList<>();
@@ -57,46 +56,23 @@ public class dfs {
         return result;
     }
 
-    public void branchBound(Task task, int processor) throws CloneNotSupportedException {
-        System.out.print("Processor: ");
-        System.out.print(processor);
-        System.out.print("    Task: ");
-        System.out.println(task.getNode().getIndex());
+    public void branchBound(Task task, int processor) {
         schedule.scheduleTask(task,processor);
 
-        Stack scheduledTasks = schedule.getScheduledTasks();
-        ArrayList<Task> sT = new ArrayList<>(scheduledTasks);
-        ArrayList<Task> allPossibilities = validOrder(sT);
-
-//        System.out.print("All possiblities:    ");
-//        for(Task temp: allPossibilities){
-//            System.out.print(temp.getNode().getIndex());
-//        }
-//        System.out.println("");
-//        System.out.print("st:    ");
-        for(Task temp: sT){
-//            System.out.print(temp.getNode().getIndex());
-        }
-//        System.out.println("");
-
+        HashSet scheduledTasks = schedule.getScheduledTasks();
+        ArrayList<Task> allPossibilities = validOrder(scheduledTasks);
         if (allPossibilities.isEmpty()) {
             if (bestSchedule == null) {
                 bestSchedule = schedule;
-                System.out.println("Best Time");
-                System.out.println(bestSchedule.getLatestScheduleTime());
                 bestTime = schedule.getLatestScheduleTime();
             }
             else {
-                int currentBest = bestSchedule.getLatestScheduleTime();
+//                int currentBest = bestSchedule.getLatestScheduleTime();
                 int candidateBest = schedule.getLatestScheduleTime();
                 if (candidateBest < bestTime) {
                     bestSchedule = schedule;
                     bestTime = schedule.getLatestScheduleTime();
                 }
-                System.out.println("Best Time");
-                System.out.println(bestSchedule.getLatestScheduleTime());
-                System.out.println("Candidate Best");
-                System.out.println(schedule.getLatestScheduleTime());
             }
 
         }
@@ -106,14 +82,7 @@ public class dfs {
                 branchBound(allPossibilities.get(i),j);
             }
         }
-        schedule.removeTasks();
-
-//        Stack scheduledTasks1 = schedule.getScheduledTasks();
-//        ArrayList<Task> sT1 = new ArrayList<>(scheduledTasks1);
-//        System.out.print("st deletion:    ");
-//        for(Task temp : sT1){
-//            System.out.print(temp.getNode().getIndex());
-//        }
+        schedule.removeTasks(task);
     }
 
     public int getBestSchedule() {

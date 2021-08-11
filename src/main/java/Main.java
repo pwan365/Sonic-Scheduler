@@ -55,7 +55,7 @@ public class Main  {
         v.topologicalorder(inputGraph);
 
         dfs d = new dfs(numberOfProcessors,inputGraph);
-        ArrayList<Task> empty = new ArrayList<>();
+        HashSet<Task> empty = new HashSet<>();
         ArrayList<Task> start = d.validOrder(empty);
         d.branchBound(start.get(0), 0);
         int best = d.getBestSchedule();
