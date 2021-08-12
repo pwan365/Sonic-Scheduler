@@ -1,6 +1,7 @@
 package algo;
 
 import algo.CostFunctions.CriticalPath;
+import algo.CostFunctions.Estimator;
 import algo.CostFunctions.LoadBalancer;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
@@ -15,13 +16,16 @@ public class dfs {
     private Graph graph;
     private int numProcessors;
     private int bestTime = Integer.MAX_VALUE;
+    private long prune = 0;
     private HashMap<HashSet,ArrayList<Task>> memoOrder = new HashMap<>();
+    private HashMap<Task ,Integer> memoCriticalPath;
 
     public dfs(int processors,Graph inputGraph) {
         schedule = new Schedule(processors,inputGraph);
         graph = inputGraph;
         bestSchedule = null;
         numProcessors = processors;
+        memoCriticalPath = new CriticalPath(inputGraph).getMemo();
     }
 
     public ArrayList<Task> validOrder(HashSet<Task> scheduledTasks) {
@@ -58,22 +62,28 @@ public class dfs {
         return result;
     }
 
-    public void branchBound(Task task, int processor) {
+    public void branchBound(Task task, int processor,int Cost) {
+//        System.out.println("Task:");
+//        System.out.println(task.getNode().getId());
+//        System.out.println("Processor:");
+//        System.out.println(processor);
         HashSet unscheduledTasks = schedule.getUnscheduledTasks();
         int numProcessors = schedule.getNumProcessors();
-        int loadBalance = LoadBalancer.calculateLB(unscheduledTasks,numProcessors);
         int earliestTime = schedule.getEarliestProcessorTime();
-        int test = earliestTime;
-        if (bestTime <= (loadBalance + earliestTime)) {
-//            System.out.println("Pruned!");
+        int loadBalance = LoadBalancer.calculateLB(unscheduledTasks,numProcessors) + earliestTime;
+        int criticalPath = memoCriticalPath.get(task) + Cost;
+        int candidateTime = Math.max(loadBalance,criticalPath);
+        if (bestTime <= candidateTime) {
+            prune += 1;
             return;
         }
-        schedule.scheduleTask(task,processor);
+        schedule.scheduleTask(task,processor,Cost);
 
         HashSet scheduledTasks = schedule.getScheduledTasks();
         ArrayList<Task> allPossibilities = validOrder(scheduledTasks);
         if (allPossibilities.isEmpty()) {
             if (bestSchedule == null) {
+
                 bestSchedule = schedule;
                 bestTime = schedule.getLatestScheduleTime();
             }
@@ -85,18 +95,31 @@ public class dfs {
                     bestTime = schedule.getLatestScheduleTime();
                 }
             }
-
         }
+        PriorityQueue<Estimator> lowestCost = new PriorityQueue<>();
 
         for(int i = 0; i < allPossibilities.size(); i++) {
             for (int j = 0; j < numProcessors; j++) {
-                branchBound(allPossibilities.get(i),j);
+                Estimator estimate = new Estimator(allPossibilities.get(i),j);
+                schedule.getProcessorList()[j].estimateCost(estimate);
+                lowestCost.add(estimate);
+//                branchBound(allPossibilities.get(i),j,estimate.estCost);
             }
+        }
+//        System.out.println("Estimates: ");
+//        for (Estimator e : lowestCost) {
+//            System.out.println(e.estCost);
+//        }
+        while (!lowestCost.isEmpty()) {
+            Estimator estimate = lowestCost.poll();
+            Task candidateTask = estimate.getTask();
+            branchBound(candidateTask,estimate.getProcNum(),estimate.estCost);
         }
         schedule.removeTasks(task);
     }
 
     public int getBestSchedule() {
+        System.out.println(prune);
         return bestTime;
     }
 }

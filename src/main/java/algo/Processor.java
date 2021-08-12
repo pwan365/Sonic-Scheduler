@@ -1,5 +1,6 @@
 package algo;
 
+import algo.CostFunctions.Estimator;
 import org.graphstream.graph.Edge;
 
 import java.io.Serializable;
@@ -56,15 +57,16 @@ public class Processor {
     /**
      * This method will add a task to this processor at the earliest time possible, accounting for communication costs.
      */
-    public void addTask(Task task) {
-        int communicationCost = communicationCost(task);
-        int latestProcessorTime = latestTime;
-
-        int taskStartTime = communicationCost + latestProcessorTime;
+    public void addTask(Task task,int start) {
+//        int communicationCost = communicationCost(task);
+//        int latestProcessorTime = latestTime;
+//
+//        int taskStartTime = communicationCost + latestProcessorTime;
+        int comm = start - latestTime;
         int taskDurationTime = task.getDurationTime();
-        int taskEndTime = taskStartTime + taskDurationTime;
-        task.setTaskDetails(this, taskEndTime, taskStartTime);
-        task.setCommunicationCost(communicationCost);
+        int taskEndTime = start + taskDurationTime;
+        task.setTaskDetails(this, taskEndTime, start);
+        task.setCommunicationCost(comm);
         latestTime = taskEndTime;
     }
 
@@ -104,5 +106,12 @@ public class Processor {
         int communicationCost = task.getCommunicationCost();
         int newLatestTime = currentLatestTime - taskDuration - communicationCost;
         setLatestTime(newLatestTime);
+    }
+
+    public void estimateCost(Estimator estimator) {
+        Task task = estimator.getTask();
+        int comm = communicationCost(task);
+        int estCost = comm + latestTime;
+        estimator.setEstimates(estCost);
     }
 }

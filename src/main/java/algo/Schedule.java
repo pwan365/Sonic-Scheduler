@@ -34,14 +34,14 @@ public class Schedule {
         return time;
     }
 
-    public void scheduleTask(Task task, int processorID) {
-        processorList[processorID].addTask(task);
+    public void scheduleTask(Task task, int processorID,int est) {
+        processorList[processorID].addTask(task,est);
         scheduledSet.add(task);
         unscheduledSet.remove(task);
-        int candidateScheduleTime = processorList[processorID].getLatestTime();
-        if (candidateScheduleTime > latestScheduleTime) {
-            latestScheduleTime = candidateScheduleTime;
-        }
+//        int candidateScheduleTime = processorList[processorID].getLatestTime();
+//        if (candidateScheduleTime > latestScheduleTime) {
+//            latestScheduleTime = candidateScheduleTime;
+//        }
     }
     public void removeTasks(Task task) {
         scheduledSet.remove(task);
@@ -55,6 +55,10 @@ public class Schedule {
 
     public int getNumProcessors() {
         return this.processorList.length;
+    }
+
+    public Processor[] getProcessorList() {
+        return processorList;
     }
 
     public HashSet getUnscheduledTasks() {
