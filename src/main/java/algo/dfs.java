@@ -74,7 +74,7 @@ public class dfs {
         int loadBalance = LoadBalancer.calculateLB(unscheduledTasks,numProcessors) + earliestTime;
         int criticalPath = memoCriticalPath.get(task) + Cost;
         int candidateTime = Math.max(loadBalance,criticalPath);
-        if (bestTime <= candidateTime) {
+        if (bestSchedule.getBestTime() <= candidateTime) {
             prune += 1;
             return;
         }
@@ -83,18 +83,13 @@ public class dfs {
         HashSet scheduledTasks = schedule.getScheduledTasks();
         ArrayList<Task> allPossibilities = validOrder(scheduledTasks);
         if (allPossibilities.isEmpty()) {
-            if (bestSchedule == null) {
-                bestSchedule.makeCopy(0, schedule.getProcessorList());
+//                int currentBest = bestSchedule.getLatestScheduleTime();
+            int candidateBest = schedule.getLatestScheduleTime();
+            if (candidateBest < bestTime) {
+                bestSchedule.makeCopy(candidateBest, schedule.getProcessorList());
                 bestTime = schedule.getLatestScheduleTime();
             }
-            else {
-//                int currentBest = bestSchedule.getLatestScheduleTime();
-                int candidateBest = schedule.getLatestScheduleTime();
-                if (candidateBest < bestTime) {
-                    bestSchedule.makeCopy(candidateBest, schedule.getProcessorList());
-                    bestTime = schedule.getLatestScheduleTime();
-                }
-            }
+
         }
         PriorityQueue<Estimator> lowestCost = new PriorityQueue<>();
 
@@ -120,6 +115,7 @@ public class dfs {
 
     public int getBestSchedule() {
         System.out.println(prune);
+        bestSchedule.done();
         return bestSchedule.getBestTime();
     }
 }

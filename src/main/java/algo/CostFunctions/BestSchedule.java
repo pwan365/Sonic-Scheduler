@@ -9,6 +9,7 @@ public class BestSchedule {
     private int bestTime;
 
     public BestSchedule(){
+        bestTime = Integer.MAX_VALUE;
     }
 
     public void makeCopy(int candidateBest, Processor[] processors) {
@@ -27,11 +28,14 @@ public class BestSchedule {
 
 
     public int getBestTime() {
+        return bestTime;
+    }
+
+    public void done(){
         for(Processor processor:processors){
             for(Task task: processor.getTasks()){
                 System.out.println("TASKLAESTTIME: " + task.getFinishingTime());
             }
         }
-        return bestTime;
     }
 }
