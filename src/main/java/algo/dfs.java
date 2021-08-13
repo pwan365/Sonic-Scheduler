@@ -3,6 +3,7 @@ package algo;
 import algo.CostFunctions.CriticalPath;
 import algo.CostFunctions.Estimator;
 import algo.CostFunctions.LoadBalancer;
+import com.rits.cloning.Cloner;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -83,18 +84,16 @@ public class dfs {
         ArrayList<Task> allPossibilities = validOrder(scheduledTasks);
         if (allPossibilities.isEmpty()) {
             if (bestSchedule == null) {
-                // copy the best schedule
-                bestSchedule = new Schedule(schedule.getLatestScheduleTime(), schedule.getProcessorList(),
-                        schedule.getScheduledTasks(), schedule.getUnscheduledTasks());
+                Cloner cloner = new Cloner();
+                bestSchedule = cloner.deepClone(schedule);
                 bestTime = schedule.getLatestScheduleTime();
             }
             else {
 //                int currentBest = bestSchedule.getLatestScheduleTime();
                 int candidateBest = schedule.getLatestScheduleTime();
                 if (candidateBest < bestTime) {
-                    // copy the best schedule
-                    bestSchedule = new Schedule(candidateBest, schedule.getProcessorList(),
-                            schedule.getScheduledTasks(), schedule.getUnscheduledTasks());
+                    Cloner cloner = new Cloner();
+                    bestSchedule = cloner.deepClone(schedule);
                     bestTime = schedule.getLatestScheduleTime();
                 }
             }
@@ -123,6 +122,6 @@ public class dfs {
 
     public int getBestSchedule() {
         System.out.println(prune);
-        return bestTime;
+        return bestSchedule.getLatestScheduleTime();
     }
 }
