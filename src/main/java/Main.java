@@ -1,17 +1,24 @@
 import algo.Processor;
 import algo.Task;
+import gui.Visualiser;
 import io.InputReader;
 import io.OutputWriter;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import org.graphstream.graph.Graph;
 
 import java.util.*;
 
 import algo.ValidScheduler;
 
-public class Main  {
+public class Main {
+    private static Scene scene;
+
     public static void main(String[] args) {
 
         List<String> commands = Arrays.asList(args);
+
 
         String fileName = args[0];
         int numberOfProcessors = Integer.parseInt(args[1]);
@@ -33,7 +40,7 @@ public class Main  {
          * TODO Implement Visualization by Milestone 2
          */
         if (commands.contains("-v")){
-            //Visualize option
+            Application.launch(Visualiser.class);
         }
 
         /*
@@ -63,4 +70,6 @@ public class Main  {
         writer.write(inputGraph, outputFileName);
 
     }
+
+
 }
