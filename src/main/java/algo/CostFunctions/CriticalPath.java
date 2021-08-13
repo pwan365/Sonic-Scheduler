@@ -21,7 +21,6 @@ public class CriticalPath {
             Node node = graph.getNode(i);
             Task task = (Task) node.getAttribute("Task");
             criticalPath(task,0);
-
         }
     }
     private int criticalPath(Task task, int total) {

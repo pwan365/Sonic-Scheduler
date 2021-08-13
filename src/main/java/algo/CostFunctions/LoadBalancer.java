@@ -1,25 +1,25 @@
 package algo.CostFunctions;
 
 import algo.Task;
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 
 public class LoadBalancer {
-    private static HashMap<HashSet, Integer> memo = new HashMap<>();
-    public static int calculateLB(HashSet<Task> unscheduledTasks,int numProcessors) {
-        if (memo.containsKey(unscheduledTasks)) {
-            return memo.get(unscheduledTasks);
-        }
-        int sum = 0;
-        Iterator<Task> iterator = unscheduledTasks.iterator();
-        while(iterator.hasNext()) {
-            Task task = iterator.next();
-            sum += task.getDurationTime();
-        }
-        int lb = (int) Math.ceil(sum/numProcessors);
-        memo.put(unscheduledTasks,lb);
+    private static HashMap<Integer, Integer> memo = new HashMap<>();
+    private static int weight = 0;
+
+    public static int calculateLB(int numProcessors, int commCost) {
+        int lb = (int) Math.ceil((weight + commCost) / numProcessors);
         return lb;
+    }
+
+    public static void sumWeights(Graph g) {
+        for (int i = 0; i < g.getNodeCount(); i++) {
+            Node node = g.getNode(i);
+            int nodeWeight = ((Double) node.getAttribute("Weight")).intValue();
+            weight += nodeWeight;
+        }
     }
 }

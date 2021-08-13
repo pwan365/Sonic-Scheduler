@@ -11,6 +11,7 @@ public class Schedule {
     private int latestScheduleTime = 0;
     private HashSet<Task> scheduledSet = new HashSet<>();
     private HashSet<Task> unscheduledSet = new HashSet<>();
+    public int commCost = 0;
 
     public Schedule(int numProcessors,Graph graph) {
         //Initialize Processor Pool
@@ -43,6 +44,7 @@ public class Schedule {
     }
 
     public void scheduleTask(Task task, int processorID,int est) {
+        commCost += est - processorList[processorID].getLatestTime();
         processorList[processorID].addTask(task,est);
         scheduledSet.add(task);
         unscheduledSet.remove(task);
@@ -52,6 +54,7 @@ public class Schedule {
 //        }
     }
     public void removeTasks(Task task) {
+        commCost -= task.getCommunicationCost();
         scheduledSet.remove(task);
         unscheduledSet.add(task);
         task.unSchedule();

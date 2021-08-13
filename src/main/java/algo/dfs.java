@@ -16,7 +16,6 @@ public class dfs {
     private BestSchedule bestSchedule;
     private Graph graph;
     private int numProcessors;
-    private int bestTime = Integer.MAX_VALUE;
     private long prune = 0;
     private HashMap<HashSet,ArrayList<Task>> memoOrder = new HashMap<>();
     private HashMap<Task ,Integer> memoCriticalPath;
@@ -27,6 +26,7 @@ public class dfs {
         bestSchedule = new BestSchedule();
         numProcessors = processors;
         memoCriticalPath = new CriticalPath(inputGraph).getMemo();
+        LoadBalancer.sumWeights(inputGraph);
     }
 
     public ArrayList<Task> validOrder(HashSet<Task> scheduledTasks) {
@@ -68,12 +68,14 @@ public class dfs {
 //        System.out.println(task.getNode().getId());
 //        System.out.println("Processor:");
 //        System.out.println(processor);
-        HashSet unscheduledTasks = schedule.getUnscheduledTasks();
         int numProcessors = schedule.getNumProcessors();
-        int earliestTime = schedule.getEarliestProcessorTime();
-        int loadBalance = LoadBalancer.calculateLB(unscheduledTasks,numProcessors) + earliestTime;
         int criticalPath = memoCriticalPath.get(task) + Cost;
+        int loadBalance = LoadBalancer.calculateLB(numProcessors,schedule.commCost);
         int candidateTime = Math.max(loadBalance,criticalPath);
+//        System.out.println("Load Balance");
+//        System.out.println(loadBalance);
+//        System.out.println("Critical Path");
+//        System.out.println(criticalPath);
         if (bestSchedule.getBestTime() <= candidateTime) {
             prune += 1;
             return;
@@ -83,13 +85,10 @@ public class dfs {
         HashSet scheduledTasks = schedule.getScheduledTasks();
         ArrayList<Task> allPossibilities = validOrder(scheduledTasks);
         if (allPossibilities.isEmpty()) {
-//                int currentBest = bestSchedule.getLatestScheduleTime();
-            int candidateBest = schedule.getLatestScheduleTime();
-            if (candidateBest < bestTime) {
-                bestSchedule.makeCopy(candidateBest, schedule.getProcessorList());
-                bestTime = schedule.getLatestScheduleTime();
-            }
-
+                int candidateBest = schedule.getLatestScheduleTime();
+                if (candidateBest < bestSchedule.getBestTime()) {
+                    bestSchedule.makeCopy(candidateBest, schedule.getProcessorList());
+                }
         }
         PriorityQueue<Estimator> lowestCost = new PriorityQueue<>();
 

@@ -6,7 +6,7 @@ import com.rits.cloning.Cloner;
 
 public class BestSchedule {
     private Processor[] processors;
-    private int bestTime;
+    private int bestTime = Integer.MAX_VALUE;
 
     public BestSchedule(){
         bestTime = Integer.MAX_VALUE;
@@ -34,6 +34,7 @@ public class BestSchedule {
     public void done(){
         for(Processor processor:processors){
             for(Task task: processor.getTasks()){
+                System.out.println(task.getFinishingTime());
                 System.out.println("TASKLAESTTIME: " + task.getFinishingTime());
             }
         }
