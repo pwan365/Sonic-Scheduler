@@ -1,9 +1,9 @@
 package algo;
 
+import algo.CostFunctions.BestSchedule;
 import algo.CostFunctions.CriticalPath;
 import algo.CostFunctions.Estimator;
 import algo.CostFunctions.LoadBalancer;
-import com.rits.cloning.Cloner;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -13,7 +13,7 @@ import java.util.*;
 public class dfs {
 
     private Schedule schedule;
-    private Schedule bestSchedule;
+    private BestSchedule bestSchedule;
     private Graph graph;
     private int numProcessors;
     private int bestTime = Integer.MAX_VALUE;
@@ -24,7 +24,7 @@ public class dfs {
     public dfs(int processors,Graph inputGraph) {
         schedule = new Schedule(processors,inputGraph);
         graph = inputGraph;
-        bestSchedule = null;
+        bestSchedule = new BestSchedule();
         numProcessors = processors;
         memoCriticalPath = new CriticalPath(inputGraph).getMemo();
     }
@@ -84,16 +84,14 @@ public class dfs {
         ArrayList<Task> allPossibilities = validOrder(scheduledTasks);
         if (allPossibilities.isEmpty()) {
             if (bestSchedule == null) {
-                Cloner cloner = new Cloner();
-                bestSchedule = cloner.deepClone(schedule);
+                bestSchedule.makeCopy(0, schedule.getProcessorList());
                 bestTime = schedule.getLatestScheduleTime();
             }
             else {
 //                int currentBest = bestSchedule.getLatestScheduleTime();
                 int candidateBest = schedule.getLatestScheduleTime();
                 if (candidateBest < bestTime) {
-                    Cloner cloner = new Cloner();
-                    bestSchedule = cloner.deepClone(schedule);
+                    bestSchedule.makeCopy(candidateBest, schedule.getProcessorList());
                     bestTime = schedule.getLatestScheduleTime();
                 }
             }
@@ -122,6 +120,6 @@ public class dfs {
 
     public int getBestSchedule() {
         System.out.println(prune);
-        return bestSchedule.getLatestScheduleTime();
+        return bestSchedule.getBestTime();
     }
 }
