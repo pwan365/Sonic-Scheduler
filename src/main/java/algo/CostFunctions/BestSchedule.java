@@ -1,6 +1,7 @@
 package algo.CostFunctions;
 
 import algo.Processor;
+import algo.Task;
 import com.rits.cloning.Cloner;
 
 public class BestSchedule {
@@ -26,6 +27,11 @@ public class BestSchedule {
 
 
     public int getBestTime() {
+        for(Processor processor:processors){
+            for(Task task: processor.getTasks()){
+                System.out.println("TASKLAESTTIME: " + task.getFinishingTime());
+            }
+        }
         return bestTime;
     }
 }

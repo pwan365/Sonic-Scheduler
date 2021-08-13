@@ -6,6 +6,7 @@ import org.graphstream.graph.Edge;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -18,6 +19,7 @@ public class Processor {
     private int latestTime = 0;
     //The id of the processor.
     private int processNum;
+    private HashSet<Task> tasks;
 
     /**
      * The constructor of Processor.
@@ -25,6 +27,7 @@ public class Processor {
      */
     public Processor(int processNumber) {
         this.processNum = processNumber;
+        tasks = new HashSet<>();
     }
 
     /**
@@ -68,6 +71,7 @@ public class Processor {
         task.setTaskDetails(this, taskEndTime, start);
         task.setCommunicationCost(comm);
         latestTime = taskEndTime;
+        tasks.add(task);
     }
 
     /**
@@ -106,6 +110,7 @@ public class Processor {
         int communicationCost = task.getCommunicationCost();
         int newLatestTime = currentLatestTime - taskDuration - communicationCost;
         setLatestTime(newLatestTime);
+        tasks.remove(task);
     }
 
     public void estimateCost(Estimator estimator) {
@@ -113,5 +118,9 @@ public class Processor {
         int comm = communicationCost(task);
         int estCost = comm + latestTime;
         estimator.setEstimates(estCost);
+    }
+
+    public HashSet<Task> getTasks(){
+        return tasks;
     }
 }
