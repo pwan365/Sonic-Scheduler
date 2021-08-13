@@ -83,15 +83,18 @@ public class dfs {
         ArrayList<Task> allPossibilities = validOrder(scheduledTasks);
         if (allPossibilities.isEmpty()) {
             if (bestSchedule == null) {
-
-                bestSchedule = schedule;
+                // copy the best schedule
+                bestSchedule = new Schedule(schedule.getLatestScheduleTime(), schedule.getProcessorList(),
+                        schedule.getScheduledTasks(), schedule.getUnscheduledTasks());
                 bestTime = schedule.getLatestScheduleTime();
             }
             else {
 //                int currentBest = bestSchedule.getLatestScheduleTime();
                 int candidateBest = schedule.getLatestScheduleTime();
                 if (candidateBest < bestTime) {
-                    bestSchedule = schedule;
+                    // copy the best schedule
+                    bestSchedule = new Schedule(candidateBest, schedule.getProcessorList(),
+                            schedule.getScheduledTasks(), schedule.getUnscheduledTasks());
                     bestTime = schedule.getLatestScheduleTime();
                 }
             }

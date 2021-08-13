@@ -26,6 +26,14 @@ public class Schedule {
         }
     }
 
+    //Copy constructor
+    public Schedule(Integer bestTime, Processor[] processors, HashSet<Task> scheduledSet, HashSet<Task> unscheduledSet){
+        this.latestScheduleTime = bestTime;
+        this.processorList = processors.clone();
+        this.scheduledSet = new HashSet<>(scheduledSet);
+        this.unscheduledSet = new HashSet<>(unscheduledSet);
+    }
+
     public int getLatestScheduleTime() {
         int time = 0;
         for (int i =0; i < processorList.length; i++) {
@@ -72,4 +80,5 @@ public class Schedule {
         }
         return time;
     }
+
 }
