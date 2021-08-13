@@ -14,7 +14,7 @@ public class Visualiser extends Application {
     public void start(Stage stage) throws Exception {
         FXMLLoader loader  = new FXMLLoader(Visualiser.class.getResource("/visualisation.fxml"));
         Parent root = loader.load();
-        stage.setScene(new Scene(root,800,600));
+        stage.setScene(new Scene(root,900,600));
         stage.show();
     }
 }

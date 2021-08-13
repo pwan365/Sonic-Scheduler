@@ -1,18 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #f5f5f5;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
-    <children>
-        <VBox layoutX="36.0" layoutY="89.0" prefHeight="255.0" prefWidth="138.0">
-            <children>
-                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="52.0" stroke="#ffffff00" strokeType="INSIDE" width="200.0" />
-                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#fbcb79" height="52.0" layoutX="10.0" layoutY="10.0" stroke="#ffffff00" strokeType="INSIDE" width="200.0" />
-                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#f78a47" height="52.0" layoutX="10.0" layoutY="62.0" stroke="#ffffff00" strokeType="INSIDE" width="200.0" />
-                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#336699" height="52.0" layoutX="10.0" layoutY="114.0" stroke="#ffffff00" strokeType="INSIDE" width="200.0" />
-            </children>
-        </VBox>
-    </children>
-</Pane>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/11.0.2">
+    <ImageView fitHeight="80.0" fitWidth="250.0" layoutX="25.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true">
+        <Image url="@logo.png" />
+    </ImageView>
+    <Region layoutX="37.0" layoutY="285.0" prefHeight="80.0" prefWidth="230.0" style="-fx-background-color: #fbcb79;" styleClass="statsBG" />
+    <Region layoutX="37.0" layoutY="375.0" prefHeight="80.0" prefWidth="230.0" style="-fx-background-color: #f78a47;" styleClass="statsBG" />
+    <Region layoutX="37.0" layoutY="464.0" prefHeight="80.0" prefWidth="230.0" style="-fx-background-color: #336699;" styleClass="statsBG" />
+    <Region layoutX="37.0" layoutY="221.0" prefHeight="50.0" prefWidth="230.0" styleClass="miniStatsBG" />
+    <Region layoutX="584.0" layoutY="47.0" prefHeight="35.0" prefWidth="179.0" styleClass="miniStatsBG" />
+    <Text fill="#3d3e3e" layoutX="52.0" layoutY="251.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Input Graph:" wrappingWidth="200.7294921875" />
+    <Text fill="WHITE" layoutX="69.0" layoutY="311.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Time Elapsed (s)" textAlignment="CENTER" wrappingWidth="159.7294921875" />
+    <Text fill="WHITE" layoutX="72.0" layoutY="401.0" strokeType="OUTSIDE" strokeWidth="0.0" text="States Examined" textAlignment="CENTER" wrappingWidth="159.7294921875" />
+    <Text fill="WHITE" layoutX="72.0" layoutY="490.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Best Time" textAlignment="CENTER" wrappingWidth="159.7294921875" />
+    <Text fill="WHITE" layoutX="69.0" layoutY="345.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0.0" textAlignment="CENTER" wrappingWidth="159.7294921875">
+        <font>
+            <Font name="System Bold" size="24.0" />
+        </font>
+    </Text>
+    <Text fill="WHITE" layoutX="72.0" layoutY="434.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="159.7294921875">
+        <font>
+            <Font name="System Bold" size="24.0" />
+        </font>
+    </Text>
+    <Text fill="WHITE" layoutX="72.0" layoutY="524.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="159.7294921875">
+        <font>
+            <Font name="System Bold" size="24.0" />
+        </font>
+    </Text>
+    <Text fill="#f78a47" layoutX="54.0" layoutY="193.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="83.7294921875">
+        <font>
+            <Font name="System Bold" size="24.0" />
+        </font>
+    </Text>
+    <Text fill="#f78a47" layoutX="166.0" layoutY="192.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="83.7294921875">
+        <font>
+            <Font name="System Bold" size="24.0" />
+        </font>
+    </Text>
+    <Text fill="#3d3e3e" layoutX="50.0" layoutY="157.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Total Tasks" textAlignment="CENTER" wrappingWidth="90.7294921875">
+        <font>
+            <Font name="System Bold" size="13.0" />
+        </font>
+    </Text>
+    <Text fill="#3d3e3e" layoutX="163.0" layoutY="157.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Thread Count" textAlignment="CENTER" wrappingWidth="90.7294921875">
+        <font>
+            <Font name="System Bold" size="13.0" />
+        </font>
+    </Text>
+    <Button id="startBtn" layoutX="770.0" layoutY="47.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="90.0" text="START" textFill="WHITE">
+        <font>
+            <Font name="System Bold" size="13.0" />
+        </font>
+    </Button>
+    <Text layoutX="600.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Status:" wrappingWidth="44.7294921875">
+        <font>
+            <Font size="11.0" />
+        </font>
+    </Text>
+    <Text layoutX="648.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="STANDBY" wrappingWidth="99.7294921875">
+        <font>
+            <Font name="System Bold" size="12.0" />
+        </font>
+    </Text>
+    <Region layoutX="293.0" layoutY="108.0" prefHeight="514.0" prefWidth="628.0" style="-fx-background-color: white; -fx-background-radius: 50px;" />
+</AnchorPane>
