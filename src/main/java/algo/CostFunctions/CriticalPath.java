@@ -17,12 +17,14 @@ public class CriticalPath {
     private static CriticalPath criticalPath;
     //Store results of the Critical paths for tasks in a Hashmap for O(1) retrieval time, can be changed to an array.
     private HashMap<Task, Integer> memo = new HashMap<>();
+//    private Integer[] memo1;
 
     /**
      * Private constructor to initiate the Critical Path class, also calculates the critical path for all nodes.
      * @param graph
      */
     private CriticalPath(Graph graph) {
+//        memo1 = new Integer[graph.getNodeCount()];
         for(int i = 0; i < graph.getNodeCount(); i++) {
             Node node = graph.getNode(i);
             Task task = (Task) node.getAttribute("Task");

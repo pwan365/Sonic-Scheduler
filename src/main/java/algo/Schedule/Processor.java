@@ -1,6 +1,6 @@
 package algo.Schedule;
 
-import algo.CostFunctions.CostCalculator;
+import algo.Solution.CommunicationCost;
 import org.graphstream.graph.Edge;
 
 import java.util.HashSet;
@@ -32,7 +32,7 @@ public class Processor {
      *
      * @return The latest time this processor is free.
      */
-    public int getLatestTime() {
+    public int getTime() {
         return latestTime;
     }
 
@@ -70,50 +70,17 @@ public class Processor {
         latestTime = taskEndTime;
         tasks.add(task);
     }
-
-    /**
-     * Calculates any extra time the processor has to wait before scheduling a given task due to communication costs of
-     * dependent tasks.
-     *
-     * @param task Task that we wish to calculate the communication cost for.
-     * @return Extra communication cost that the processor must wait before scheduling the task.
-     */
-    private int communicationCost(Task task) {
-        List<Edge> parents = task.getParentEdgeList();
-        int processorLatestTime = getLatestTime();
-        int cost = 0;
-        for (Edge parentEdge : parents) {
-            // Gets the parent task of the candidate task, getNode0 returns the parent of an edge.
-            Task parentTask = (Task) parentEdge.getNode0().getAttribute("Task");
-            Processor parentProcessor = parentTask.getAllocatedProcessor();
-            if (parentProcessor != this) {
-                int parentEndTime = parentTask.getFinishingTime();
-                int commCost = ((Double) parentEdge.getAttribute("Weight")).intValue();
-                int candidateCost = parentEndTime + commCost;
-                cost = Math.max(cost, candidateCost - processorLatestTime);
-            }
-        }
-        return cost;
-    }
-
-    /**
+    /** Removes a task from the processor, used to support backtracking in DFS.
      *
      * @param task
      */
     public void removeLatestTask(Task task) {
-        int currentLatestTime = getLatestTime();
+        int currentLatestTime = latestTime;
         int taskDuration = task.getDurationTime();
         int communicationCost = task.getCommunicationCost();
         int newLatestTime = currentLatestTime - taskDuration - communicationCost;
         setLatestTime(newLatestTime);
         tasks.remove(task);
-    }
-
-    public void estimateCost(CostCalculator costCalculator) {
-        Task task = costCalculator.getTask();
-        int comm = communicationCost(task);
-        int estCost = comm + latestTime;
-        costCalculator.setEstimates(estCost);
     }
 
     public HashSet<Task> getTasks(){

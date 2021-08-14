@@ -4,20 +4,33 @@ import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
 import java.util.HashSet;
+import java.util.Stack;
 
-public class PartialSchedule {
+/**
+ * Class used to schedule/remove tasks for SequentialSearch.
+ *
+ * @author Luxman Jeyarajah
+ */
+public class PartialSchedule implements Schedule {
 
-    private Processor[] processorList;
-    private int latestScheduleTime = 0;
+    private Processor[] processors;
+    // Stack to record the latest schedule time when each task was scheduled.
+    private Stack<Integer> time = new Stack<>();
     private HashSet<Task> scheduledSet = new HashSet<>();
     private HashSet<Task> unscheduledSet = new HashSet<>();
     public int idle = 0;
 
+    /**
+     * Constructor to initialize Partial Schedule class, initializes the processors and adds all tasks to the
+     * unscheduled set.
+     * @param numProcessors
+     * @param graph
+     */
     public PartialSchedule(int numProcessors, Graph graph) {
         //Initialize Processor Pool
-        processorList  = new Processor[numProcessors];
+        processors  = new Processor[numProcessors];
         for (int i = 0; i < numProcessors; i ++) {
-            processorList[i] = new Processor(i+1);
+            processors[i] = new Processor(i+1);
         }
         //Initialize Unscheduled Tasks Set
         for(int i = 0; i < graph.getNodeCount(); i++) {
@@ -25,54 +38,74 @@ public class PartialSchedule {
             Task task = (Task) node.getAttribute("Task");
             unscheduledSet.add(task);
         }
+        // Add the starting time of 0 to the stack.
+        time.push(0);
     }
 
-    //Copy constructor
-    public PartialSchedule(Integer bestTime, Processor[] processors, HashSet<Task> scheduledSet, HashSet<Task> unscheduledSet){
-        this.latestScheduleTime = bestTime;
-        this.processorList = processors.clone();
-        this.scheduledSet = new HashSet<>(scheduledSet);
-        this.unscheduledSet = new HashSet<>(unscheduledSet);
+    /**
+     * Getter method for the schedules latest time.
+     * @return Latest schedule time.
+     */
+    public int getTime() {
+        return time.peek();
     }
 
-    public int getLatestScheduleTime() {
-        int time = 0;
-        for (int i =0; i < processorList.length; i++) {
-            time = Math.max(time,processorList[i].getLatestTime());
-        }
-        return time;
-    }
-
-    public void scheduleTask(Task task, int processorID,int est) {
-        idle += est - processorList[processorID].getLatestTime();
-        processorList[processorID].addTask(task,est);
+    /**
+     * Adds a task to the given processors, accounting for communication costs, updates the time in the stack.
+     * @param task The task to be scheduled.
+     * @param processorID The processor number to schedule the task.
+     * @param cost The cost to schedule the task on this processor.
+     */
+    public void scheduleTask(Task task, int processorID,int cost) {
+        idle += cost - processors[processorID].getTime();
+        processors[processorID].addTask(task,cost);
         scheduledSet.add(task);
         unscheduledSet.remove(task);
-//        int candidateScheduleTime = processorList[processorID].getLatestTime();
-//        if (candidateScheduleTime > latestScheduleTime) {
-//            latestScheduleTime = candidateScheduleTime;
-//        }
+
+//      Add the latest time to the stack, if updating the processor increases the time, push the time accordingly.
+        int candidateTime = processors[processorID].getTime();
+        int currentTime = time.peek();
+        time.push(Math.max(candidateTime, currentTime));
     }
+
+    /**
+     * Removes a task from a schedule to support backtracking in DFS.
+     * @param task The task to be removed from the schedule.
+     */
     public void removeTasks(Task task) {
+        time.pop();
         idle -= task.getCommunicationCost();
         scheduledSet.remove(task);
         unscheduledSet.add(task);
         task.unSchedule();
     }
 
+    /**
+     * Getter method to return the current scheduled tasks.
+     * @return
+     */
     public HashSet<Task> getScheduledTasks() {
         return this.scheduledSet;
     }
 
+    /**
+     * Getter method to retrieve the number of processors in the schedule.
+     * @return Number of processors.
+     */
     public int getNumProcessors() {
-        return this.processorList.length;
+        return this.processors.length;
     }
 
-    public Processor[] getProcessorList() {
-        return processorList;
+    /**
+     * Getter method to retrieve the list of processors.
+     * @return
+     */
+    public Processor[] getProcessors() {
+        return processors;
     }
 
     public HashSet getUnscheduledTasks() {
         return this.unscheduledSet;
     }
+
 }

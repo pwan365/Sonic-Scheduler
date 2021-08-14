@@ -2,9 +2,14 @@ package algo.Schedule;
 
 import com.rits.cloning.Cloner;
 
-public class BestSchedule {
+/**
+ * Represents the Best Schedule currently found, contains the processors with their tasks and the time of the schedule.
+ *
+ * @author Wayne Yao, Luxman Jeyarajah
+ */
+public class BestSchedule implements Schedule {
     private Processor[] processors;
-    private int bestTime = Integer.MAX_VALUE;
+    private int bestTime;
 
     public BestSchedule(){
         bestTime = Integer.MAX_VALUE;
@@ -20,13 +25,12 @@ public class BestSchedule {
         this.bestTime = candidateBest;
     }
 
-    public Processor[] getBestProcessors(){
-        return processors;
+    public int getTime() {
+        return bestTime;
     }
 
-
-    public int getBestTime() {
-        return bestTime;
+    public Processor[] getProcessors() {
+        return processors;
     }
 
     public void done(){
@@ -38,4 +42,5 @@ public class BestSchedule {
             }
         }
     }
+
 }

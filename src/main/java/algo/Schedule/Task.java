@@ -126,5 +126,4 @@ public class Task {
         allocatedProcessor = null;
         communicationCost = 0;
     }
-
 }

@@ -50,10 +50,7 @@ public class ValidScheduler {
             int startTime = 0;
 
             for (int i = 0; i < processorList.length; i++) {
-                startTime = processorList[i].getLatestTime();
-                int communicationCost = communicationCost(candidateTask,processorList[i]);
-                startTime += communicationCost;
-
+                startTime = processorList[i].getTime();
                 if (startTime < minTime) {
                     minTime = startTime;
                     candidateProcessor = processorList[i];
@@ -87,23 +84,4 @@ public class ValidScheduler {
      * @param candidateProcessor Processor that we wish to calculate the communication cost for.
      * @return Extra communication cost that the processor must wait before scheduling the task.
      */
-    public int communicationCost(Task candidateTask,Processor candidateProcessor) {
-        List<Edge> parents = candidateTask.getParentEdgeList();
-        int cost = 0;
-        int candidateProcessorLatestTime = candidateProcessor.getLatestTime();
-
-        for (Edge parentEdge : parents) {
-            // Gets the parent task of the candidate task, getNode0 returns the parent of an edge.
-            Task parentTask = (Task)parentEdge.getNode0().getAttribute("Task");
-            Processor parentProcessor = parentTask.getAllocatedProcessor();
-
-            if (parentProcessor != candidateProcessor) {
-                int parentEndTime = parentTask.getFinishingTime();
-                int commCost = ((Double)parentEdge.getAttribute("Weight")).intValue();
-                int candidateCost = parentEndTime + commCost;
-                cost = Math.max(cost,candidateCost - candidateProcessorLatestTime);
-            }
-        }
-        return cost;
-    }
 }

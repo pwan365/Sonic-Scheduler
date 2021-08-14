@@ -1,6 +1,7 @@
 import algo.Schedule.Task;
+import algo.Solution.AllOrders;
 import algo.Solution.ValidScheduler;
-import algo.Solution.dfs;
+import algo.Solution.SequentialSearch;
 import io.InputReader;
 import io.OutputWriter;
 import org.graphstream.graph.Graph;
@@ -56,10 +57,9 @@ public class Main  {
         ValidScheduler v = new ValidScheduler(1);
         v.topologicalorder(inputGraph);
 
-        dfs d = new dfs(numberOfProcessors,inputGraph);
+        SequentialSearch d = new SequentialSearch(numberOfProcessors,inputGraph);
         HashSet<Task> empty = new HashSet<>();
-        ArrayList<Task> start = d.validOrder(empty);
-        d.branchBound(start.get(0), 0,0);
+        d.branchBound((Task)inputGraph.getNode(0).getAttribute("Task"), 0,0);
         int best = d.getBestSchedule();
         System.out.println(best);
         // Write the scheduled graph to a file.
