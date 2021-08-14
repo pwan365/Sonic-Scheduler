@@ -1,9 +1,11 @@
-package algo;
+package algo.Solution;
 
-import algo.CostFunctions.BestSchedule;
+import algo.Schedule.BestSchedule;
 import algo.CostFunctions.CriticalPath;
-import algo.CostFunctions.Estimator;
+import algo.CostFunctions.CostCalculator;
 import algo.CostFunctions.LoadBalancer;
+import algo.Schedule.PartialSchedule;
+import algo.Schedule.Task;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -12,21 +14,22 @@ import java.util.*;
 
 public class dfs {
 
-    private Schedule schedule;
+    private PartialSchedule partialSchedule;
     private BestSchedule bestSchedule;
     private Graph graph;
-    private int numProcessors;
-    private long prune = 0;
     private HashMap<HashSet,ArrayList<Task>> memoOrder = new HashMap<>();
-    private HashMap<Task ,Integer> memoCriticalPath;
+    private LoadBalancer loadBalancer;
+    private CriticalPath criticalPath;
+
+    //Optional, may remove.
+    private long prune = 0;
 
     public dfs(int processors,Graph inputGraph) {
-        schedule = new Schedule(processors,inputGraph);
         graph = inputGraph;
+        loadBalancer = LoadBalancer.init(inputGraph,processors);
+        partialSchedule = new PartialSchedule(processors,inputGraph);
         bestSchedule = new BestSchedule();
-        numProcessors = processors;
-        memoCriticalPath = new CriticalPath(inputGraph).getMemo();
-        LoadBalancer.sumWeights(inputGraph);
+        criticalPath = CriticalPath.init(inputGraph);
     }
 
     public ArrayList<Task> validOrder(HashSet<Task> scheduledTasks) {
@@ -64,52 +67,44 @@ public class dfs {
     }
 
     public void branchBound(Task task, int processor,int Cost) {
-//        System.out.println("Task:");
-//        System.out.println(task.getNode().getId());
-//        System.out.println("Processor:");
-//        System.out.println(processor);
-        int numProcessors = schedule.getNumProcessors();
-        int criticalPath = memoCriticalPath.get(task) + Cost;
-        int loadBalance = LoadBalancer.calculateLB(numProcessors,schedule.commCost);
-        int candidateTime = Math.max(loadBalance,criticalPath);
-//        System.out.println("Load Balance");
-//        System.out.println(loadBalance);
-//        System.out.println("Critical Path");
-//        System.out.println(criticalPath);
+        int numProcessors = partialSchedule.getNumProcessors();
+        int bWeight = criticalPath.getCriticalPath(task) + Cost;
+        int loadBalance = loadBalancer.calculateLB(partialSchedule.idle + Cost);
+        int candidateTime = Math.max(loadBalance,bWeight);
+
         if (bestSchedule.getBestTime() <= candidateTime) {
             prune += 1;
             return;
         }
-        schedule.scheduleTask(task,processor,Cost);
 
-        HashSet scheduledTasks = schedule.getScheduledTasks();
+        partialSchedule.scheduleTask(task,processor,Cost);
+
+        HashSet scheduledTasks = partialSchedule.getScheduledTasks();
         ArrayList<Task> allPossibilities = validOrder(scheduledTasks);
+
         if (allPossibilities.isEmpty()) {
-                int candidateBest = schedule.getLatestScheduleTime();
+                int candidateBest = partialSchedule.getLatestScheduleTime();
                 if (candidateBest < bestSchedule.getBestTime()) {
-                    bestSchedule.makeCopy(candidateBest, schedule.getProcessorList());
+                    bestSchedule.makeCopy(candidateBest, partialSchedule.getProcessorList());
                 }
         }
-        PriorityQueue<Estimator> lowestCost = new PriorityQueue<>();
+
+        PriorityQueue<CostCalculator> lowestCost = new PriorityQueue<>();
 
         for(int i = 0; i < allPossibilities.size(); i++) {
             for (int j = 0; j < numProcessors; j++) {
-                Estimator estimate = new Estimator(allPossibilities.get(i),j);
-                schedule.getProcessorList()[j].estimateCost(estimate);
+                CostCalculator estimate = new CostCalculator(allPossibilities.get(i),j);
+                partialSchedule.getProcessorList()[j].estimateCost(estimate);
                 lowestCost.add(estimate);
-//                branchBound(allPossibilities.get(i),j,estimate.estCost);
             }
         }
-//        System.out.println("Estimates: ");
-//        for (Estimator e : lowestCost) {
-//            System.out.println(e.estCost);
-//        }
+
         while (!lowestCost.isEmpty()) {
-            Estimator estimate = lowestCost.poll();
+            CostCalculator estimate = lowestCost.poll();
             Task candidateTask = estimate.getTask();
             branchBound(candidateTask,estimate.getProcNum(),estimate.estCost);
         }
-        schedule.removeTasks(task);
+        partialSchedule.removeTasks(task);
     }
 
     public int getBestSchedule() {

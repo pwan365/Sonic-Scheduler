@@ -1,5 +1,6 @@
-package algo;
+package algo.Solution;
 
+import algo.Schedule.Task;
 import org.graphstream.algorithm.Algorithm;
 import org.graphstream.algorithm.NotInitializedException;
 import org.graphstream.graph.Edge;

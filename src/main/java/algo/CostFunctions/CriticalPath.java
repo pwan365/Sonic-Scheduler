@@ -1,6 +1,6 @@
 package algo.CostFunctions;
 
-import algo.Task;
+import algo.Schedule.Task;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -14,15 +14,41 @@ import java.util.stream.Collectors;
  * Run Time Complexity: O(n) on the number of nodes in the graph.
  */
 public class CriticalPath {
+    private static CriticalPath criticalPath;
+    //Store results of the Critical paths for tasks in a Hashmap for O(1) retrieval time, can be changed to an array.
     private HashMap<Task, Integer> memo = new HashMap<>();
 
-    public CriticalPath(Graph graph) {
+    /**
+     * Private constructor to initiate the Critical Path class, also calculates the critical path for all nodes.
+     * @param graph
+     */
+    private CriticalPath(Graph graph) {
         for(int i = 0; i < graph.getNodeCount(); i++) {
             Node node = graph.getNode(i);
             Task task = (Task) node.getAttribute("Task");
             criticalPath(task,0);
         }
     }
+
+    /**
+     * Initialize the CriticalPath object, will throw an error if already initialized.
+     * @param g Input graph from user.
+     * @return CriticalPath object.
+     */
+    public synchronized static CriticalPath init(Graph g) {
+        if (criticalPath != null) {
+            throw new AssertionError("CriticalPath class has already been instantiated");
+        }
+        criticalPath = new CriticalPath(g);
+        return criticalPath;
+    }
+
+    /**
+     * Private method to dynamically calculate the critical path of each node in the graph.
+     * @param task The task to calculate the critical path.
+     * @param total The current total weight of nodes in the recursive search.
+     * @return The critical path of the task.
+     */
     private int criticalPath(Task task, int total) {
         if (memo.containsKey(task)) {
             return memo.get(task);
@@ -36,7 +62,7 @@ public class CriticalPath {
         }
 
         int max = 0;
-
+        // Traverse through edges and pick the subtree with the maximum weight to form the critical path for this node.
         for(Edge e : edges){
             Task child = (Task)e.getNode1().getAttribute("Task");
             int temp = ((Double)node.getAttribute("Weight")).intValue() + criticalPath(child,total + task.getDurationTime());
@@ -48,7 +74,13 @@ public class CriticalPath {
         return memo.get(task);
     }
 
-    public HashMap<Task,Integer> getMemo() {
-        return memo;
+    /**
+     * Returns the value of the Critical Path given a task.
+     * @param task
+     * @return The critical path for the task.
+     */
+    public int getCriticalPath(Task task) {
+        int path = memo.get(task);
+        return path;
     }
 }

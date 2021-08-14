@@ -1,5 +1,6 @@
-import algo.*;
-import algo.CostFunctions.CriticalPath;
+import algo.Schedule.Task;
+import algo.Solution.ValidScheduler;
+import algo.Solution.dfs;
 import io.InputReader;
 import io.OutputWriter;
 import org.graphstream.graph.Graph;
@@ -62,8 +63,8 @@ public class Main  {
         int best = d.getBestSchedule();
         System.out.println(best);
         // Write the scheduled graph to a file.
-//        OutputWriter writer = new OutputWriter();
-//        writer.write(inputGraph, outputFileName);
+        OutputWriter writer = new OutputWriter();
+        writer.write(inputGraph, outputFileName);
         // 27 seconds
 
     }

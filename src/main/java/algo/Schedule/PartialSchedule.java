@@ -1,19 +1,19 @@
-package algo;
+package algo.Schedule;
 
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
 import java.util.HashSet;
 
-public class Schedule {
+public class PartialSchedule {
 
     private Processor[] processorList;
     private int latestScheduleTime = 0;
     private HashSet<Task> scheduledSet = new HashSet<>();
     private HashSet<Task> unscheduledSet = new HashSet<>();
-    public int commCost = 0;
+    public int idle = 0;
 
-    public Schedule(int numProcessors,Graph graph) {
+    public PartialSchedule(int numProcessors, Graph graph) {
         //Initialize Processor Pool
         processorList  = new Processor[numProcessors];
         for (int i = 0; i < numProcessors; i ++) {
@@ -28,7 +28,7 @@ public class Schedule {
     }
 
     //Copy constructor
-    public Schedule(Integer bestTime, Processor[] processors, HashSet<Task> scheduledSet, HashSet<Task> unscheduledSet){
+    public PartialSchedule(Integer bestTime, Processor[] processors, HashSet<Task> scheduledSet, HashSet<Task> unscheduledSet){
         this.latestScheduleTime = bestTime;
         this.processorList = processors.clone();
         this.scheduledSet = new HashSet<>(scheduledSet);
@@ -44,7 +44,7 @@ public class Schedule {
     }
 
     public void scheduleTask(Task task, int processorID,int est) {
-        commCost += est - processorList[processorID].getLatestTime();
+        idle += est - processorList[processorID].getLatestTime();
         processorList[processorID].addTask(task,est);
         scheduledSet.add(task);
         unscheduledSet.remove(task);
@@ -54,7 +54,7 @@ public class Schedule {
 //        }
     }
     public void removeTasks(Task task) {
-        commCost -= task.getCommunicationCost();
+        idle -= task.getCommunicationCost();
         scheduledSet.remove(task);
         unscheduledSet.add(task);
         task.unSchedule();
@@ -75,13 +75,4 @@ public class Schedule {
     public HashSet getUnscheduledTasks() {
         return this.unscheduledSet;
     }
-
-    public int getEarliestProcessorTime() {
-        int time = Integer.MAX_VALUE;
-        for (int i =0; i < processorList.length; i++) {
-            time = Math.min(time,processorList[i].getLatestTime());
-        }
-        return time;
-    }
-
 }

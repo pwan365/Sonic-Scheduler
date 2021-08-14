@@ -1,20 +1,19 @@
 package algo.CostFunctions;
 
-import algo.Processor;
-import algo.Task;
+import algo.Schedule.Task;
 
-public class Estimator implements Comparable<Estimator> {
+public class CostCalculator implements Comparable<CostCalculator> {
 
     private int procNum;
     private Task candidateTask;
     public int estCost;
 
-    public Estimator(Task task, int processor) {
+    public CostCalculator(Task task, int processor) {
         candidateTask = task;
         procNum = processor;
     }
     @Override
-    public int compareTo(Estimator e) {
+    public int compareTo(CostCalculator e) {
         return Integer.compare(this.estCost,e.estCost);
     }
 

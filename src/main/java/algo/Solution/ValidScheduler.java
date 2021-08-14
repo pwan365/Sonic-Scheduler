@@ -1,5 +1,8 @@
-package algo;
+package algo.Solution;
 
+import algo.Schedule.Processor;
+import algo.Schedule.Task;
+import algo.Solution.TopologicalSort;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import java.util.List;
