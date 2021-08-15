@@ -1,5 +1,7 @@
 import algo.Processor;
 import algo.Task;
+import com.sun.javafx.application.PlatformImpl;
+import gui.Controller;
 import gui.Visualiser;
 import io.InputReader;
 import io.OutputWriter;
@@ -40,7 +42,19 @@ public class Main {
          * TODO Implement Visualization by Milestone 2
          */
         if (commands.contains("-v")){
-            Application.launch(Visualiser.class);
+            PlatformImpl.startup(() -> {
+                Visualiser v = new Visualiser();
+                try{
+                    v.start(new Stage());
+
+                }catch(Exception e){
+
+                }
+                v.loadData(fileName);
+
+            });
+//            Application.launch(Visualiser.class);
+
         }
 
         /*
