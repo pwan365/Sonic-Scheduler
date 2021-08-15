@@ -19,3 +19,5 @@ current best schedule(Initially set to an INTEGER.MAX Time.) If it is then we de
 ### Deep Copying
 
 ### Representing time as a Stack
+
+## Psuedocode
