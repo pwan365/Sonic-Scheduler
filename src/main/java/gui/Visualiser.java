@@ -13,11 +13,10 @@ public class Visualiser extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader  = new FXMLLoader(getClass().getResource("/visualisation.fxml"));
+        FXMLLoader loader  = new FXMLLoader(Visualiser.class.getResource("/visualisation.fxml"));
         Parent root = loader.load();
         this.c = loader.getController();
-
-        stage.setScene(new Scene(root,900,500));
+        stage.setScene(new Scene(root,900,600));
         stage.show();
     }
 

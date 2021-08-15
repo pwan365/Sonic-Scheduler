@@ -8,13 +8,8 @@ public class Controller {
 
     @FXML
     private Label graphName;
-    @FXML
-    private Button startButton;
 
-    public void handleButtonClick(){
-        System.out.println("hello");
-        startButton.setText("clicked");
-    }
+
     public void passInput(String inputGraphName){
         graphName.setText(inputGraphName);
     }
