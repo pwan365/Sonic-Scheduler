@@ -37,12 +37,12 @@
             <Font name="System Bold" size="24.0" />
         </font>
     </Text>
-    <Text fill="#f78a47" layoutX="54.0" layoutY="193.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="83.7294921875">
+    <Text fx:id="totalTask" fill="#f78a47" layoutX="54.0" layoutY="193.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="83.7294921875">
         <font>
             <Font name="System Bold" size="24.0" />
         </font>
     </Text>
-    <Text fill="#f78a47" layoutX="166.0" layoutY="192.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="83.7294921875">
+    <Text fx:id="numProcess" fill="#f78a47" layoutX="166.0" layoutY="192.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="83.7294921875">
         <font>
             <Font name="System Bold" size="24.0" />
         </font>

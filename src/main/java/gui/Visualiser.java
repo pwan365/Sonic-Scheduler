@@ -20,7 +20,7 @@ public class Visualiser extends Application {
         stage.show();
     }
 
-    public void loadData(String inputName){
-        c.passInput(inputName);
+    public void loadData(String inputName, String numTask, int numProc){
+        c.passInput(inputName,numTask,numProc);
     }
 }

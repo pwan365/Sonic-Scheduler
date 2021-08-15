@@ -50,7 +50,7 @@ public class Main {
                 }catch(Exception e){
 
                 }
-                v.loadData(fileName);
+                v.loadData(fileName,"20",numberOfProcessors);
 
             });
 //            Application.launch(Visualiser.class);
