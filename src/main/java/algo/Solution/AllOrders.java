@@ -28,10 +28,10 @@ public class AllOrders {
      * @return The AllOrders Object.
      */
     public synchronized static AllOrders init(Graph g) {
-        if (allOrders != null) {
-            //Throw an error when LoadBalancer tries to get instantiated more than once.
-            throw new AssertionError("LoadBalancer has already been instantiated.");
-        }
+//        if (allOrders != null) {
+//            //Throw an error when LoadBalancer tries to get instantiated more than once.
+//            throw new AssertionError("LoadBalancer has already been instantiated.");
+//        }
         allOrders = new AllOrders(g);
         return allOrders;
     }

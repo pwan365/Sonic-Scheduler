@@ -57,7 +57,7 @@ public class PartialSchedule implements Schedule {
      * @param cost The cost to schedule the task on this processor.
      */
     public void scheduleTask(Task task, int processorID,int cost) {
-        idle += cost - processors[processorID].getTime();
+        idle += cost;
         processors[processorID].addTask(task,cost);
         scheduledSet.add(task);
         unscheduledSet.remove(task);

@@ -6,6 +6,7 @@ import io.InputReader;
 import io.OutputWriter;
 import org.graphstream.graph.Graph;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Main  {
@@ -58,8 +59,16 @@ public class Main  {
         v.topologicalorder(inputGraph);
 
         SequentialSearch d = new SequentialSearch(numberOfProcessors,inputGraph);
+        AllOrders a = AllOrders.init(inputGraph);
+
         HashSet<Task> empty = new HashSet<>();
-        d.branchBound((Task)inputGraph.getNode(0).getAttribute("Task"), 0,0);
+        ArrayList<Task> tasks = a.getOrder(empty);
+        for (Task task : tasks) {
+            for(int i=0; i<numberOfProcessors;i++) {
+                d.branchBound(task,i,0);
+            }
+
+        }
         int best = d.getBestSchedule();
         System.out.println(best);
         // Write the scheduled graph to a file.

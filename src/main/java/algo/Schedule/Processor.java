@@ -57,16 +57,12 @@ public class Processor {
     /**
      * This method will add a task to this processor at the earliest time possible, accounting for communication costs.
      */
-    public void addTask(Task task,int start) {
-//        int communicationCost = communicationCost(task);
-//        int latestProcessorTime = latestTime;
-//
-//        int taskStartTime = communicationCost + latestProcessorTime;
-        int comm = start - latestTime;
+    public void addTask(Task task,int cost) {
+        int taskStartTime = cost + latestTime;
         int taskDurationTime = task.getDurationTime();
-        int taskEndTime = start + taskDurationTime;
-        task.setTaskDetails(this, taskEndTime, start);
-        task.setCommunicationCost(comm);
+        int taskEndTime = taskStartTime + taskDurationTime;
+        task.setTaskDetails(this, taskEndTime, taskStartTime);
+        task.setCommunicationCost(cost);
         latestTime = taskEndTime;
         tasks.add(task);
     }
@@ -75,10 +71,9 @@ public class Processor {
      * @param task
      */
     public void removeLatestTask(Task task) {
-        int currentLatestTime = latestTime;
         int taskDuration = task.getDurationTime();
         int communicationCost = task.getCommunicationCost();
-        int newLatestTime = currentLatestTime - taskDuration - communicationCost;
+        int newLatestTime = latestTime - taskDuration - communicationCost;
         setLatestTime(newLatestTime);
         tasks.remove(task);
     }

@@ -1,6 +1,7 @@
 package algo.Solution;
 
 import algo.Schedule.Processor;
+import algo.Schedule.Schedule;
 import algo.Schedule.Task;
 import org.graphstream.graph.Edge;
 
@@ -17,7 +18,7 @@ public class CommunicationCost implements Comparable<CommunicationCost> {
     private final int start;
     private final int cost;
 
-    public CommunicationCost(Task candidateTask, Processor candidateProcessor) {
+    public CommunicationCost(Task candidateTask, Processor candidateProcessor, Schedule schedule) {
         task = candidateTask;
         processor = candidateProcessor;
         cost = communicationCost();
@@ -25,7 +26,7 @@ public class CommunicationCost implements Comparable<CommunicationCost> {
     }
     @Override
     public int compareTo(CommunicationCost e) {
-        return Integer.compare(this.start + this.cost,e.start+e.cost);
+        return Integer.compare(this.start,e.start);
     }
 
     /**
@@ -46,7 +47,7 @@ public class CommunicationCost implements Comparable<CommunicationCost> {
                 int parentEndTime = parentTask.getFinishingTime();
                 int commCost = ((Double) parentEdge.getAttribute("Weight")).intValue();
                 int candidateCost = parentEndTime + commCost;
-                calcCost = Math.max(cost, candidateCost - processorLatestTime);
+                calcCost = Math.max(calcCost, candidateCost - processorLatestTime);
             }
         }
         return calcCost;
@@ -59,11 +60,7 @@ public class CommunicationCost implements Comparable<CommunicationCost> {
         return processor.getProcessNum()-1;
     }
 
-    public int cost() {
+    public int commCost() {
         return cost;
-    }
-
-    public int startTime() {
-        return start;
     }
 }

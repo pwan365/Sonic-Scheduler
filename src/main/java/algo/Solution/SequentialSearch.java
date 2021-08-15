@@ -4,6 +4,7 @@ import algo.Schedule.BestSchedule;
 import algo.CostFunctions.CriticalPath;
 import algo.CostFunctions.LoadBalancer;
 import algo.Schedule.PartialSchedule;
+import algo.Schedule.Processor;
 import algo.Schedule.Task;
 import org.graphstream.graph.Graph;
 
@@ -21,6 +22,7 @@ public class SequentialSearch extends BranchAndBound {
     private LoadBalancer loadBalancer;
     private CriticalPath criticalPath;
     private AllOrders allOrders;
+    private DuplicateStart duplicateStart;
     //Optional, may remove.
     private long prune = 0;
 
@@ -30,26 +32,39 @@ public class SequentialSearch extends BranchAndBound {
         criticalPath = CriticalPath.init(inputGraph);
         loadBalancer = LoadBalancer.init(inputGraph,processors);
         allOrders = AllOrders.init(inputGraph);
+        duplicateStart = DuplicateStart.init();
     }
 
     /**
      * Recursive function that goes through all possible schedules and finds the one with the earliest schedule time.
      * @param task Task to be scheduled.
      * @param processor Processor to schedule the task on.
-     * @param Cost Cost to schedule the task on the processor.
+     * @param cost Cost to schedule the task on the processor.
      */
-    public void branchBound(Task task, int processor,int Cost) {
-        int numProcessors = partialSchedule.getNumProcessors();
-        int bWeight = criticalPath.getCriticalPath(task) + Cost;
-        int loadBalance = loadBalancer.calculateLB(partialSchedule.idle + Cost);
-        int candidateTime = Math.max(loadBalance,bWeight);
+    public void branchBound(Task task, int processor,int cost) {
+//        System.out.println("Processor");
+//        System.out.println(processor);
+//        System.out.println("PROCESSOR TIME");
+//        System.out.println(partialSchedule.getProcessors()[processor].getTime());
+//        System.out.println("COST");
+//        System.out.println(cost);
+//        System.out.println("TASK");
+//        System.out.println(task.getNode().getId());
 
-        if (bestSchedule.getTime() <= candidateTime) {
+//        System.out.println(cost);
+        Processor candidateProcessor = partialSchedule.getProcessors()[processor];
+        int start = partialSchedule.getTime();
+        int numProcessors = partialSchedule.getNumProcessors();
+        int bWeight = criticalPath.getCriticalPath(task)+ cost + candidateProcessor.getTime();
+        int loadBalance = loadBalancer.calculateLB(partialSchedule.idle + cost);
+        int candidateTime = Math.max(start, Math.max(bWeight, loadBalance));
+        boolean checkZeroTask =  duplicateStart.checkZeroTask(candidateProcessor,task,cost);
+        if (bestSchedule.getTime() <= candidateTime || checkZeroTask) {
             prune += 1;
             return;
         }
 
-        partialSchedule.scheduleTask(task,processor,Cost);
+        partialSchedule.scheduleTask(task,processor,cost);
 
         HashSet<Task> scheduledTasks = partialSchedule.getScheduledTasks();
         ArrayList<Task> allPossibilities = allOrders.getOrder(scheduledTasks);
@@ -65,9 +80,9 @@ public class SequentialSearch extends BranchAndBound {
 
         for(int i = 0; i < allPossibilities.size(); i++) {
             for (int j = 0; j < numProcessors; j++) {
-                CommunicationCost start = new CommunicationCost(allPossibilities.get(i),
-                        partialSchedule.getProcessors()[j]);
-                lowestCost.add(start);
+                CommunicationCost startTask = new CommunicationCost(allPossibilities.get(i),
+                        partialSchedule.getProcessors()[j],partialSchedule);
+                lowestCost.add(startTask);
             }
         }
 
@@ -75,13 +90,15 @@ public class SequentialSearch extends BranchAndBound {
             CommunicationCost candidate = lowestCost.poll();
             Task candidateTask = candidate.getTask();
             int processorID = candidate.getProcessorID();
-            int startTime = candidate.startTime();
-            branchBound(candidateTask,processorID,startTime);
+            int candidateCost = candidate.commCost();
+            branchBound(candidateTask,processorID,candidateCost);
         }
         partialSchedule.removeTasks(task);
     }
 
+
     public int getBestSchedule() {
+        System.out.println("PRUNED");
         System.out.println(prune);
         bestSchedule.done();
         return bestSchedule.getTime();

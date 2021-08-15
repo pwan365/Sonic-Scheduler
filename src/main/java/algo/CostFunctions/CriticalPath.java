@@ -1,5 +1,7 @@
 package algo.CostFunctions;
 
+import algo.Schedule.Processor;
+import algo.Schedule.Schedule;
 import algo.Schedule.Task;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
@@ -26,6 +28,7 @@ public class CriticalPath {
     private CriticalPath(Graph graph) {
 //        memo1 = new Integer[graph.getNodeCount()];
         for(int i = 0; i < graph.getNodeCount(); i++) {
+
             Node node = graph.getNode(i);
             Task task = (Task) node.getAttribute("Task");
             criticalPath(task,0);
