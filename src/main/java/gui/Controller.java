@@ -1,6 +1,7 @@
 package gui;
 
 import algo.Task;
+import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.chart.StackedBarChart;
@@ -76,7 +77,7 @@ public class Controller {
             }
     }
 
-    private class StatusRefresh extends AnimationTimer{
+    private class StatusRefresh extends AnimationTimer {
 
         @Override
         public void handle(long now) {
@@ -93,8 +94,8 @@ public class Controller {
         }
 
         /* TESTS - WILL BE REMOVED LATER */
-        formatStatesExamined(10000);
-        barChart(procNum);
+//        formatStatesExamined(10000);
+//        barChart(procNum);
     }
 
     /* Updates the states examined and formats large numbers into abbreviations */
