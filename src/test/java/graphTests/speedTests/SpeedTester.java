@@ -8,19 +8,14 @@ import algo.Solution.DuplicateStart;
 import algo.Solution.SequentialSearch;
 import algo.Solution.ValidScheduler;
 import graphTests.validateTests.InputReaderHelper;
-import graphTests.validateTests.Validator;
-import io.OutputWriter;
 import org.graphstream.graph.Graph;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SpeedTester {
@@ -38,7 +33,7 @@ public class SpeedTester {
         int best = this.scheduling(inputGraph, numProc);
 
 
-        assertTrue(best == 28);
+        assertEquals(best, 28);
     }
 
     @Test
@@ -52,7 +47,7 @@ public class SpeedTester {
 
         int best = this.scheduling(inputGraph, numProc);
 
-        assertTrue(best == 22);
+        assertEquals(best, 22);
     }
 
     @Test
@@ -66,7 +61,7 @@ public class SpeedTester {
 
         int best = this.scheduling(inputGraph, numProc);
 
-        assertTrue(best == 581);
+        assertEquals(best, 581);
     }
 
     @Test
@@ -80,7 +75,7 @@ public class SpeedTester {
 
         int best = this.scheduling(inputGraph, numProc);
 
-        assertTrue(best == 581);
+        assertEquals(best, 581);
     }
 
     @Test
@@ -94,7 +89,7 @@ public class SpeedTester {
 
         int best = this.scheduling(inputGraph, numProc);
 
-        assertTrue(best == 55);
+        assertEquals(best, 55);
     }
 
     @Test
@@ -108,7 +103,7 @@ public class SpeedTester {
 
         int best = this.scheduling(inputGraph, numProc);
 
-        assertTrue(best == 55);
+        assertEquals(best, 55);
     }
 
     @Test
@@ -122,7 +117,7 @@ public class SpeedTester {
 
         int best = this.scheduling(inputGraph, numProc);
 
-        assertTrue(best == 50);
+        assertEquals(best, 50);
     }
 
     @Test
@@ -136,7 +131,7 @@ public class SpeedTester {
 
         int best = this.scheduling(inputGraph, numProc);
 
-        assertTrue(best == 50);
+        assertEquals(best, 50);
     }
 
     @Test
@@ -164,7 +159,7 @@ public class SpeedTester {
 
         int best = this.scheduling(inputGraph, numProc);
 
-        assertTrue(best == 227);
+        assertEquals(best, 227);
     }
 
     @AfterEach
@@ -207,8 +202,7 @@ public class SpeedTester {
                 d.branchBound(task,i,0);
             }
         }
-        int best = d.getBestSchedule();
-        return best;
+        return d.getBestSchedule();
     }
 
 }
