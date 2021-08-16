@@ -60,7 +60,7 @@
             <Font name="System Bold" size="13.0" />
         </font>
     </Text>
-    <Button id="startBtn" layoutX="770.0" layoutY="47.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="90.0" text="START" textFill="WHITE">
+    <Button id="startBtn" fx:id="startBtn" layoutX="770.0" layoutY="47.0" mnemonicParsing="false" onAction="#start" prefHeight="35.0" prefWidth="90.0" text="START" textFill="WHITE">
         <font>
             <Font name="System Bold" size="13.0" />
         </font>
@@ -70,7 +70,7 @@
             <Font size="11.0" />
         </font>
     </Text>
-    <Text layoutX="648.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="STANDBY" wrappingWidth="99.7294921875">
+    <Text fx:id="statusText" layoutX="648.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="STANDBY" wrappingWidth="99.7294921875">
         <font>
             <Font name="System Bold" size="12.0" />
         </font>
@@ -79,10 +79,10 @@
    <Label fx:id="graphName" layoutX="123.0" layoutY="238.0" text="Label" />
    <StackedBarChart layoutX="307.0" layoutY="132.0" prefHeight="436.0" prefWidth="566.0" AnchorPane.topAnchor="132.0">
      <xAxis>
-       <NumberAxis label="Time" side="BOTTOM"  />
+       <NumberAxis label="Time" side="BOTTOM" />
      </xAxis>
      <yAxis>
-       <CategoryAxis label="Processors" side="LEFT"/>
+       <CategoryAxis label="Processors" side="LEFT" />
      </yAxis>
    </StackedBarChart>
 </AnchorPane>
