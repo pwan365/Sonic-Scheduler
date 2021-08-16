@@ -25,8 +25,10 @@ public class SequentialSearch extends BranchAndBound {
     private DuplicateStart duplicateStart;
     //Optional, may remove.
     private long prune = 0;
+    private Graph input;
 
     public SequentialSearch(int processors, Graph inputGraph) {
+        input = inputGraph;
         partialSchedule = new PartialSchedule(processors,inputGraph);
         bestSchedule = new BestSchedule();
         criticalPath = CriticalPath.init(inputGraph);
@@ -101,6 +103,7 @@ public class SequentialSearch extends BranchAndBound {
         System.out.println("PRUNED");
         System.out.println(prune);
         bestSchedule.done();
+        bestSchedule.writeToGraph(input);
         return bestSchedule.getTime();
     }
 }
