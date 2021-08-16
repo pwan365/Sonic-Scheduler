@@ -40,7 +40,7 @@ public class CriticalPath {
      * @param g Input graph from user.
      * @return CriticalPath object.
      */
-    public synchronized static CriticalPath init(Graph g) {
+    public static synchronized  CriticalPath init(Graph g) {
         if (criticalPath != null) {
             throw new AssertionError("CriticalPath class has already been instantiated");
         }
@@ -87,5 +87,9 @@ public class CriticalPath {
     public int getCriticalPath(Task task) {
         int path = memo.get(task);
         return path;
+    }
+
+    public static void  clearObject() {
+        criticalPath = null;
     }
 }

@@ -57,4 +57,8 @@ public class LoadBalancer {
             weight += nodeWeight;
         }
     }
+
+    public static void clearObject() {
+        loadBalancer = null;
+    }
 }
