@@ -1,6 +1,5 @@
 package gui;
 
-import algo.Task;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.scene.Node;

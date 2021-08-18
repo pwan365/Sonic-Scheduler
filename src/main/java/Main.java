@@ -1,5 +1,4 @@
-import algo.Processor;
-import algo.Task;
+
 import com.sun.javafx.application.PlatformImpl;
 import gui.Controller;
 import gui.Visualiser;
@@ -17,7 +16,7 @@ import org.graphstream.graph.Graph;
 import java.lang.reflect.Array;
 import java.util.*;
 
-import algo.ValidScheduler;
+
 
 public class Main {
     private static Scene scene;
