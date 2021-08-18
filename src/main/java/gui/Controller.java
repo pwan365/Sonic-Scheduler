@@ -52,8 +52,6 @@ public class Controller {
 
     public void start(){
         toggleBtn(control);
-
-        System.out.println("hello");
     }
 
     public void toggleBtn(StatusRefresh control){
@@ -85,15 +83,17 @@ public class Controller {
         @Override
         public void handle(long now) {
 
-            if (now - lastUpdate < 50_000_0000) {
+            if (now - lastUpdate < 50_000_000) {
                 return;
             } else {
                 lastUpdate = now;
-                System.out.println(now);
             }
             long elapsedMillis = System.currentTimeMillis() - startTime;
+            int milliseconds = (int) ( elapsedMillis % 1000);
             int seconds = (int) ((elapsedMillis / 1000) % 60);
-            timeElapsed.setText(String.valueOf(seconds));
+            int minutes = (int) ((elapsedMillis / (1000 * 60)) % 60);
+            int hours = (int) (elapsedMillis / (1000 * 60 * 60));
+            timeElapsed.setText(String.format("%02d : %02d : %02d.%02d",hours,minutes,seconds,milliseconds/10));
         }
 
         public void setStartTime(){
