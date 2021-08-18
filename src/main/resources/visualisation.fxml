@@ -25,7 +25,7 @@
     <Text fill="WHITE" layoutX="69.0" layoutY="311.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Time Elapsed (s)" textAlignment="CENTER" wrappingWidth="159.7294921875" />
     <Text fill="WHITE" layoutX="72.0" layoutY="401.0" strokeType="OUTSIDE" strokeWidth="0.0" text="States Examined" textAlignment="CENTER" wrappingWidth="159.7294921875" />
     <Text fill="WHITE" layoutX="72.0" layoutY="490.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Best Time" textAlignment="CENTER" wrappingWidth="159.7294921875" />
-    <Text fill="WHITE" layoutX="69.0" layoutY="345.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0.0" textAlignment="CENTER" wrappingWidth="159.7294921875">
+    <Text fx:id="timeElapsed" fill="WHITE" layoutX="69.0" layoutY="345.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0.0" textAlignment="CENTER" wrappingWidth="159.7294921875">
         <font>
             <Font name="System Bold" size="24.0" />
         </font>
@@ -76,18 +76,18 @@
         </font>
     </Text>
     <Region layoutX="293.0" layoutY="108.0" prefHeight="489.0" prefWidth="599.0" style="-fx-background-color: white; -fx-background-radius: 50px;" />
-   <Label fx:id="graphName" layoutX="109.0" layoutY="238.0" prefWidth="146.0" text="Label" />
-   <StackedBarChart fx:id="barChartSchedule" layoutX="307.0" layoutY="132.0" prefHeight="436.0" prefWidth="566.0" title="Current best partial schedule" AnchorPane.topAnchor="132.0">
-     <xAxis>
-       <NumberAxis label="Time" side="BOTTOM" />
-     </xAxis>
-     <yAxis>
-       <CategoryAxis label="Processors" side="LEFT" />
-     </yAxis>
-   </StackedBarChart>
-   <Text fx:id="statesMagnitude" fill="WHITE" layoutX="72.0" layoutY="446.0" strokeType="OUTSIDE" strokeWidth="0.0" text="million" textAlignment="CENTER" wrappingWidth="159.7294921875">
-      <font>
-         <Font name="System Bold" size="14.0" />
-      </font>
-   </Text>
+    <Label fx:id="graphName" layoutX="109.0" layoutY="238.0" prefWidth="146.0" text="Label" />
+    <StackedBarChart fx:id="barChartSchedule" layoutX="307.0" layoutY="132.0" prefHeight="436.0" prefWidth="566.0" title="Current best partial schedule" AnchorPane.topAnchor="132.0">
+        <xAxis>
+            <NumberAxis label="Time" side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+            <CategoryAxis label="Processors" side="LEFT" />
+        </yAxis>
+    </StackedBarChart>
+    <Text fx:id="statesMagnitude" fill="WHITE" layoutX="72.0" layoutY="446.0" strokeType="OUTSIDE" strokeWidth="0.0" text="million" textAlignment="CENTER" wrappingWidth="159.7294921875">
+        <font>
+            <Font name="System Bold" size="14.0" />
+        </font>
+    </Text>
 </AnchorPane>

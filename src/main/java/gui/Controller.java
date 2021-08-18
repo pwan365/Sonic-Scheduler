@@ -18,7 +18,8 @@ public class Controller {
 
     @FXML
     private Label graphName;
-
+    @FXML
+    private Text timeElapsed;
     @FXML
     private Text totalTask;
 
@@ -60,29 +61,29 @@ public class Controller {
             init = false;
             isRunning = true;
             control.start();
+            control.setStartTime();
         }else{
             isRunning = !isRunning;
         }
-            if(isRunning){
-                startBtn.setText("STOP");
-                startBtn.setStyle("-fx-background-color: #A30000");
-                statusText.setText("SCHEDULING");
-                control.start();
-            }else{
-                startBtn.setText("START");
-                startBtn.setStyle("-fx-background-color: #56b661");
-                statusText.setText("STANDBY");
-                control.stop();
-            }
+        if(isRunning){
+            startBtn.setText("STOP");
+            startBtn.setStyle("-fx-background-color: #A30000");
+            statusText.setText("SCHEDULING");
+            control.start();
+            control.setStartTime();
+        }else{
+            startBtn.setText("START");
+            startBtn.setStyle("-fx-background-color: #56b661");
+            statusText.setText("STANDBY");
+            control.stop();
+        }
     }
 
     private class StatusRefresh extends AnimationTimer {
-
+        long startTime;
+        long lastUpdate = 0;
         @Override
         public void handle(long now) {
-            final long startTime = System.currentTimeMillis();
-            long lastUpdate = 0;
-
 
             if (now - lastUpdate < 50_000_0000) {
                 return;
@@ -90,6 +91,13 @@ public class Controller {
                 lastUpdate = now;
                 System.out.println(now);
             }
+            long elapsedMillis = System.currentTimeMillis() - startTime;
+            int seconds = (int) ((elapsedMillis / 1000) % 60);
+            timeElapsed.setText(String.valueOf(seconds));
+        }
+
+        public void setStartTime(){
+            startTime = System.currentTimeMillis();
         }
 
         /* TESTS - WILL BE REMOVED LATER */
