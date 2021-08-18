@@ -118,11 +118,22 @@ public class SequentialSearch extends BranchAndBound {
     }
 
 
-    public int getBestSchedule() {
+    public int getBestTime() {
         System.out.println("PRUNED");
         System.out.println(prune);
         bestSchedule.done();
         bestSchedule.writeToGraph(input);
         return bestSchedule.getTime();
+    }
+
+    public void writeToGraph() {
+        System.out.println("PRUNED");
+        System.out.println(prune);
+        bestSchedule.done();
+        bestSchedule.writeToGraph(input);
+    }
+
+    public BestSchedule getBestSchedule() {
+        return bestSchedule;
     }
 }

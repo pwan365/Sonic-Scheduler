@@ -53,6 +53,7 @@ public class BestSchedule implements Schedule {
                 node.setAttribute("Task", task);
             }
         }
+        System.out.println(bestTime);
     }
 
 }

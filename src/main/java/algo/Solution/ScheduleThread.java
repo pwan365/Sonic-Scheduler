@@ -1,5 +1,6 @@
 package algo.Solution;
 
+import algo.Schedule.BestSchedule;
 import algo.Schedule.Task;
 import io.InputReader;
 import io.OutputWriter;
@@ -12,6 +13,7 @@ public class ScheduleThread extends Thread{
     private String inputFileName;
     private String outputFileName;
     private int numberOfProcessors;
+    private SequentialSearch search;
 
     public ScheduleThread(String inputName, String outputName, int numOfProcessors){
         inputFileName = inputName;
@@ -27,15 +29,25 @@ public class ScheduleThread extends Thread{
         ValidScheduler v = new ValidScheduler(1);
         v.topologicalorder(inputGraph);
 
-        SequentialSearch d = new SequentialSearch(numberOfProcessors,inputGraph);
-        d.schedule();
-        int best = d.getBestSchedule();
-        System.out.println(best);
+        search = new SequentialSearch(numberOfProcessors,inputGraph);
+        search.schedule();
+        search.writeToGraph();
         // Write the scheduled graph to a file.
         OutputWriter writer = new OutputWriter();
         writer.write(inputGraph, outputFileName);
         // 27 seconds
     }
 
+    public int getBestTime() {
+        return search.getBestTime();
+    }
+
+    public BestSchedule getBestSchedule() {
+        return search.getBestSchedule();
+    }
+
+    public int getStates() {
+        return search.getStates();
+    }
 
 }
