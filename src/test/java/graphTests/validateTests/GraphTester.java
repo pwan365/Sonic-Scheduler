@@ -1,7 +1,5 @@
-package validateTests;
+package graphTests.validateTests;
 
-import algo.Processor;
-import algo.ValidScheduler;
 import io.OutputWriter;
 import org.graphstream.graph.Graph;
 
@@ -425,9 +423,9 @@ public class GraphTester {
     private static String outputGenerator(Graph input, String inputFileName, int numberOfProcessors) {
         Graph copyOfInput = input;
 
-        ValidScheduler v = new ValidScheduler(numberOfProcessors);
-        v.topologicalorder(copyOfInput);
-        v.scheduleTasks();
+//        ValidScheduler v = new ValidScheduler(numberOfProcessors);
+//        v.topologicalorder(copyOfInput);
+//        v.scheduleTasks();
         OutputWriter writer = new OutputWriter();
         writer.write(copyOfInput,inputFileName.replace(".dot", "-output.dot"));
 

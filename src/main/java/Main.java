@@ -3,6 +3,10 @@ import algo.Task;
 import com.sun.javafx.application.PlatformImpl;
 import gui.Controller;
 import gui.Visualiser;
+import algo.Schedule.Task;
+import algo.Solution.AllOrders;
+import algo.Solution.ValidScheduler;
+import algo.Solution.SequentialSearch;
 import io.InputReader;
 import io.OutputWriter;
 import javafx.application.Application;
@@ -10,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.graphstream.graph.Graph;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 import algo.ValidScheduler;
@@ -17,7 +22,9 @@ import algo.ValidScheduler;
 public class Main {
     private static Scene scene;
 
-    public static void main(String[] args) {
+
+
+    public static void main(String[] args) throws CloneNotSupportedException {
 
         List<String> commands = Arrays.asList(args);
 
@@ -71,17 +78,30 @@ public class Main {
         }
 
         // Read and perform valid sorting of graph.
+
         InputReader reader = new InputReader(fileName);
         Graph inputGraph = reader.read();
 
-        ValidScheduler v = new ValidScheduler(numberOfProcessors);
-
+        ValidScheduler v = new ValidScheduler(1);
         v.topologicalorder(inputGraph);
-        v.scheduleTasks();
 
+        SequentialSearch d = new SequentialSearch(numberOfProcessors,inputGraph);
+        AllOrders a = AllOrders.init(inputGraph);
+
+        HashSet<Task> empty = new HashSet<>();
+        ArrayList<Task> tasks = a.getOrder(empty);
+        for (Task task : tasks) {
+            for(int i=0; i<numberOfProcessors;i++) {
+                d.branchBound(task,i,0);
+            }
+
+        }
+        int best = d.getBestSchedule();
+        System.out.println(best);
         // Write the scheduled graph to a file.
         OutputWriter writer = new OutputWriter();
         writer.write(inputGraph, outputFileName);
+        // 27 seconds
 
     }
 
