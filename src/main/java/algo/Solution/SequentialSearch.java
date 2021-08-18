@@ -23,11 +23,14 @@ public class SequentialSearch extends BranchAndBound {
     private CriticalPath criticalPath;
     private AllOrders allOrders;
     private DuplicateStart duplicateStart;
+    private int numProcessors;
     //Optional, may remove.
     private long prune = 0;
     private Graph input;
+    private int states = 0;
 
     public SequentialSearch(int processors, Graph inputGraph) {
+        numProcessors = processors;
         input = inputGraph;
         partialSchedule = new PartialSchedule(processors,inputGraph);
         bestSchedule = new BestSchedule();
@@ -37,6 +40,18 @@ public class SequentialSearch extends BranchAndBound {
         duplicateStart = DuplicateStart.init();
     }
 
+    public void schedule() {
+        allOrders = AllOrders.init(input);
+
+        HashSet<Task> empty = new HashSet<>();
+        ArrayList<Task> tasks = allOrders.getOrder(empty);
+        for (Task task : tasks) {
+            for(int i=0; i<numProcessors;i++) {
+                branchBound(task,i,0);
+            }
+
+        }
+    }
     /**
      * Recursive function that goes through all possible schedules and finds the one with the earliest schedule time.
      * @param task Task to be scheduled.
@@ -56,7 +71,6 @@ public class SequentialSearch extends BranchAndBound {
 //        System.out.println(cost);
         Processor candidateProcessor = partialSchedule.getProcessors()[processor];
         int start = partialSchedule.getTime();
-        int numProcessors = partialSchedule.getNumProcessors();
         int bWeight = criticalPath.getCriticalPath(task)+ cost + candidateProcessor.getTime();
         int loadBalance = loadBalancer.calculateLB(partialSchedule.idle + cost);
         int candidateTime = Math.max(start, Math.max(bWeight, loadBalance));
@@ -96,6 +110,11 @@ public class SequentialSearch extends BranchAndBound {
             branchBound(candidateTask,processorID,candidateCost);
         }
         partialSchedule.removeTasks(task);
+        states += 1;
+    }
+
+    public int getStates() {
+        return states;
     }
 
 
