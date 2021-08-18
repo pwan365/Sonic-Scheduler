@@ -14,6 +14,7 @@ public class ScheduleThread extends Thread{
     private String outputFileName;
     private int numberOfProcessors;
     private SequentialSearch search;
+    private boolean done = false;
 
     public ScheduleThread(String inputName, String outputName, int numOfProcessors){
         inputFileName = inputName;
@@ -31,6 +32,7 @@ public class ScheduleThread extends Thread{
 
         search = new SequentialSearch(numberOfProcessors,inputGraph);
         search.schedule();
+        done = true;
         search.writeToGraph();
         // Write the scheduled graph to a file.
         OutputWriter writer = new OutputWriter();
@@ -50,4 +52,7 @@ public class ScheduleThread extends Thread{
         return search.getStates();
     }
 
+    public boolean isDone() {
+        return done;
+    }
 }
