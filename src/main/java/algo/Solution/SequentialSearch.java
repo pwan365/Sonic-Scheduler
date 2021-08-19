@@ -52,7 +52,6 @@ public class SequentialSearch extends BranchAndBound {
                 branchBound(task,i,0);
             }
         }
-        newBest = true;
     }
     /**
      * Recursive function that goes through all possible schedules and finds the one with the earliest schedule time.
@@ -91,6 +90,7 @@ public class SequentialSearch extends BranchAndBound {
                 int candidateBest = partialSchedule.getTime();
                 if (candidateBest < bestSchedule.getTime()) {
                     bestSchedule.makeCopy(candidateBest, partialSchedule.getProcessors());
+                    newBest = true;
                 }
         }
 

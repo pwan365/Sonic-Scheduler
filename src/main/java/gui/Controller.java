@@ -115,13 +115,13 @@ public class Controller {
             }
 
             formatStatesExamined(scheduleThread.getStates());
-            bestTime.setText(scheduleThread.getBestTime() + "");
-            updateBarChart();
+            //bestTime.setText(scheduleThread.getBestTime() + "");
+            //updateBarChart();
 
-            /*if (scheduleThread.getBestChanged()) {
+            if (scheduleThread.getBestChanged()) {
                 bestTime.setText(scheduleThread.getBestTime() + "");
                 updateBarChart();
-            }*/
+            }
 
             System.out.println(scheduleThread.isDone());
             if(scheduleThread.isDone()){
