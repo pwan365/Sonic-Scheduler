@@ -1,5 +1,6 @@
 package gui;
 
+import algo.Solution.ScheduleThread;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 
@@ -20,7 +21,7 @@ public class Visualiser extends Application {
         stage.show();
     }
 
-    public void loadData(String inputName, String numTask, int numProc){
-        c.passInput(inputName,numTask,numProc);
+    public void loadData(ScheduleThread scheduleThread,String inputName, String numTask, int numProc){
+        c.passInput(scheduleThread, inputName,numTask,numProc);
     }
 }

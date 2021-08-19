@@ -3,6 +3,7 @@ package algo.Schedule;
 import algo.Solution.CommunicationCost;
 import org.graphstream.graph.Edge;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -81,4 +82,5 @@ public class Processor {
     public HashSet<Task> getTasks(){
         return tasks;
     }
+
 }

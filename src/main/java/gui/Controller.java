@@ -1,14 +1,24 @@
 package gui;
 
+import algo.Schedule.BestSchedule;
+import algo.Schedule.Processor;
+import algo.Schedule.Task;
+import algo.Solution.ScheduleThread;
 import javafx.animation.AnimationTimer;
+import javafx.beans.property.ObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.text.Text;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 public class Controller {
@@ -40,18 +50,29 @@ public class Controller {
     @FXML
     private Text statesMagnitude;
 
+    CategoryAxis yAxis = new CategoryAxis();
+
+    NumberAxis xAxis = new NumberAxis();
     @FXML
-    private StackedBarChart<Number, String> barChartSchedule;
+    private StackedBarChart<Number, String> barChartSchedule ;
 
+    ScheduleThread scheduleThread;
 
-    public void passInput(String inputGraphName, String taskNum, int procNum){
+    public void passInput(ScheduleThread scheduleThread,String inputGraphName, String taskNum, int procNum){
+        this.scheduleThread = scheduleThread;
         graphName.setText(inputGraphName);
         totalTask.setText(taskNum);
         numProcess.setText(String.valueOf(procNum));
+        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+
     }
 
     public void start(){
         toggleBtn(control);
+        scheduleThread.start();
+        updateBarChart();
+
+
     }
 
     public void toggleBtn(StatusRefresh control){
@@ -88,6 +109,7 @@ public class Controller {
             } else {
                 lastUpdate = now;
             }
+            updateBarChart();
             long elapsedMillis = System.currentTimeMillis() - startTime;
             int milliseconds = (int) ( elapsedMillis % 1000);
             int seconds = (int) ((elapsedMillis / 1000) % 60);
@@ -139,4 +161,68 @@ public class Controller {
         barChartSchedule.getData().addAll(series1, series2);
     }
 
+    public void updateBarChart() {
+
+        List<List<Task>> barList = getBestSchedule();
+        if(barList == null){
+            return;
+        }
+        barChartSchedule.getData().clear();
+
+        XYChart.Series<Number, String> dataSeries1 = new XYChart.Series<Number, String>();
+
+//        for (List<Task> )
+        List<Task> eachBar = barList.get(0);
+        Task eachPart = eachBar.get(0);
+        int length = eachPart.getDurationTime();
+        String procNum = "P1";
+        dataSeries1.getData().add(new XYChart.Data<Number, String>(length, procNum));
+
+
+//        dataSeries1.setName("P1");
+//        dataSeries1.getData().add(new XYChart.Data<Number, String>(100, "P1"));
+//        final XYChart.Data<Number, String> bar = new XYChart.Data<Number,String>(50, "P1");
+//        bar.nodeProperty().addListener((ov, oldNode, node) -> {
+//            if (node != null) {
+//
+//                // Idle tasks should be transparent
+//                node.setStyle("-fx-bar-fill: transparent");
+//
+//            }
+//        });
+//
+//        dataSeries1.getData().add(bar);
+//        dataSeries1.getData().add(new XYChart.Data<Number, String>(120, "P1"));
+//
+//
+//        XYChart.Series<Number, String> dataSeries2 = new XYChart.Series<Number, String>();
+//        dataSeries2.setName("P2");
+//        dataSeries2.getData().add(new XYChart.Data<Number, String>(120, "P2"));
+//        barChartSchedule.getData().addAll(dataSeries1,dataSeries2);
+        barChartSchedule.getData().addAll(dataSeries1);
+
+    }
+
+    public List<List<Task>> getBestSchedule(){
+        BestSchedule b = scheduleThread.getBestSchedule();
+        List<List<Task>> barList = new ArrayList<>();
+
+        if (b.getProcessors()==null){
+            return null;
+        }
+        Processor[] processors = b.getProcessors();
+        HashSet<Task> tasks;
+        List<Task> eachBar = new ArrayList<>();
+
+
+        for(int i=0 ; i<processors.length;i++){
+            tasks=processors[i].getTasks();
+            Iterator value = tasks.iterator();
+            while (value.hasNext()){
+                eachBar.add((Task) value.next());
+            }
+            barList.add(eachBar);
+        }
+        return barList;
+    }
 }

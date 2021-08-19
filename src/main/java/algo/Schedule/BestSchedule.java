@@ -13,7 +13,8 @@ public class BestSchedule implements Schedule {
     private Processor[] processors;
     private int bestTime;
 
-    public BestSchedule(){
+    public BestSchedule(int numProc){
+
         bestTime = Integer.MAX_VALUE;
     }
 

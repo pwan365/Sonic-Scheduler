@@ -41,13 +41,14 @@ public class Main {
         if (commands.contains("-v")){
             PlatformImpl.startup(() -> {
                 Visualiser v = new Visualiser();
+               ScheduleThread scheduleThread = new ScheduleThread(fileName,"Test-output.dot",numberOfProcessors);
                 try{
                     v.start(new Stage());
 
                 }catch(Exception e){
 
                 }
-                v.loadData(fileName,"20",numberOfProcessors);
+                v.loadData(scheduleThread,fileName,"20",numberOfProcessors);
 
             });
 //            Application.launch(Visualiser.class);
@@ -67,8 +68,7 @@ public class Main {
             }
         }
 
-        ScheduleThread scheduleThread = new ScheduleThread(fileName, outputFileName, numberOfProcessors);
-        scheduleThread.start();
+
 
     }
 

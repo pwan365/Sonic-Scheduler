@@ -33,7 +33,7 @@ public class SequentialSearch extends BranchAndBound {
         numProcessors = processors;
         input = inputGraph;
         partialSchedule = new PartialSchedule(processors,inputGraph);
-        bestSchedule = new BestSchedule();
+        bestSchedule = new BestSchedule(processors);
         criticalPath = CriticalPath.init(inputGraph);
         loadBalancer = LoadBalancer.init(inputGraph,processors);
         allOrders = AllOrders.init(inputGraph);

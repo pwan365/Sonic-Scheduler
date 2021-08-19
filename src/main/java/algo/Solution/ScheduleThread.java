@@ -15,22 +15,24 @@ public class ScheduleThread extends Thread{
     private int numberOfProcessors;
     private SequentialSearch search;
     private boolean done = false;
+    private Graph inputGraph;
 
     public ScheduleThread(String inputName, String outputName, int numOfProcessors){
         inputFileName = inputName;
         outputFileName = outputName;
         numberOfProcessors = numOfProcessors;
-    }
-
-    public void run(){
         // Read and perform valid sorting of graph.
         InputReader reader = new InputReader(inputFileName);
-        Graph inputGraph = reader.read();
+        inputGraph = reader.read();
 
         ValidScheduler v = new ValidScheduler(1);
         v.topologicalorder(inputGraph);
 
         search = new SequentialSearch(numberOfProcessors,inputGraph);
+    }
+
+    public void run(){
+
         search.schedule();
         done = true;
         search.writeToGraph();
