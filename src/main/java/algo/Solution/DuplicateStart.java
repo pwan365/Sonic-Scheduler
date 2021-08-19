@@ -59,4 +59,8 @@ public class DuplicateStart {
         }
         return false;
     }
+
+    public static void clearObject() {
+        duplicateStart = null;
+    }
 }
