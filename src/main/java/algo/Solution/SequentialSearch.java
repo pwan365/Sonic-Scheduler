@@ -1,8 +1,11 @@
 package algo.Solution;
 
-import algo.Schedule.*;
+import algo.Schedule.BestSchedule;
 import algo.CostFunctions.CriticalPath;
 import algo.CostFunctions.LoadBalancer;
+import algo.Schedule.PartialSchedule;
+import algo.Schedule.Processor;
+import algo.Schedule.Task;
 import org.graphstream.graph.Graph;
 
 import java.util.*;
@@ -23,6 +26,8 @@ public class SequentialSearch extends BranchAndBound {
     //Optional, may remove.
     private long prune = 0;
     private Graph input;
+    private int numProcessors;
+    private Processor[] processorList;
     private HashSet<Integer> duplicateDetector;
 
     public SequentialSearch(int processors, Graph inputGraph) {
@@ -33,6 +38,8 @@ public class SequentialSearch extends BranchAndBound {
         loadBalancer = LoadBalancer.init(inputGraph,processors);
         allOrders = AllOrders.init(inputGraph);
         duplicateStart = DuplicateStart.init();
+        processorList = partialSchedule.getProcessors();
+        numProcessors = processors;
         duplicateDetector = new HashSet<>();
     }
 
@@ -53,35 +60,20 @@ public class SequentialSearch extends BranchAndBound {
 //        System.out.println(task.getNode().getId());
 
 //        System.out.println(cost);
-        Processor candidateProcessor = partialSchedule.getProcessors()[processor];
+        Processor candidateProcessor = processorList[processor];
         int start = partialSchedule.getTime();
-        int numProcessors = partialSchedule.getNumProcessors();
+
         int bWeight = criticalPath.getCriticalPath(task)+ cost + candidateProcessor.getTime();
         int loadBalance = loadBalancer.calculateLB(partialSchedule.idle + cost);
         int candidateTime = Math.max(start, Math.max(bWeight, loadBalance));
         boolean checkZeroTask =  duplicateStart.checkZeroTask(candidateProcessor,task,cost);
+
         if (bestSchedule.getTime() <= candidateTime || checkZeroTask) {
             prune += 1;
             return;
         }
 
-        int hashCode = hashCodeGenerator(numProcessors);
-
-        for (Task scheduledTask: partialSchedule.getScheduledTasks()){
-            System.out.println("Task start time " + scheduledTask.getStartingTime());
-            System.out.println("Task processor " + scheduledTask.getAllocatedProcessor().getProcessNum());
-        }
-
-        System.out.println(hashCode);
-        if (duplicateDetector.contains(hashCode)){
-            prune += 1;
-            return;
-        } else {
-            duplicateDetector.add(hashCode);
-        }
-
         partialSchedule.scheduleTask(task,processor,cost);
-
 
         HashSet<Task> scheduledTasks = partialSchedule.getScheduledTasks();
         ArrayList<Task> allPossibilities = allOrders.getOrder(scheduledTasks);
@@ -94,12 +86,25 @@ public class SequentialSearch extends BranchAndBound {
         }
 
         PriorityQueue<CommunicationCost> lowestCost = new PriorityQueue<>();
-
+        boolean [] candidateProcessors = normalise();
         for(int i = 0; i < allPossibilities.size(); i++) {
             for (int j = 0; j < numProcessors; j++) {
-                CommunicationCost startTask = new CommunicationCost(allPossibilities.get(i),
-                        partialSchedule.getProcessors()[j],partialSchedule);
-                lowestCost.add(startTask);
+                if (candidateProcessors[j]) {
+
+                    CommunicationCost startTask = new CommunicationCost(allPossibilities.get(i),
+                            partialSchedule.getProcessors()[j],partialSchedule,criticalPath.
+                            getCriticalPath(allPossibilities.get(i)));
+
+                    int hashCode = hashCodeGenerator(numProcessors,allPossibilities.get(i),j,startTask.startTime());
+                    if (!duplicateDetector.contains(hashCode)) {
+                        lowestCost.add(startTask);
+                        duplicateDetector.add(hashCode);
+                    }
+                    else {
+                        prune += 1;
+                    }
+
+                }
             }
         }
 
@@ -113,15 +118,27 @@ public class SequentialSearch extends BranchAndBound {
         partialSchedule.removeTasks(task);
     }
 
-    public int getBestSchedule() {
-        System.out.println("PRUNED");
-        System.out.println(prune);
-        bestSchedule.done();
-        bestSchedule.writeToGraph(input);
-        return bestSchedule.getTime();
+    private boolean [] normalise() {
+        boolean zeroFlag = false;
+        boolean [] processorStarted = new boolean[numProcessors];
+        for (int i = 0; i < numProcessors; i ++) {
+            if (processorList[i].getTime() == 0) {
+                if (!zeroFlag) {
+                    zeroFlag = true;
+                    processorStarted[i] = true;
+                }
+                else {
+                    processorStarted[i] = false;
+                }
+            }
+            else {
+                processorStarted[i] = true;
+            }
+        }
+        return processorStarted;
     }
 
-    public int hashCodeGenerator(int numberOfProcessors) {
+    public int hashCodeGenerator(int numberOfProcessors,Task candTask, int candProcessor, int start) {
         HashSet<Task> scheduledTasks = partialSchedule.getScheduledTasks();
         Set<Stack<Integer>> scheduleSet = new HashSet<>();
         Stack<Integer>[] stacks = new Stack[numberOfProcessors];
@@ -133,11 +150,11 @@ public class SequentialSearch extends BranchAndBound {
         for(Task scheduledTask: scheduledTasks){
             int startTime = scheduledTask.getStartingTime();
             int allocatedProcessor = scheduledTask.getAllocatedProcessor().getProcessNum();
-            if(startTime!=-1){
                 stacks[allocatedProcessor - 1].add(scheduledTask.getNode().getIndex());
                 stacks[allocatedProcessor - 1].add(startTime);
-            }
         }
+        stacks[candProcessor].add(candTask.getNode().getIndex());
+        stacks[candProcessor].add(start);
 
         for(Stack<Integer> stack : stacks){
             scheduleSet.add(stack);
@@ -145,5 +162,14 @@ public class SequentialSearch extends BranchAndBound {
 
         return scheduleSet.hashCode();
 
+    }
+
+    public int getBestSchedule() {
+        System.out.println("PRUNED");
+        System.out.println(prune);
+        bestSchedule.done();
+        bestSchedule.writeToGraph(input);
+        System.out.println(bestSchedule.getTime());
+        return bestSchedule.getTime();
     }
 }

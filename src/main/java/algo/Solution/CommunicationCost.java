@@ -17,16 +17,18 @@ public class CommunicationCost implements Comparable<CommunicationCost> {
     private final Task task;
     private final int start;
     private final int cost;
+    private final int dsl;
 
-    public CommunicationCost(Task candidateTask, Processor candidateProcessor, Schedule schedule) {
+    public CommunicationCost(Task candidateTask, Processor candidateProcessor, Schedule schedule,int c) {
         task = candidateTask;
         processor = candidateProcessor;
         cost = communicationCost();
         start = cost + processor.getTime();
+        dsl = -(c-(start));
     }
     @Override
     public int compareTo(CommunicationCost e) {
-        return Integer.compare(this.start,e.start);
+        return Integer.compare(this.dsl,e.dsl);
     }
 
     /**
@@ -62,5 +64,8 @@ public class CommunicationCost implements Comparable<CommunicationCost> {
 
     public int commCost() {
         return cost;
+    }
+    public int startTime() {
+        return start;
     }
 }

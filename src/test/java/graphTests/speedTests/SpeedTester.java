@@ -37,6 +37,20 @@ public class SpeedTester {
     }
 
     @Test
+    public void test16_4() {
+        String inputFileName ="Join_Nodes_16_CCR_0.10_WeightType_Random#3_Homogeneous-4.gxl.dot";
+        int numProc = 2;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, 4);
+
+
+        assertEquals(best, 283);
+    }
+    @Test
     public void test7N_4P() {
         String inputFileName ="Nodes_7_OutTree.dot";
         int numProc = 4;

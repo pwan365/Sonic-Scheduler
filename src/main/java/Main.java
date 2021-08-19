@@ -1,5 +1,6 @@
 import algo.Schedule.Task;
 import algo.Solution.AllOrders;
+import algo.Solution.CommunicationCost;
 import algo.Solution.ValidScheduler;
 import algo.Solution.SequentialSearch;
 import io.InputReader;
@@ -61,6 +62,7 @@ public class Main  {
         SequentialSearch d = new SequentialSearch(numberOfProcessors,inputGraph);
         AllOrders a = AllOrders.init(inputGraph);
 
+
         HashSet<Task> empty = new HashSet<>();
         ArrayList<Task> tasks = a.getOrder(empty);
         for (Task task : tasks) {
@@ -69,8 +71,8 @@ public class Main  {
             }
 
         }
+
         int best = d.getBestSchedule();
-        System.out.println(best);
         // Write the scheduled graph to a file.
         OutputWriter writer = new OutputWriter();
         writer.write(inputGraph, outputFileName);
