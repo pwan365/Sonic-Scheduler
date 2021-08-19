@@ -176,8 +176,8 @@ public class Controller {
 
         for (List<Task> eachBar : barList ){
             Collections.sort(eachBar, (c1, c2) -> {
-                if (c1.getStartingTime() > c2.getStartingTime()) return -1;
-                if (c1.getStartingTime() < c2.getStartingTime()) return 1;
+                if (c1.getStartingTime() > c2.getStartingTime()) return 1;
+                if (c1.getStartingTime() < c2.getStartingTime()) return -1;
                 return 0;
             });
 
