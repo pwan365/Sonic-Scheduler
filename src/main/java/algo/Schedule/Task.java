@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  */
 public class Task {
     private int finishingTime = -1;
-    private int startingTime;
+    private int startingTime = -1;
     private int durationTime;
     private int communicationCost;
     //This is the list of edges that connects to the parent of the node of this task.

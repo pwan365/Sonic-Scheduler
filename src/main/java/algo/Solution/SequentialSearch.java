@@ -1,11 +1,8 @@
 package algo.Solution;
 
-import algo.Schedule.BestSchedule;
+import algo.Schedule.*;
 import algo.CostFunctions.CriticalPath;
 import algo.CostFunctions.LoadBalancer;
-import algo.Schedule.PartialSchedule;
-import algo.Schedule.Processor;
-import algo.Schedule.Task;
 import org.graphstream.graph.Graph;
 
 import java.util.*;
@@ -26,6 +23,7 @@ public class SequentialSearch extends BranchAndBound {
     //Optional, may remove.
     private long prune = 0;
     private Graph input;
+    private HashSet<Integer> duplicateDetector;
 
     public SequentialSearch(int processors, Graph inputGraph) {
         input = inputGraph;
@@ -35,6 +33,7 @@ public class SequentialSearch extends BranchAndBound {
         loadBalancer = LoadBalancer.init(inputGraph,processors);
         allOrders = AllOrders.init(inputGraph);
         duplicateStart = DuplicateStart.init();
+        duplicateDetector = new HashSet<>();
     }
 
     /**
@@ -66,7 +65,23 @@ public class SequentialSearch extends BranchAndBound {
             return;
         }
 
+        int hashCode = hashCodeGenerator(numProcessors);
+
+        for (Task scheduledTask: partialSchedule.getScheduledTasks()){
+            System.out.println("Task start time " + scheduledTask.getStartingTime());
+            System.out.println("Task processor " + scheduledTask.getAllocatedProcessor().getProcessNum());
+        }
+
+        System.out.println(hashCode);
+        if (duplicateDetector.contains(hashCode)){
+            prune += 1;
+            return;
+        } else {
+            duplicateDetector.add(hashCode);
+        }
+
         partialSchedule.scheduleTask(task,processor,cost);
+
 
         HashSet<Task> scheduledTasks = partialSchedule.getScheduledTasks();
         ArrayList<Task> allPossibilities = allOrders.getOrder(scheduledTasks);
@@ -98,12 +113,37 @@ public class SequentialSearch extends BranchAndBound {
         partialSchedule.removeTasks(task);
     }
 
-
     public int getBestSchedule() {
         System.out.println("PRUNED");
         System.out.println(prune);
         bestSchedule.done();
         bestSchedule.writeToGraph(input);
         return bestSchedule.getTime();
+    }
+
+    public int hashCodeGenerator(int numberOfProcessors) {
+        HashSet<Task> scheduledTasks = partialSchedule.getScheduledTasks();
+        Set<Stack<Integer>> scheduleSet = new HashSet<>();
+        Stack<Integer>[] stacks = new Stack[numberOfProcessors];
+
+        for (int i = 0; i < stacks.length; i++){
+            stacks[i] = new Stack<>();
+        }
+
+        for(Task scheduledTask: scheduledTasks){
+            int startTime = scheduledTask.getStartingTime();
+            int allocatedProcessor = scheduledTask.getAllocatedProcessor().getProcessNum();
+            if(startTime!=-1){
+                stacks[allocatedProcessor - 1].add(scheduledTask.getNode().getIndex());
+                stacks[allocatedProcessor - 1].add(startTime);
+            }
+        }
+
+        for(Stack<Integer> stack : stacks){
+            scheduleSet.add(stack);
+        }
+
+        return scheduleSet.hashCode();
+
     }
 }
