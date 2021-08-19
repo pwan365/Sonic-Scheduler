@@ -15,7 +15,11 @@ after scheduling a task.) As such we can calculate an underestimate for the time
 #### Bottom Level
 The Bottom level for each node(longest path) is calculated before scheduling. Thus when we are in the process of scheduling a task in the processor we add the communication cost + the bottom level for the task, as well as the latest time on the processor already. This is a guaranteed underestimate of the cost, thus we can prune a state if this calculation is larger than the time of the best schedule. 
 ## Heuristic
+### Dynamic List Scheduling
 
+https://www.semanticscholar.org/paper/Static-vs.-Dynamic-List-Scheduling-Performance-Hagras-Janecek/7c4ca98ca39e20a3c17535b6f53278f9d60162c0
+
+As per the above study, dynamic heuristics outperform static ones.
 ## Other methods to reduce time
 
 ### Deep Copying
