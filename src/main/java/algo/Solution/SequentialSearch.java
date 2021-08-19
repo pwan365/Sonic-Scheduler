@@ -17,6 +17,7 @@ import java.util.*;
  */
 public class SequentialSearch extends BranchAndBound {
 
+
     private PartialSchedule partialSchedule;
     private BestSchedule bestSchedule;
     private LoadBalancer loadBalancer;
@@ -28,6 +29,7 @@ public class SequentialSearch extends BranchAndBound {
     private long prune = 0;
     private Graph input;
     private int states = 0;
+    protected volatile boolean newBest = false;
 
     public SequentialSearch(int processors, Graph inputGraph) {
         numProcessors = processors;
@@ -49,8 +51,8 @@ public class SequentialSearch extends BranchAndBound {
             for(int i=0; i<numProcessors;i++) {
                 branchBound(task,i,0);
             }
-
         }
+        newBest = true;
     }
     /**
      * Recursive function that goes through all possible schedules and finds the one with the earliest schedule time.

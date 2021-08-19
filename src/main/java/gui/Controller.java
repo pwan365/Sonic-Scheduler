@@ -47,6 +47,9 @@ public class Controller {
     @FXML
     private Text statesMagnitude;
 
+    @FXML
+    private Text bestTime;
+
     CategoryAxis yAxis = new CategoryAxis();
 
     NumberAxis xAxis = new NumberAxis();
@@ -66,8 +69,6 @@ public class Controller {
 
     public void start(){
         toggleBtn(control);
-
-
     }
 
     public void toggleBtn(StatusRefresh control){
@@ -106,12 +107,21 @@ public class Controller {
             } else {
                 lastUpdate = now;
             }
+
+            formatStatesExamined(scheduleThread.getStates());
+            bestTime.setText(scheduleThread.getBestTime() + "");
+            updateBarChart();
+
+            /*if (scheduleThread.getBestChanged()) {
+                bestTime.setText(scheduleThread.getBestTime() + "");
+                updateBarChart();
+            }*/
+
             System.out.println(scheduleThread.isDone());
             if(scheduleThread.isDone()){
                 this.stop();
             }
 
-            updateBarChart();
             long elapsedMillis = System.currentTimeMillis() - startTime;
             int milliseconds = (int) ( elapsedMillis % 1000);
             int seconds = (int) ((elapsedMillis / 1000) % 60);
@@ -123,10 +133,6 @@ public class Controller {
         public void setStartTime(){
             startTime = System.currentTimeMillis();
         }
-
-        /* TESTS - WILL BE REMOVED LATER */
-//        formatStatesExamined(10000);
-//        barChart(procNum);
     }
 
     /* Updates the states examined and formats large numbers into abbreviations */
@@ -181,10 +187,10 @@ public class Controller {
                 return 0;
             });
 
-            dataSeries1.setName("P"+procNum);
+//            dataSeries1.setName("P" + procNum);
             for(Task eachPart : eachBar){
                 int length = eachPart.getDurationTime();
-                dataSeries1.getData().add(new XYChart.Data<Number, String>(length, procNum+"P"));
+                dataSeries1.getData().add(new XYChart.Data<Number, String>(length, "P" + procNum));
             }
             procNum++;
         }
