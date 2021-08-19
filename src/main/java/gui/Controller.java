@@ -57,11 +57,13 @@ public class Controller {
     private StackedBarChart<Number, String> barChartSchedule ;
 
     ScheduleThread scheduleThread;
+    int procNum;
 
     public void passInput(ScheduleThread scheduleThread,String inputGraphName, String taskNum, int procNum){
         this.scheduleThread = scheduleThread;
         graphName.setText(inputGraphName);
         totalTask.setText(taskNum);
+        this.procNum=procNum;
         numProcess.setText(String.valueOf(procNum));
         Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 
@@ -69,6 +71,10 @@ public class Controller {
 
     public void start(){
         toggleBtn(control);
+        startBtn.setDisable(true);
+        scheduleThread.start();
+        control.start();
+        control.setStartTime();
     }
 
     public void toggleBtn(StatusRefresh control){
@@ -122,6 +128,7 @@ public class Controller {
                 this.stop();
             }
 
+            updateBarChart();
             long elapsedMillis = System.currentTimeMillis() - startTime;
             int milliseconds = (int) ( elapsedMillis % 1000);
             int seconds = (int) ((elapsedMillis / 1000) % 60);
@@ -189,6 +196,7 @@ public class Controller {
 
 //            dataSeries1.setName("P" + procNum);
             for(Task eachPart : eachBar){
+//                System.out.println(eachPart.getStartingTime()+"----P"+procNum);
                 int length = eachPart.getDurationTime();
                 dataSeries1.getData().add(new XYChart.Data<Number, String>(length, "P" + procNum));
             }
@@ -231,14 +239,19 @@ public class Controller {
         }
         Processor[] processors = b.getProcessors();
         HashSet<Task> tasks;
-        List<Task> eachBar = new ArrayList<>();
-
-
         for(int i=0 ; i<processors.length;i++){
+            List<Task> eachBar = new ArrayList<>();
+            int j=0;
+
             tasks=processors[i].getTasks();
-            Iterator value = tasks.iterator();
-            while (value.hasNext()){
-                eachBar.add((Task) value.next());
+
+            for(Task task:tasks){
+
+
+                    eachBar.add(task);
+
+                    j++;
+
             }
             barList.add(eachBar);
         }
