@@ -16,10 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.text.Text;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class Controller {
 
@@ -69,8 +66,6 @@ public class Controller {
 
     public void start(){
         toggleBtn(control);
-        scheduleThread.start();
-        updateBarChart();
 
 
     }
@@ -79,6 +74,7 @@ public class Controller {
         if(init){
             init = false;
             isRunning = true;
+            scheduleThread.start();
             control.start();
             control.setStartTime();
         }else{
@@ -88,6 +84,7 @@ public class Controller {
             startBtn.setText("STOP");
             startBtn.setStyle("-fx-background-color: #A30000");
             statusText.setText("SCHEDULING");
+            scheduleThread.start();
             control.start();
             control.setStartTime();
         }else{
@@ -109,6 +106,11 @@ public class Controller {
             } else {
                 lastUpdate = now;
             }
+            System.out.println(scheduleThread.isDone());
+            if(scheduleThread.isDone()){
+                this.stop();
+            }
+
             updateBarChart();
             long elapsedMillis = System.currentTimeMillis() - startTime;
             int milliseconds = (int) ( elapsedMillis % 1000);
@@ -170,13 +172,25 @@ public class Controller {
         barChartSchedule.getData().clear();
 
         XYChart.Series<Number, String> dataSeries1 = new XYChart.Series<Number, String>();
+        int procNum = 1;
 
-//        for (List<Task> )
-        List<Task> eachBar = barList.get(0);
-        Task eachPart = eachBar.get(0);
-        int length = eachPart.getDurationTime();
-        String procNum = "P1";
-        dataSeries1.getData().add(new XYChart.Data<Number, String>(length, procNum));
+        for (List<Task> eachBar : barList ){
+            Collections.sort(eachBar, (c1, c2) -> {
+                if (c1.getStartingTime() > c2.getStartingTime()) return -1;
+                if (c1.getStartingTime() < c2.getStartingTime()) return 1;
+                return 0;
+            });
+
+            dataSeries1.setName("P"+procNum);
+            for(Task eachPart : eachBar){
+                int length = eachPart.getDurationTime();
+                dataSeries1.getData().add(new XYChart.Data<Number, String>(length, procNum+"P"));
+            }
+            procNum++;
+        }
+        barChartSchedule.getData().addAll(dataSeries1);
+
+
 
 
 //        dataSeries1.setName("P1");
@@ -199,7 +213,6 @@ public class Controller {
 //        dataSeries2.setName("P2");
 //        dataSeries2.getData().add(new XYChart.Data<Number, String>(120, "P2"));
 //        barChartSchedule.getData().addAll(dataSeries1,dataSeries2);
-        barChartSchedule.getData().addAll(dataSeries1);
 
     }
 
