@@ -141,8 +141,8 @@ public class Controller {
             int milliseconds = (int) ( elapsedMillis % 1000);
             int seconds = (int) ((elapsedMillis / 1000) % 60);
             int minutes = (int) ((elapsedMillis / (1000 * 60)) % 60);
-            int hours = (int) (elapsedMillis / (1000 * 60 * 60));
-            timeElapsed.setText(String.format("%02d : %02d : %02d.%02d",hours,minutes,seconds,milliseconds/10));
+            //int hours = (int) (elapsedMillis / (1000 * 60 * 60));
+            timeElapsed.setText(String.format("%02d:%02d.%02d",/*hours,*/minutes,seconds,milliseconds/10));
         }
 
         public void setStartTime(){

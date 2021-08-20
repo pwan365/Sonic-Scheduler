@@ -6,82 +6,126 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.Controller">
-    <ImageView fitHeight="80.0" fitWidth="250.0" layoutX="25.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true">
-        <Image url="@logo.png" />
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1440.0" style="-fx-background-color: white;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.Controller">
+   <ImageView fitHeight="287.0" fitWidth="396.0" layoutX="14.0" layoutY="425.0" pickOnBounds="true" preserveRatio="true">
+        <Image url="@img/schedule_vector.png" />
+   </ImageView>
+    <Region layoutX="423.0" layoutY="1.0" prefHeight="700.0" prefWidth="1061.0" style="-fx-background-color: #f5f9fd; -fx-background-radius: 50px;" />
+    <ImageView fitHeight="120.0" fitWidth="342.0" layoutX="45.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true">
+        <Image url="@img/logo.png" />
     </ImageView>
-    <Region layoutX="37.0" layoutY="285.0" prefHeight="80.0" prefWidth="230.0" style="-fx-background-color: #fbcb79;" styleClass="statsBG" />
-    <Region layoutX="37.0" layoutY="375.0" prefHeight="80.0" prefWidth="230.0" style="-fx-background-color: #f78a47;" styleClass="statsBG" />
-    <Region layoutX="37.0" layoutY="464.0" prefHeight="80.0" prefWidth="230.0" style="-fx-background-color: #336699;" styleClass="statsBG" />
-    <Region layoutX="37.0" layoutY="221.0" prefHeight="50.0" prefWidth="230.0" styleClass="miniStatsBG" />
-    <Region layoutX="579.0" layoutY="47.0" prefHeight="35.0" prefWidth="179.0" styleClass="miniStatsBG" />
-    <Text fill="#3d3e3e" layoutX="50.0" layoutY="243.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Input Graph:" wrappingWidth="58.7294921875" />
-    <Text fill="WHITE" layoutX="69.0" layoutY="311.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Time Elapsed (s)" textAlignment="CENTER" wrappingWidth="159.7294921875" />
-    <Text fill="WHITE" layoutX="72.0" layoutY="401.0" strokeType="OUTSIDE" strokeWidth="0.0" text="States Examined" textAlignment="CENTER" wrappingWidth="159.7294921875" />
-    <Text fill="WHITE" layoutX="72.0" layoutY="490.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Best Time" textAlignment="CENTER" wrappingWidth="159.7294921875" />
-    <Text fx:id="timeElapsed" fill="WHITE" layoutX="37.0" layoutY="342.0" strokeType="OUTSIDE" strokeWidth="0.0" text="00 : 00 : 00.00" textAlignment="CENTER" wrappingWidth="230.0">
+    <Region layoutX="1022.0" layoutY="284.0" prefHeight="140.0" prefWidth="376.0" styleClass="statsBG" />
+    <Region layoutX="1026.0" layoutY="438.0" prefHeight="140.0" prefWidth="376.0" styleClass="statsBG" />
+    <Region layoutX="59.0" layoutY="266.0" prefHeight="58.0" prefWidth="313.0" styleClass="miniStatsBG" />
+    <Region layoutX="57.0" layoutY="334.0" prefHeight="58.0" prefWidth="313.0" styleClass="miniStatsBG" />
+    <Text fill="#3d3e3e" layoutX="74.0" layoutY="302.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Input Graph:" wrappingWidth="96.7294921875">
+      <font>
+         <Font size="14.0" />
+      </font></Text>
+    <Text fill="#3d3e3e" layoutX="1040.0" layoutY="335.0" strokeType="OUTSIDE" strokeWidth="0.0" text="States Examined" textAlignment="CENTER" wrappingWidth="179.7294921875">
+      <font>
+         <Font size="16.0" />
+      </font></Text>
+    <Text fill="#3d3e3e" layoutX="1054.0" layoutY="489.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Best Time" textAlignment="CENTER" wrappingWidth="159.7294921875">
+      <font>
+         <Font size="16.0" />
+      </font></Text>
+    <Text fx:id="statesExamined" fill="#3d3e3e" layoutX="1050.0" layoutY="380.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="159.7294921875">
         <font>
-            <Font name="System Bold" size="24.0" />
+            <Font name="System Bold" size="36.0" />
         </font>
     </Text>
-    <Text fx:id="statesExamined" fill="WHITE" layoutX="72.0" layoutY="427.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="159.7294921875">
+    <Text fx:id="bestTime" fill="#3d3e3e" layoutX="1054.0" layoutY="533.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="159.7294921875">
         <font>
-            <Font name="System Bold" size="24.0" />
+            <Font name="System Bold" size="36.0" />
         </font>
     </Text>
-    <Text fx:id="bestTime" fill="WHITE" layoutX="72.0" layoutY="524.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="159.7294921875">
+    <Text fx:id="totalTask" fill="#336699" layoutX="88.0" layoutY="230.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="83.7294921875">
         <font>
-            <Font name="System Bold" size="24.0" />
+            <Font name="System Bold" size="36.0" />
         </font>
     </Text>
-    <Text fx:id="totalTask" fill="#f78a47" layoutX="54.0" layoutY="193.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="83.7294921875">
+    <Text fx:id="numProcess" fill="#336699" layoutX="232.0" layoutY="230.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="83.7294921875">
         <font>
-            <Font name="System Bold" size="24.0" />
+            <Font name="System Bold" size="36.0" />
         </font>
     </Text>
-    <Text fx:id="numProcess" fill="#f78a47" layoutX="166.0" layoutY="192.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="83.7294921875">
+    <Text fill="#3d3e3e" layoutX="70.0" layoutY="181.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Total Tasks" textAlignment="CENTER" wrappingWidth="119.7294921875">
         <font>
-            <Font name="System Bold" size="24.0" />
+            <Font name="System Bold" size="18.0" />
         </font>
     </Text>
-    <Text fill="#3d3e3e" layoutX="50.0" layoutY="157.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Total Tasks" textAlignment="CENTER" wrappingWidth="90.7294921875">
+    <Text fill="#3d3e3e" layoutX="203.0" layoutY="181.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Thread Count" textAlignment="CENTER" wrappingWidth="167.7294921875">
         <font>
-            <Font name="System Bold" size="13.0" />
+            <Font name="System Bold" size="18.0" />
         </font>
     </Text>
-    <Text fill="#3d3e3e" layoutX="163.0" layoutY="157.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Thread Count" textAlignment="CENTER" wrappingWidth="90.7294921875">
+    <Button id="startBtn" fx:id="startBtn" layoutX="138.0" layoutY="408.0" mnemonicParsing="false" onAction="#start" prefHeight="50.0" prefWidth="131.0" text="START" textFill="WHITE">
         <font>
-            <Font name="System Bold" size="13.0" />
-        </font>
-    </Text>
-    <Button id="startBtn" fx:id="startBtn" layoutX="770.0" layoutY="47.0" mnemonicParsing="false" onAction="#start" prefHeight="35.0" prefWidth="90.0" text="START" textFill="WHITE">
-        <font>
-            <Font name="System Bold" size="13.0" />
+            <Font name="System Bold" size="18.0" />
         </font>
     </Button>
-    <Text layoutX="600.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Status:" wrappingWidth="44.7294921875">
+    <Text fill="#3d3e3e" layoutX="103.0" layoutY="367.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Status:" wrappingWidth="58.7294921875">
         <font>
-            <Font size="11.0" />
+            <Font size="14.0" />
         </font>
     </Text>
-    <Text fx:id="statusText" layoutX="648.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="STANDBY" wrappingWidth="99.7294921875">
+    <Text fx:id="statusText" layoutX="173.0" layoutY="369.0" strokeType="OUTSIDE" strokeWidth="0.0" text="STANDBY" wrappingWidth="159.7294921875">
         <font>
-            <Font name="System Bold" size="12.0" />
+            <Font name="System Bold" size="18.0" />
         </font>
     </Text>
-    <Region layoutX="293.0" layoutY="108.0" prefHeight="489.0" prefWidth="599.0" style="-fx-background-color: white; -fx-background-radius: 50px;" />
-    <Label fx:id="graphName" layoutX="109.0" layoutY="238.0" prefWidth="146.0" text="Label" />
-    <StackedBarChart fx:id="barChartSchedule" animated="false" legendVisible="false" layoutX="307.0" layoutY="132.0" prefHeight="436.0" prefWidth="566.0" title="Current best partial schedule" AnchorPane.topAnchor="132.0">
+    <Label fx:id="graphName" layoutX="174.0" layoutY="287.0" prefHeight="21.0" prefWidth="190.0" text="Label">
+      <font>
+         <Font size="14.0" />
+      </font></Label>
+    <StackedBarChart fx:id="barChartSchedule" animated="false" layoutX="432.0" layoutY="115.0" legendVisible="false" prefHeight="523.0" prefWidth="580.0" AnchorPane.topAnchor="115.0">
         <xAxis>
-            <NumberAxis label="Time" side="BOTTOM" />
+            <NumberAxis label="Time">
+            <tickLabelFont>
+               <Font size="14.0" />
+            </tickLabelFont></NumberAxis>
         </xAxis>
         <yAxis>
-            <CategoryAxis label="Processors" side="LEFT" />
+            <CategoryAxis label="Processors" prefHeight="441.0" prefWidth="53.0" side="LEFT">
+            <tickLabelFont>
+               <Font size="14.0" />
+            </tickLabelFont></CategoryAxis>
         </yAxis>
     </StackedBarChart>
-    <Text fx:id="statesMagnitude" fill="WHITE" layoutX="72.0" layoutY="446.0" strokeType="OUTSIDE" strokeWidth="0.0" text="" textAlignment="CENTER" wrappingWidth="159.7294921875">
+    <Text fx:id="statesMagnitude" fill="#3d3e3e" layoutX="1049.0" layoutY="401.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="159.7294921875">
         <font>
             <Font name="System Bold" size="14.0" />
         </font>
     </Text>
+    <Region layoutX="1022.0" layoutY="127.0" prefHeight="140.0" prefWidth="376.0" style="-fx-background-color: #d8ebff;" styleClass="statsBG" />
+    <Text fill="#3d3e3e" layoutX="1053.0" layoutY="169.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Time Elapsed" textAlignment="CENTER" wrappingWidth="159.7294921875">
+      <font>
+         <Font size="16.0" />
+      </font></Text>
+    <Text fx:id="timeElapsed" fill="#3d3e3e" layoutX="1022.0" layoutY="219.0" strokeType="OUTSIDE" strokeWidth="0.0" text="00:00.00" textAlignment="CENTER" wrappingWidth="230.0">
+        <font>
+            <Font name="System Bold" size="36.0" />
+        </font>
+    </Text>
+   <ImageView fitHeight="168.0" fitWidth="168.0" layoutX="1231.0" layoutY="267.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+         <Image url="@img/states_vector.png" />
+      </image>
+   </ImageView>
+   <ImageView fitHeight="179.0" fitWidth="180.0" layoutX="1227.0" layoutY="421.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+         <Image url="@img/best_time_vector.png" />
+      </image>
+   </ImageView>
+   <Text fill="#3d3e3e" layoutX="477.0" layoutY="107.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Best Partial Schedule" textAlignment="CENTER" wrappingWidth="538.7294921875">
+      <font>
+         <Font name="System Bold" size="24.0" />
+      </font>
+   </Text>
+   <ImageView fitHeight="168.0" fitWidth="168.0" layoutX="1231.0" layoutY="113.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+         <Image url="@img/time_elapsed_vector.png" />
+      </image>
+   </ImageView>
 </AnchorPane>
