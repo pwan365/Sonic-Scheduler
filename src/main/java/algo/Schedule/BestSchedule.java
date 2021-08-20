@@ -39,9 +39,9 @@ public class BestSchedule implements Schedule {
     public void done(){
         for(Processor processor:processors){
             for(Task task: processor.getTasks()){
-                System.out.println("PROCESSOR: ");
-                System.out.println(task.getAllocatedProcessor().getProcessNum());
-                System.out.println("TASKLAESTTIME: " + task.getFinishingTime());
+//                System.out.println("PROCESSOR: ");
+//                System.out.println(task.getAllocatedProcessor().getProcessNum());
+//                System.out.println("TASKLAESTTIME: " + task.getFinishingTime());
             }
         }
     }

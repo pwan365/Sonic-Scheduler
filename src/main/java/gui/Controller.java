@@ -104,7 +104,6 @@ public class Controller {
         long lastUpdate = 0;
         @Override
         public void handle(long now) {
-
             if (now - lastUpdate < 50_000_0000) {
                 return;
             } else {
@@ -204,7 +203,6 @@ public class Controller {
                 i++;
             }
 
-//            dataSeries1.setName("P"+procNum);
             for(Task eachPart : eachBar){
                 int length = eachPart.getDurationTime();
                 final XYChart.Data<Number, String> bar = new XYChart.Data<Number,String>(length, procNum+"P");
@@ -215,18 +213,14 @@ public class Controller {
                         }else{
                             node.setStyle("-fx-bar-fill: #79b4de;-fx-border-color: #336699;");
                         }
-
-
                     }
                 });
                 dataSeries1.getData().add(bar);
-
             }
             procNum++;
         }
         barChartSchedule.getData().addAll(dataSeries1);
         barChartSchedule.setLegendVisible(false);
-
     }
 
     public List<List<Task>> getBestSchedule(){
@@ -241,20 +235,13 @@ public class Controller {
         for(int i=0 ; i<processors.length;i++){
             List<Task> eachBar = new ArrayList<>();
             int j=0;
-
             tasks=processors[i].getTasks();
-
             for(Task task:tasks){
-
-
                     eachBar.add(task);
-
                     j++;
-
             }
             barList.add(eachBar);
         }
-
         return barList;
     }
 }

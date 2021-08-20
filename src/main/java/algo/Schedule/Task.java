@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 /**
  * This class is used to record a Node from the graph and its relative information.
  *
- * @author John Jia, Wayne Yao, Luxman Jeyarajah
+ * @author John Jia, Wayne Yao, Luxman Jeyarajah,Samuel Chen
  */
 public class Task {
     private int finishingTime = -1;
@@ -38,6 +38,12 @@ public class Task {
         }
     }
 
+    /**
+     * Constructor for idle task in GUI
+     * @param startingTime
+     * @param durationTime
+     * @param isIdle
+     */
     public Task(int startingTime, int durationTime, boolean isIdle){
         this.startingTime = startingTime;
         this.durationTime = durationTime;
