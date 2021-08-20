@@ -79,10 +79,10 @@
 
     <!-- Right Panel -->
     <!-- Right Background -->
-    <Region layoutX="423.0" layoutY="1.0" prefHeight="700.0" prefWidth="1061.0" style="-fx-background-color: #f5f9fd; -fx-background-radius: 50px;" />
+    <Region layoutX="423.0" layoutY="-9.0" prefHeight="700.0" prefWidth="1061.0" style="-fx-background-color: #f5f9fd; -fx-background-radius: 50px;" />
 
     <!--Bar Graph -->
-    <Text fx:id="chartTitle" id="chartTitle" fill="#3d3e3e" layoutX="477.0" layoutY="107.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Best Partial Schedule" textAlignment="CENTER" wrappingWidth="538.7294921875">
+    <Text id="chartTitle" fx:id="chartTitle" fill="#3d3e3e" layoutX="477.0" layoutY="80.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Best Partial Schedule" textAlignment="CENTER" wrappingWidth="538.7294921875">
         <font>
             <Font name="System Bold" size="24.0" />
         </font>

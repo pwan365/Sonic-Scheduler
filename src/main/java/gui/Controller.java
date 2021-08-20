@@ -255,18 +255,19 @@ public class Controller {
     public void setGUIRunning(){
         // Start button is disabled and status of the GUI is changed
         startBtn.setDisable(true);
-        chartTitle.setText("PARTIAL BEST SCHEDULE");
+        chartTitle.setText("PARTIAL OPTIMAL SCHEDULE");
         statusText.setFill(Color.GREEN);
         statusText.setText("SCHEDULING");
     }
 
     public void setGUICompleted(){
         statusText.setText("FINISHED");
-        chartTitle.setText("BEST SCHEDULE");
+        chartTitle.setText("OPTIMAL SCHEDULE");
     }
 
     public void setGUIInitial(){
-        chartTitle.setText("");
+        chartTitle.setText("FIND THE OPTIMAL SCHEDULE");
         chartTitle.setFill(Paint.valueOf("#336699"));
+        chartTitle.setStyle("-fx-font-weight: bold");
     }
 }
