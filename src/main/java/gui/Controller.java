@@ -4,6 +4,7 @@ import algo.Schedule.BestSchedule;
 import algo.Schedule.Processor;
 import algo.Schedule.Task;
 import algo.Solution.ScheduleThread;
+import io.InputReader;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.scene.chart.CategoryAxis;
@@ -17,6 +18,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import org.graphstream.graph.Graph;
 
 import java.util.*;
 
@@ -66,7 +68,7 @@ public class Controller {
     public void passInput(ScheduleThread scheduleThread,String inputGraphName, String taskNum, int procNum){
         this.scheduleThread = scheduleThread;
         graphName.setText(inputGraphName);
-        totalTask.setText(taskNum);
+        totalTask.setText(getTaskNum(inputGraphName)+"");
         this.procNum=procNum;
         numProcess.setText(String.valueOf(procNum));
         Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
@@ -269,5 +271,11 @@ public class Controller {
         chartTitle.setText("FIND THE OPTIMAL SCHEDULE");
         chartTitle.setFill(Paint.valueOf("#336699"));
         chartTitle.setStyle("-fx-font-weight: bold");
+    }
+
+    public int getTaskNum(String inputFileName){
+        InputReader reader = new InputReader(inputFileName);
+        Graph inputGraph = reader.read();
+        return inputGraph.getNodeCount();
     }
 }

@@ -38,7 +38,7 @@ public class Main {
          * Visualization Code
          * TODO Implement Visualization by Milestone 2
          */
-        ScheduleThread scheduleThread = new ScheduleThread(fileName,"Test-output.dot",numberOfProcessors);
+        ScheduleThread scheduleThread = new ScheduleThread(fileName,outputFileName,numberOfProcessors);
 
         if (commands.contains("-v")){
             PlatformImpl.startup(() -> {
