@@ -180,10 +180,15 @@ public class Controller {
                 if (c1.getStartingTime() < c2.getStartingTime()) return -1;
                 return 0;
             });
+            System.out.println(procNum+"P--------");
+
+            for(Task task : eachBar){
+                System.out.println("StartTime:"+task.getStartingTime()+" DurationTime:"+task.getDurationTime()+" Total:"+(task.getStartingTime()+task.getDurationTime()));
+            }
 
             if(eachBar.size() != 0 && eachBar.get(0).getStartingTime() != 0){
                 Task idlePart = new Task(0,eachBar.get(0).getStartingTime(),true);
-                eachBar.add(idlePart);
+                eachBar.add(0,idlePart);
             }
 
             int i = 1;
@@ -211,18 +216,14 @@ public class Controller {
                         }else{
                             node.setStyle("-fx-bar-fill: #79b4de;-fx-border-color: #336699;");
                         }
-
-
                     }
                 });
                 dataSeries1.getData().add(bar);
-
             }
             procNum++;
         }
         barChartSchedule.getData().addAll(dataSeries1);
         barChartSchedule.setLegendVisible(false);
-
     }
 
     public List<List<Task>> getBestSchedule(){
@@ -234,17 +235,22 @@ public class Controller {
         }
         Processor[] processors = b.getProcessors();
         HashSet<Task> tasks;
+        System.out.println("-------------");
         for(int i=0 ; i<processors.length;i++){
+            System.out.println("P"+i);
+
             List<Task> eachBar = new ArrayList<>();
             int j=0;
-            tasks=processors[i].getTasks();
-            for(Task task:tasks){
-                eachBar.add(task);
-                j++;
-            }
-            barList.add(eachBar);
-        }
 
+                tasks=processors[i].getTasks();
+                for(Task task:tasks){
+//                    System.out.println("StartTime:"+task.getStartingTime()+" DurationTime:"+task.getDurationTime()+" Total:"+(task.getStartingTime()+task.getDurationTime()));
+                    eachBar.add(task);
+                    j++;
+                }
+                barList.add(eachBar);
+
+        }
         return barList;
     }
 }
