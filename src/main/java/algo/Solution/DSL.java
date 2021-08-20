@@ -8,7 +8,7 @@ public class DSL implements Comparable<DSL> {
     protected final int cost;
 
     public DSL(int bLevel, int cost, int start,int task, int processor) {
-        this.dsl = bLevel - (cost + start);
+        this.dsl = cost + start;
         this.task = task;
         this.processor = processor;
         this.cost = cost;

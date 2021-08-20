@@ -98,15 +98,21 @@ public class SequentialSearch extends BranchAndBound{
         }
 
         boolean[] candidateTasks = getOrder();
-//        PriorityQueue<CommunicationCost> lowestCost = new PriorityQueue<>();
+        PriorityQueue<DSL> lowestCost = new PriorityQueue<>();
         boolean[] candidateProcessors = normalise();
         for (int i = 0; i < numTasks; i++) {
             if (candidateTasks[i]) {
                 for (int j = 0; j < numProcessors; j++) {
                     if (candidateProcessors[j]) {
-                        int candidateTask = i;
-                        int commCost = commCost(candidateTask,j);
-                        branchBound(candidateTask,j ,commCost);
+
+                        int commCost = commCost(i,j);
+                        boolean seen = hashCode(i,j,commCost);
+
+                        if (!seen) {
+                            DSL dsl = new DSL(bottomLevel[i],commCost,processorTimes[j],i,j);
+                            lowestCost.add(dsl);
+                        }
+//                        branchBound(candidateTask,j ,commCost);
                     }
                 }
             }
@@ -127,13 +133,13 @@ public class SequentialSearch extends BranchAndBound{
 
 
 
-//            while (!lowestCost.isEmpty()) {
-//                CommunicationCost candidate = lowestCost.poll();
-//                Task candidateTask = candidate.getTask();
-//                int processorID = candidate.getProcessorID();
-//                int candidateCost = candidate.commCost();
-//                branchBound(candidateTask, processorID, candidateCost);
-//            }
+            while (!lowestCost.isEmpty()) {
+                DSL candidate = lowestCost.poll();
+                int candidateTask = candidate.task;
+                int processorID = candidate.processor;
+                int candidateCost = candidate.cost;
+                branchBound(candidateTask, processorID, candidateCost);
+            }
 //            partialSchedule.removeTasks(task);
             removeTask(task,processor,cost);
             states += 1;

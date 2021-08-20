@@ -29,6 +29,9 @@ public abstract class BranchAndBound {
     //Load Balancer
     protected int graphWeight =0;
 
+    //Set of seen schedules.
+    protected HashSet<Integer> seenStates = new HashSet<>();
+
     public BranchAndBound(IntGraph graph,int numberOfProcessors) {
         intGraph = graph;
         numProcessors = numberOfProcessors;
@@ -253,9 +256,9 @@ public abstract class BranchAndBound {
         return processorStarted;
     }
 
-    public int hashCodeGenerator(int numberOfProcessors,int candTask, int candProcessor, int start) {
+    public boolean hashCode(int candTask, int candProcessor, int cost) {
         Set<Stack<Integer>> scheduleSet = new HashSet<>();
-        Stack<Integer>[] stacks = new Stack[numberOfProcessors];
+        Stack<Integer>[] stacks = new Stack[numProcessors];
 
         for (int i = 0; i < stacks.length; i++){
             stacks[i] = new Stack<>();
@@ -268,16 +271,21 @@ public abstract class BranchAndBound {
             stacks[allocatedProcessor].add(startTime);
         }
         stacks[candProcessor].add(candTask);
-        stacks[candProcessor].add(start);
+        int taskStart = processorTimes[candProcessor] + cost;
+        stacks[candProcessor].add(taskStart);
 
         for(Stack<Integer> stack : stacks){
             scheduleSet.add(stack);
         }
 
-        return scheduleSet.hashCode();
-
+        int id = scheduleSet.hashCode();
+        if (seenStates.contains(id)) {
+            return false;
+        }
+        else {
+            seenStates.add(id);
+        }
+        return true;
     }
-
-
 
 }
