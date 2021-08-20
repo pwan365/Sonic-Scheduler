@@ -12,8 +12,8 @@ public class IntGraph {
 
     protected int [] tasks;
     protected int [] weights;
-    protected  LinkedList<Integer[]>[] outEdges;
-    protected  LinkedList<Integer[]>[] inEdges;
+    protected  LinkedList<int[]>[] outEdges;
+    protected  LinkedList<int[]>[] inEdges;
 
     public IntGraph(Graph g) {
         int numTasks = g.getNodeCount();
@@ -37,8 +37,8 @@ public class IntGraph {
             for(Edge e : edges){
                 int childNode = e.getNode1().getIndex();
                 int edgeWeight = ((Double) e.getAttribute("Weight")).intValue();
-                Integer[] outEdge = new Integer[]{childNode, edgeWeight};
-                Integer[] inEdge = new Integer[]{i,edgeWeight};
+                int[] outEdge = new int[]{childNode, edgeWeight};
+                int[] inEdge = new int[]{i,edgeWeight};
                 outEdges[i].add(outEdge);
                 inEdges[childNode].add(inEdge);
             }

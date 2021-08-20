@@ -1,4 +1,4 @@
-package algo.Schedule;
+package algo.Solution;
 
 import com.rits.cloning.Cloner;
 import org.graphstream.graph.Graph;
@@ -12,7 +12,7 @@ import org.graphstream.graph.Node;
 public class BestSchedule {
     private int[][] taskInformation;
     private int[] taskProcessors;
-    private int bestTime;
+    protected int bestTime;
 
     public BestSchedule(){
         bestTime = Integer.MAX_VALUE;
@@ -20,7 +20,8 @@ public class BestSchedule {
 
     public void makeCopy(int candidateBest, int[] allocatedProcessors, int[][] taskData) {
         taskInformation = new int[taskData.length][4];
-        allocatedProcessors = new int[allocatedProcessors.length];
+        taskProcessors = new int[allocatedProcessors.length];
+
 
         for(int i = 0; i < allocatedProcessors.length; i++){
             taskProcessors[i] = allocatedProcessors[i];
@@ -31,6 +32,16 @@ public class BestSchedule {
             }
         }
         this.bestTime = candidateBest;
+    }
+    public void printTasks() {
+        for (int i = 0; i < taskInformation.length; i++) {
+            System.out.println("Tasks");
+            System.out.println(i);
+            System.out.println("Processor");
+            System.out.println(taskProcessors[i]);
+            System.out.println("Start");
+            System.out.println(taskInformation[i][0]);
+        }
     }
 
     public int getTime() {

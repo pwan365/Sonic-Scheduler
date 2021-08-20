@@ -32,7 +32,7 @@ public class SpeedTester {
         assertEquals(best, 28);
     }
 
-    @Test
+//    @Test
     public void test16_4() {
         String inputFileName = "Random_Nodes_10_Density_1.50_CCR_2.03_WeightType_Random_GB_Homogeneous-8.gxl.dot";
         int numProc = 2;

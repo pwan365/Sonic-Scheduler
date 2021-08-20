@@ -1,5 +1,6 @@
 package algo.Solution;
 
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -13,17 +14,23 @@ public abstract class BranchAndBound {
 
     //Schedule information
     protected Stack<Integer> time;
-    private Integer idle;
+    private int idle;
     private HashSet<Integer> scheduledTasks;
-    private HashSet<Integer> unscheduledTasks;
+    protected HashSet<Integer> unscheduledTasks;
 
     //Processor information
-    private int [] processorTimes;
+    protected int [] processorTimes;
 
     //Task information
     protected int [] taskProcessors;
     //Index 0 is StartTime, Index 1 is Weight, Index 2 is Finish Time, Index 3 is communication cost.
     protected int [][] taskInformation;
+
+    //Cost Functions
+    //Bottom Level
+    protected int [] bottomLevel;
+    //Load Balancer
+    protected int graphWeight =0;
 
     public BranchAndBound(IntGraph graph,int numberOfProcessors) {
         intGraph = graph;
@@ -45,6 +52,20 @@ public abstract class BranchAndBound {
 
         setDefaultTaskInfo();
         setDefaultTaskProcessor();
+
+        //Initialize bottom levels
+        bottomLevel = new int[numTasks];
+        initB();
+
+//        for (int i =0; i < bottomLevel.length; i ++) {
+//            System.out.println("Task");
+//            System.out.println(i);
+//            System.out.println("B Level");
+//            System.out.println(bottomLevel[i]);
+//        }
+
+        //Initialize Load Balancer
+        initLB();
     }
 
     private void addUnscheduledTasks() {
@@ -123,12 +144,12 @@ public abstract class BranchAndBound {
     }
 
     protected int commCost(int task,int processor) {
-        LinkedList<Integer[]> parents = intGraph.inEdges[task];
+        LinkedList<int[]> parents = intGraph.inEdges[task];
         int calcCost = 0;
         int processorTime = processorTimes[processor];
         for(int i=0; i<parents.size(); i ++) {
             //Index 0 is parent task, 1 is edge Weight.
-            Integer[] parentInfo = parents.get(i);
+            int[] parentInfo = parents.get(i);
             int parent = parentInfo[0];
             int edgeWeight = parentInfo[1];
             int parentProcessor = taskProcessors[parent];
@@ -142,15 +163,15 @@ public abstract class BranchAndBound {
         return calcCost;
     }
 
-    public ArrayList<Integer> getOrder() {
-        ArrayList<Integer> result = new ArrayList<>();
+    public boolean [] getOrder() {
+        boolean [] validTasks = new boolean[numTasks];
 
         for(int i = 0; i < numTasks; i++){
             int nodeIndex = i;
 
             // if input is 0 size, find all root tasks
             if(intGraph.inEdges[i].size() == 0 && !scheduledTasks.contains(nodeIndex)){
-                result.add(nodeIndex);
+                validTasks[nodeIndex] = true;
                 continue;
             }
 
@@ -159,13 +180,79 @@ public abstract class BranchAndBound {
                 int parent = intGraph.inEdges[i].get(j)[0];
                 if(!scheduledTasks.contains(parent)){
                     flag = false;
+                    validTasks[nodeIndex] = false;
                     break;
                 }
             }
             if(flag && !scheduledTasks.contains(nodeIndex)){
-                result.add(nodeIndex);
+                validTasks[nodeIndex] = true;
             }
         }
-        return result;
+        return validTasks;
+    }
+
+    private void initB() {
+        for(int i=0; i < numTasks;i++) {
+            bottomLevel[i] = -1;
+        }
+        for (int i=0; i<numTasks;i++) {
+            int weight = intGraph.weights[i];
+            bottomLevel(i,weight);
+        }
+    }
+
+    private int bottomLevel(int task, int total) {
+        if (bottomLevel[task]!= -1) {
+            return bottomLevel[task];
+        }
+        LinkedList<int[]> outEdges = intGraph.outEdges[task];
+        if (outEdges.size() == 0) {
+            bottomLevel[task] = total;
+            return total;
+        }
+
+        int max = 0;
+        // Traverse through edges and pick the subtree with the maximum weight to form the critical path for this node.
+        for (int i =0; i < outEdges.size(); i ++) {
+            int child = outEdges.get(i)[0];
+            int weight = intGraph.weights[child];
+            int temp = total+ bottomLevel(child,weight);
+
+            max = Math.max(max,temp);
+        }
+
+        bottomLevel[task] = max;
+        return max;
+    }
+
+    private void initLB() {
+        int [] weights = intGraph.weights;
+        for (int i = 0; i< weights.length; i++) {
+            graphWeight += weights[i];
+        }
+    }
+
+    protected int loadBalance(int currentCost) {
+        return (int) Math.ceil((graphWeight + idle + currentCost) / numProcessors);
+    }
+
+    protected boolean [] normalise() {
+        boolean zeroFlag = false;
+        boolean [] processorStarted = new boolean[numProcessors];
+        for (int i = 0; i < numProcessors; i ++) {
+            if (processorTimes[i] == 0) {
+                if (!zeroFlag) {
+                    zeroFlag = true;
+                    processorStarted[i] = true;
+                }
+                else {
+                    processorStarted[i] = false;
+                }
+            }
+            else {
+                processorStarted[i] = true;
+            }
+        }
+        return processorStarted;
     }
 }
