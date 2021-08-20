@@ -173,6 +173,118 @@ public class SpeedTester {
         assertEquals(best, 227);
     }
 
+    @Test
+    public void customTest10N_2P() {
+        String inputFileName = "N10-2P.dot";
+        int numProc = 2;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 56);
+    }
+
+    @Test
+    public void customTest16N_4P() {
+        String inputFileName = "N16-02-4P.dot";
+        int numProc = 4;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 51);
+    }
+
+    @Test
+    public void customTest10N_4P() {
+        String inputFileName = "N10-4P.dot";
+        int numProc = 4;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 51);
+    }
+
+    @Test
+    public void customTest10N_6P() {
+        String inputFileName = "N10-4P.dot";
+        int numProc = 6;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 51);
+    }
+
+    @Test
+    public void test16N_2P() {
+        String inputFileName = "N16-01.dot";
+        int numProc = 2;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 76);
+    }
+
+    @Test
+    public void test16N_4P() {
+        String inputFileName = "N16-01.dot";
+        int numProc = 4;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 76);
+    }
+
+    @Test
+    public void test16N_02_4P() {
+        String inputFileName = "N16-02-4P.dot";
+        int numProc = 4;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 51);
+    }
+
+    @Test
+    public void test16N_03_4P() {
+        String inputFileName = "N16-03-4P.dot";
+        int numProc = 4;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 76);
+    }
+
     @AfterEach
     public void clear() {
         CriticalPath.clearObject();
