@@ -286,50 +286,37 @@ public class BranchAndBound {
     }
 
     public BranchAndBound deepCopy(){
-
         BranchAndBound c_branchandbound = new BranchAndBound(intGraph, numProcessors, false);
-        //c_branchandbound.time = new Stack<>();
+
+        int numTasks = intGraph.tasks.length;
+        for (int i = 0; i < numTasks; i++){
+            c_branchandbound.taskProcessors[i] = taskProcessors[i];
+            c_branchandbound.bottomLevel[i] = bottomLevel[i];
+            for (int j = 0; j < 4; j ++){
+                c_branchandbound.taskInformation[i][j] = taskInformation[i][j];
+            }
+        }
         for (int i = 0; i < time.size(); i++){
             c_branchandbound.time.add(i, time.get(i));
         }
         c_branchandbound.idle = idle;
 
-        //c_branchandbound.scheduledTasks = new HashSet<>();
         Iterator it = scheduledTasks.iterator();
         while (it.hasNext()){
             int task = (Integer)it.next();
             c_branchandbound.scheduledTasks.add(task);
         }
 
-        //c_branchandbound.unscheduledTasks = new HashSet<>();
         Iterator unit = unscheduledTasks.iterator();
         while (unit.hasNext()){
             int task = (Integer)unit.next();
             c_branchandbound.unscheduledTasks.add(task);
         }
 
-        //c_branchandbound.processorTimes = new int[processorTimes.length];
-        for (int i = 0; i < processorTimes.length; i++){
+        for (int i = 0; i < numProcessors; i++){
             c_branchandbound.processorTimes[i] = processorTimes[i];
         }
 
-       // c_branchandbound.taskProcessors = new int[taskProcessors.length];
-        for (int i = 0; i < taskProcessors.length; i++){
-            c_branchandbound.taskProcessors[i] = taskProcessors[i];
-        }
-
-        //c_branchandbound.taskInformation = new int[taskInformation.length][4];
-        for (int i = 0; i < taskInformation.length; i++){
-            for (int j = 0; j < 4; j ++){
-                c_branchandbound.taskInformation[i][j] = taskInformation[i][j];
-            }
-        }
-
-        //c_branchandbound.bottomLevel = new int[bottomLevel.length];
-        for (int i = 0; i < bottomLevel.length; i++){
-            c_branchandbound.bottomLevel[i] = bottomLevel[i];
-        }
-        //Load Balancer
         c_branchandbound.graphWeight = graphWeight;
 
         return c_branchandbound;

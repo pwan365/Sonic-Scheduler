@@ -64,24 +64,26 @@ public class ParallelSearch{
             int loadBalance = branchAndBound.loadBalance(cost);
             int candidateTime = Math.max(branchAndBound.time.peek(), Math.max(bWeight, loadBalance));
 
-            synchronized (RecursiveSearch.class) {
+
                 if (bestSchedule.bestTime <= candidateTime) {
                     prune += 1;
                     return;
                 } else {
                     branchAndBound.addTask(task, processor, cost);
                 }
-            }
 
 
-            synchronized (RecursiveSearch.class) {
+
+
                 if (branchAndBound.unscheduledTasks.isEmpty()) {
                     int candidateBest = branchAndBound.time.peek();
-                    if (candidateBest < bestSchedule.bestTime) {
-                        bestSchedule.makeCopy(candidateBest, branchAndBound.taskProcessors, branchAndBound.taskInformation);
+                    synchronized (RecursiveSearch.class) {
+                        if (candidateBest < bestSchedule.bestTime) {
+                            bestSchedule.makeCopy(candidateBest, branchAndBound.taskProcessors, branchAndBound.taskInformation);
+                        }
                     }
                 }
-            }
+
             boolean[] candidateTasks = branchAndBound.getOrder();
             PriorityQueue<DSL> lowestCost = new PriorityQueue<>();
             boolean[] candidateProcessors = branchAndBound.normalise();
