@@ -43,7 +43,7 @@ public class ScheduleThread extends Thread{
     }
 
     public int getBestTime() {
-        return search.getBestTime();
+        return search.getBestSchedule().getTime();
     }
 
     public BestSchedule getBestSchedule() {
@@ -56,5 +56,12 @@ public class ScheduleThread extends Thread{
 
     public boolean isDone() {
         return done;
+    }
+
+    public boolean getBestChanged() {
+        boolean isNewBest = search.newBest;
+        search.newBest = false;
+
+        return isNewBest;
     }
 }

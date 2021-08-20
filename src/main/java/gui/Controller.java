@@ -47,6 +47,9 @@ public class Controller {
     @FXML
     private Text statesMagnitude;
 
+    @FXML
+    private Text bestTime;
+
     CategoryAxis yAxis = new CategoryAxis();
 
     NumberAxis xAxis = new NumberAxis();
@@ -109,6 +112,16 @@ public class Controller {
             } else {
                 lastUpdate = now;
             }
+
+            formatStatesExamined(scheduleThread.getStates());
+            bestTime.setText(scheduleThread.getBestTime() + "");
+            updateBarChart();
+
+            /*if (scheduleThread.getBestChanged()) {
+                bestTime.setText(scheduleThread.getBestTime() + "");
+                updateBarChart();
+            }*/
+
             System.out.println(scheduleThread.isDone());
             if(scheduleThread.isDone()){
                 this.stop();
@@ -126,10 +139,6 @@ public class Controller {
         public void setStartTime(){
             startTime = System.currentTimeMillis();
         }
-
-        /* TESTS - WILL BE REMOVED LATER */
-//        formatStatesExamined(10000);
-//        barChart(procNum);
     }
 
     /* Updates the states examined and formats large numbers into abbreviations */
@@ -205,7 +214,7 @@ public class Controller {
 
             for(Task eachPart : eachBar){
                 int length = eachPart.getDurationTime();
-                final XYChart.Data<Number, String> bar = new XYChart.Data<Number,String>(length, procNum+"P");
+                final XYChart.Data<Number, String> bar = new XYChart.Data<Number,String>(length, "P" + procNum);
                 bar.nodeProperty().addListener((ov, oldNode, node) -> {
                     if (node != null) {
                         if(eachPart.isIdle()){
