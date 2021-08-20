@@ -60,10 +60,6 @@ public class SequentialSearch extends BranchAndBound{
      * @param cost Cost to schedule the task on the processor.
      */
     public void branchBound(int task, int processor,int cost) {
-//        System.out.println(cost);
-//        Processor candidateProcessor = processorList[processor];
-//        int start = partialSchedule.getTime();
-//
         int bWeight = bottomLevel[task] + cost + processorTimes[processor];
         int loadBalance = loadBalance(cost);
         int candidateTime = Math.max(time.peek(), Math.max(bWeight, loadBalance));
@@ -76,7 +72,7 @@ public class SequentialSearch extends BranchAndBound{
 
         addTask(task, processor, cost);
 
-        boolean seen = checkSeen(task,processor,cost);
+        boolean seen = checkSeen();
 
         if (seen) {
             removeTask(task,processor,cost);
@@ -99,7 +95,7 @@ public class SequentialSearch extends BranchAndBound{
                 for (int j = 0; j < numProcessors; j++) {
                     if (candidateProcessors[j]) {
                         int commCost = commCost(i,j);
-                        DSL dsl = new DSL(bottomLevel[i],commCost,processorTimes[j],i,j);
+                        DSL dsl = new DSL(commCost,processorTimes[j],i,j);
                         lowestCost.add(dsl);
 //                        branchBound(candidateTask,j ,commCost);
                     }

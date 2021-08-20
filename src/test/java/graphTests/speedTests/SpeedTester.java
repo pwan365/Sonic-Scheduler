@@ -271,7 +271,7 @@ public class SpeedTester {
         assertEquals(best, 51);
     }
 
-    @Test
+//    @Test
     public void test16N_03_4P() {
         String inputFileName = "N16-03-4P.dot";
         int numProc = 4;
