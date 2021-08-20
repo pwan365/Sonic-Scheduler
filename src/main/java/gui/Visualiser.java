@@ -21,7 +21,13 @@ public class Visualiser extends Application {
         stage.show();
     }
 
-    public void loadData(ScheduleThread scheduleThread,String inputName, String numTask, int numProc){
-        c.passInput(scheduleThread, inputName,numTask,numProc);
+    /**
+     * Pass input into the controller class
+     * @param scheduleThread the thread that runs the scheduling algorithm
+     * @param inputName the name of the input file
+     * @param numProc number of processor that the tasks are assigned to
+     */
+    public void loadData(ScheduleThread scheduleThread,String inputName, int numProc){
+        c.passInput(scheduleThread, inputName,numProc);
     }
 }

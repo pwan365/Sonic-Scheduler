@@ -49,10 +49,9 @@ public class Main {
                 }catch(Exception e){
 
                 }
-                v.loadData(scheduleThread,fileName,"20",numberOfProcessors);
+                v.loadData(scheduleThread, fileName, numberOfProcessors);
 
             });
-//            Application.launch(Visualiser.class);
 
         }else{
             scheduleThread.start();

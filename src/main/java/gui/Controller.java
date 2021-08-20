@@ -12,11 +12,8 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import org.graphstream.graph.Graph;
 
@@ -24,13 +21,9 @@ import java.util.*;
 
 public class Controller {
 
-    private Boolean isRunning = false;
-    private Boolean init = true;
     private StatusRefresh control = new StatusRefresh();
     private ScheduleThread scheduleThread;
     private int procNum;
-
-    String fontFamily = "Microsoft Sans Serif";
 
     @FXML
     private Text graphName;
@@ -62,10 +55,9 @@ public class Controller {
      * Method sets the global variables and GUI text to those passed into the controller as inputs.
      * @param scheduleThread Thread that runs the schedule algorithm
      * @param inputGraphName Name of the input graph file
-     * @param taskNum Number of nodes that represent tasks in the input file
      * @param procNum Number of processors the schedule is required to run on based on user's input
      */
-    public void passInput(ScheduleThread scheduleThread,String inputGraphName, String taskNum, int procNum){
+    public void passInput(ScheduleThread scheduleThread,String inputGraphName, int procNum){
         this.scheduleThread = scheduleThread;
         graphName.setText(inputGraphName);
         totalTask.setText(getTaskNum(inputGraphName)+"");
@@ -169,6 +161,7 @@ public class Controller {
         XYChart.Series<Number, String> dataSeries1 = new XYChart.Series<Number, String>();
         int procNum = 1;
 
+        //sort the task in each processors by starting time
         for (List<Task> eachBar : barList ){
             Collections.sort(eachBar, (c1, c2) -> {
                 if (c1.getStartingTime() > c2.getStartingTime()) return 1;
@@ -181,11 +174,13 @@ public class Controller {
                 System.out.println("StartTime:"+task.getStartingTime()+" DurationTime:"+task.getDurationTime()+" Total:"+(task.getStartingTime()+task.getDurationTime()));
             }
 
+            //add idle task as the beginning of each processor that doesn't have starting time of 0
             if(eachBar.size() != 0 && eachBar.get(0).getStartingTime() != 0){
                 Task idlePart = new Task(0,eachBar.get(0).getStartingTime(),true);
                 eachBar.add(0,idlePart);
             }
 
+            //add idle task between tasks that has gap between them
             int i = 1;
             while(eachBar.size() > i){
                 Task currPart = eachBar.get(i);
@@ -200,11 +195,12 @@ public class Controller {
                 i++;
             }
 
-//            dataSeries1.setName("P"+procNum);
+            //add bar to the series
             for(Task eachPart : eachBar){
                 int length = eachPart.getDurationTime();
                 final XYChart.Data<Number, String> bar = new XYChart.Data<Number,String>(length, "P" + procNum);
                 bar.nodeProperty().addListener((ov, oldNode, node) -> {
+                    //set color of each type of bar, transparent for idle section, blue for task bar section
                     if (node != null) {
                         if(eachPart.isIdle()){
                             node.setStyle("-fx-bar-fill: transparent");
@@ -254,6 +250,9 @@ public class Controller {
         return barList;
     }
 
+    /**
+     * change the property of the GUI when task are being scheduled
+     */
     public void setGUIRunning(){
         // Start button is disabled and status of the GUI is changed
         startBtn.setDisable(true);
@@ -262,17 +261,28 @@ public class Controller {
         statusText.setText("SCHEDULING");
     }
 
+    /**
+     * change the property of the GUI when task scheduling is completed
+     */
     public void setGUICompleted(){
         statusText.setText("FINISHED");
         chartTitle.setText("OPTIMAL SCHEDULE");
     }
 
+    /**
+     * change the property of the GUI when GUI is first loaded
+     */
     public void setGUIInitial(){
         chartTitle.setText("FIND THE OPTIMAL SCHEDULE");
         chartTitle.setFill(Paint.valueOf("#336699"));
         chartTitle.setStyle("-fx-font-weight: bold");
     }
 
+    /**
+     * A helper method that retrieve the number of nodes in the input graph
+     * @param inputFileName name of the input graph
+     * @return integer that indicates the number of nodes in the graph
+     */
     public int getTaskNum(String inputFileName){
         InputReader reader = new InputReader(inputFileName);
         Graph inputGraph = reader.read();
