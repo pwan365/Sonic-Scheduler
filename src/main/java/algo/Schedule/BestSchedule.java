@@ -9,20 +9,26 @@ import org.graphstream.graph.Node;
  *
  * @author Wayne Yao, Luxman Jeyarajah
  */
-public class BestSchedule implements Schedule {
-    private Processor[] processors;
+public class BestSchedule {
+    private int[][] taskInformation;
+    private int[] taskProcessors;
     private int bestTime;
 
     public BestSchedule(){
         bestTime = Integer.MAX_VALUE;
     }
 
-    public void makeCopy(int candidateBest, Processor[] processors) {
-        Cloner cloner = new Cloner();
-        int numOfProcessors = processors.length;
-        this.processors = new Processor[numOfProcessors];
-        for(int i = 0; i < numOfProcessors; i++){
-            this.processors[i] = cloner.deepClone(processors[i]);
+    public void makeCopy(int candidateBest, int[] allocatedProcessors, int[][] taskData) {
+        taskInformation = new int[taskData.length][4];
+        allocatedProcessors = new int[allocatedProcessors.length];
+
+        for(int i = 0; i < allocatedProcessors.length; i++){
+            taskProcessors[i] = allocatedProcessors[i];
+        }
+        for(int i = 0; i < taskData.length; i++){
+            for(int j = 0; j < taskData[i].length; j++){
+                taskInformation[i][j] = taskData[i][j];
+            }
         }
         this.bestTime = candidateBest;
     }
@@ -31,28 +37,10 @@ public class BestSchedule implements Schedule {
         return bestTime;
     }
 
-    public Processor[] getProcessors() {
-        return processors;
+    public int[][] getTaskInformation() {
+        return taskInformation;
     }
 
-    public void done(){
-        for(Processor processor:processors){
-            for(Task task: processor.getTasks()){
-//                System.out.println("PROCESSOR: ");
-//                System.out.println(task.getAllocatedProcessor().getProcessNum());
-//                System.out.println("TASKLAESTTIME: " + task.getFinishingTime());
-            }
-        }
-    }
 
-    public void writeToGraph(Graph input){
-        for(Processor processor: processors){
-            for(Task task: processor.getTasks()){
-                int nodeIndex = task.getNode().getIndex();
-                Node node = input.getNode(nodeIndex);
-                node.setAttribute("Task", task);
-            }
-        }
-    }
 
 }
