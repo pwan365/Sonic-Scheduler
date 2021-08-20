@@ -25,7 +25,7 @@ public class SequentialSearch extends BranchAndBound{
     private BestSchedule bestSchedule;
 
     public SequentialSearch(IntGraph graph, int processors) {
-        super(graph,processors);
+        super(graph,processors,true);
         bestSchedule = new BestSchedule();
 //        input = inputGraph;
 //        partialSchedule = new PartialSchedule(processors,inputGraph);

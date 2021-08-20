@@ -200,9 +200,8 @@ public class SpeedTester {
 
     private int scheduling(Graph input, int numberOfProcessors) {
         IntGraph graph = new IntGraph(input);
-        SequentialSearch s = new SequentialSearch(graph,numberOfProcessors);
+        ParallelSearch s = new ParallelSearch(graph,numberOfProcessors);
         s.run();
-
         return s.done();
     }
 }

@@ -3,69 +3,66 @@ package algo.Solution;
 
 import java.util.*;
 
-public abstract class BranchAndBound {
+public class BranchAndBound {
     //Graph
     IntGraph intGraph;
     int numProcessors;
     int  numTasks;
 
     //Schedule information
-    protected Stack<Integer> time;
-    private int idle;
-    private HashSet<Integer> scheduledTasks;
-    protected HashSet<Integer> unscheduledTasks;
+    public Stack<Integer> time;
+    public int idle;
+    public HashSet<Integer> scheduledTasks;
+    public HashSet<Integer> unscheduledTasks;
 
     //Processor information
-    protected int [] processorTimes;
+    public int [] processorTimes;
 
     //Task information
-    protected int [] taskProcessors;
+    public int [] taskProcessors;
     //Index 0 is StartTime, Index 1 is Weight, Index 2 is Finish Time, Index 3 is communication cost.
-    protected int [][] taskInformation;
+    public int [][] taskInformation;
 
     //Cost Functions
     //Bottom Level
-    protected int [] bottomLevel;
+    public int [] bottomLevel;
     //Load Balancer
-    protected int graphWeight =0;
+    public int graphWeight =0;
 
     //Set of seen schedules.
-    protected HashSet<Integer> seenStates = new HashSet<>();
+    public HashSet<Integer> seenStates = new HashSet<>();
 
-    public BranchAndBound(IntGraph graph,int numberOfProcessors) {
-        intGraph = graph;
-        numProcessors = numberOfProcessors;
-        numTasks = graph.tasks.length;
+    public BranchAndBound(IntGraph graph,int numberOfProcessors, boolean init) {
+            intGraph = graph;
+            numProcessors = numberOfProcessors;
+            numTasks = graph.tasks.length;
 
-        time = new Stack<>();
-        time.push(0);
-        idle = 0;
-        scheduledTasks = new HashSet<>();
-        unscheduledTasks = new HashSet<>();
+            time = new Stack<>();
 
-        addUnscheduledTasks();
+            scheduledTasks = new HashSet<>();
+            unscheduledTasks = new HashSet<>();
 
-        processorTimes = new int[numberOfProcessors];
-        taskProcessors = new int[numTasks];
 
-        taskInformation = new int[numTasks][3];
+            processorTimes = new int[numberOfProcessors];
+            taskProcessors = new int[numTasks];
 
-        setDefaultTaskInfo();
-        setDefaultTaskProcessor();
-
-        //Initialize bottom levels
+            taskInformation = new int[numTasks][4];
         bottomLevel = new int[numTasks];
-        initB();
 
-//        for (int i =0; i < bottomLevel.length; i ++) {
-//            System.out.println("Task");
-//            System.out.println(i);
-//            System.out.println("B Level");
-//            System.out.println(bottomLevel[i]);
-//        }
+        if (init){
+            time.push(0);
+            idle = 0;
+            addUnscheduledTasks();
+            setDefaultTaskInfo();
+            setDefaultTaskProcessor();
 
-        //Initialize Load Balancer
-        initLB();
+            initB();
+            initLB();
+        }
+
+
+
+
     }
 
     private void addUnscheduledTasks() {
@@ -289,6 +286,53 @@ public abstract class BranchAndBound {
     }
 
     public BranchAndBound deepCopy(){
+
+        BranchAndBound c_branchandbound = new BranchAndBound(intGraph, numProcessors, false);
+        //c_branchandbound.time = new Stack<>();
+        for (int i = 0; i < time.size(); i++){
+            c_branchandbound.time.add(i, time.get(i));
+        }
+        c_branchandbound.idle = idle;
+
+        //c_branchandbound.scheduledTasks = new HashSet<>();
+        Iterator it = scheduledTasks.iterator();
+        while (it.hasNext()){
+            int task = (Integer)it.next();
+            c_branchandbound.scheduledTasks.add(task);
+        }
+
+        //c_branchandbound.unscheduledTasks = new HashSet<>();
+        Iterator unit = unscheduledTasks.iterator();
+        while (unit.hasNext()){
+            int task = (Integer)unit.next();
+            c_branchandbound.unscheduledTasks.add(task);
+        }
+
+        //c_branchandbound.processorTimes = new int[processorTimes.length];
+        for (int i = 0; i < processorTimes.length; i++){
+            c_branchandbound.processorTimes[i] = processorTimes[i];
+        }
+
+       // c_branchandbound.taskProcessors = new int[taskProcessors.length];
+        for (int i = 0; i < taskProcessors.length; i++){
+            c_branchandbound.taskProcessors[i] = taskProcessors[i];
+        }
+
+        //c_branchandbound.taskInformation = new int[taskInformation.length][4];
+        for (int i = 0; i < taskInformation.length; i++){
+            for (int j = 0; j < 4; j ++){
+                c_branchandbound.taskInformation[i][j] = taskInformation[i][j];
+            }
+        }
+
+        //c_branchandbound.bottomLevel = new int[bottomLevel.length];
+        for (int i = 0; i < bottomLevel.length; i++){
+            c_branchandbound.bottomLevel[i] = bottomLevel[i];
+        }
+        //Load Balancer
+        c_branchandbound.graphWeight = graphWeight;
+
+        return c_branchandbound;
 
     }
 
