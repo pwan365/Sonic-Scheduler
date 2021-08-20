@@ -71,7 +71,7 @@
     </Text>
     <Region layoutX="293.0" layoutY="108.0" prefHeight="489.0" prefWidth="599.0" style="-fx-background-color: white; -fx-background-radius: 50px;" />
     <Label fx:id="graphName" layoutX="109.0" layoutY="238.0" prefWidth="146.0" text="Label" />
-    <StackedBarChart fx:id="barChartSchedule" legendVisible="false" layoutX="307.0" layoutY="132.0" prefHeight="436.0" prefWidth="566.0" title="Current best partial schedule" AnchorPane.topAnchor="132.0">
+    <StackedBarChart fx:id="barChartSchedule" animated="false" legendVisible="false" layoutX="307.0" layoutY="132.0" prefHeight="436.0" prefWidth="566.0" title="Current best partial schedule" AnchorPane.topAnchor="132.0">
         <xAxis>
             <NumberAxis label="Time" side="BOTTOM" />
         </xAxis>

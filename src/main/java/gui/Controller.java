@@ -5,9 +5,7 @@ import algo.Schedule.Processor;
 import algo.Schedule.Task;
 import algo.Solution.ScheduleThread;
 import javafx.animation.AnimationTimer;
-import javafx.beans.property.ObjectProperty;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.StackedBarChart;
@@ -22,6 +20,9 @@ public class Controller {
 
     private Boolean isRunning = false;
     private Boolean init = true;
+    private StatusRefresh control = new StatusRefresh();
+    private ScheduleThread scheduleThread;
+    private int procNum;
 
     @FXML
     private Label graphName;
@@ -29,36 +30,31 @@ public class Controller {
     private Text timeElapsed;
     @FXML
     private Text totalTask;
-
     @FXML
     private Text numProcess;
-
     @FXML
     private Button startBtn;
     @FXML
     private Text statusText;
-
-    StatusRefresh control = new StatusRefresh();
-
-
     @FXML
     private Text statesExamined;
-
     @FXML
     private Text statesMagnitude;
-
     @FXML
     private Text bestTime;
 
-    CategoryAxis yAxis = new CategoryAxis();
-
-    NumberAxis xAxis = new NumberAxis();
     @FXML
     private StackedBarChart<Number, String> barChartSchedule ;
+    CategoryAxis yAxis = new CategoryAxis();
+    NumberAxis xAxis = new NumberAxis();
 
-    ScheduleThread scheduleThread;
-    int procNum;
-
+    /**
+     * Method sets the global variables and GUI text to those passed into the controller as inputs.
+     * @param scheduleThread Thread that runs the schedule algorithm
+     * @param inputGraphName Name of the input graph file
+     * @param taskNum Number of nodes that represent tasks in the input file
+     * @param procNum Number of processors the schedule is required to run on based on user's input
+     */
     public void passInput(ScheduleThread scheduleThread,String inputGraphName, String taskNum, int procNum){
         this.scheduleThread = scheduleThread;
         graphName.setText(inputGraphName);
@@ -69,8 +65,14 @@ public class Controller {
 
     }
 
+    /**
+     * Method is called when the START button is pressed to begin the scheduling algorithm on the thread.
+     */
     public void start(){
+        // Start button is disabled and status of the GUI is changed
         startBtn.setDisable(true);
+        statusText.setText("SCHEDULING");
+        // Starts running the scheduling algorithm
         scheduleThread.start();
         control.start();
         control.setStartTime();
@@ -115,20 +117,22 @@ public class Controller {
             }
 
             formatStatesExamined(scheduleThread.getStates());
-            bestTime.setText(scheduleThread.getBestTime() + "");
+            if (scheduleThread.getStates() > 0) {
+                bestTime.setText(scheduleThread.getBestTime() + "");
+            }
             updateBarChart();
+
+            System.out.println(scheduleThread.isDone());
+            if(scheduleThread.isDone()){
+                statusText.setText("FINISHED");
+                this.stop();
+            }
 
             /*if (scheduleThread.getBestChanged()) {
                 bestTime.setText(scheduleThread.getBestTime() + "");
                 updateBarChart();
             }*/
 
-            System.out.println(scheduleThread.isDone());
-            if(scheduleThread.isDone()){
-                this.stop();
-            }
-
-            updateBarChart();
             long elapsedMillis = System.currentTimeMillis() - startTime;
             int milliseconds = (int) ( elapsedMillis % 1000);
             int seconds = (int) ((elapsedMillis / 1000) % 60);
@@ -157,23 +161,6 @@ public class Controller {
             statesExamined.setText(String.valueOf(currentStates/1000000000));
             statesMagnitude.setText("billion");
         }
-    }
-
-    public void barChart(int procNum) {
-        // reset the bar chart
-        barChartSchedule.getData().clear();
-
-        // prepares XYChart.Series objects by setting data
-        XYChart.Series<Number, String> series1 = new XYChart.Series<>();
-        series1.setName("P1");
-        series1.getData().add(new XYChart.Data<>(100, "Task 1"));
-
-        XYChart.Series<Number, String> series2 = new XYChart.Series<>();
-        series2.setName("P2");
-        series2.getData().add(new XYChart.Data<>(200, "Task 2"));
-
-        //Adds the data to the chart
-        barChartSchedule.getData().addAll(series1, series2);
     }
 
     public void updateBarChart() {
@@ -216,7 +203,7 @@ public class Controller {
 //            dataSeries1.setName("P"+procNum);
             for(Task eachPart : eachBar){
                 int length = eachPart.getDurationTime();
-                final XYChart.Data<Number, String> bar = new XYChart.Data<Number,String>(length, "P" + procNum);
+                final XYChart.Data<Number, String> bar = new XYChart.Data<Number,String>(length, procNum+"P");
                 bar.nodeProperty().addListener((ov, oldNode, node) -> {
                     if (node != null) {
                         if(eachPart.isIdle()){
@@ -250,16 +237,10 @@ public class Controller {
         for(int i=0 ; i<processors.length;i++){
             List<Task> eachBar = new ArrayList<>();
             int j=0;
-
             tasks=processors[i].getTasks();
-
             for(Task task:tasks){
-
-
-                    eachBar.add(task);
-
-                    j++;
-
+                eachBar.add(task);
+                j++;
             }
             barList.add(eachBar);
         }
