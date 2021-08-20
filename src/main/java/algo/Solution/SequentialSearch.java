@@ -72,28 +72,19 @@ public class SequentialSearch extends BranchAndBound{
             prune += 1;
             return;
         }
+        boolean seen = checkSeen(task,processor,cost);
+
+        if (seen) {
+            prune+= 1;
+            return;
+        }
 
         addTask(task, processor, cost);
 
-        if (unscheduledTasks.isEmpty()) {
+        if (scheduled == numTasks) {
             int candidateBest = time.peek();
             if (candidateBest < bestSchedule.bestTime) {
-//                bestSchedule.makeCopy(candidateBest, partialSchedule.getProcessors());
                 bestSchedule.makeCopy(candidateBest,taskProcessors,taskInformation);
-//                System.out.println("START");
-//                System.out.println(bestTime);
-//                for (int i =0; i < numTasks; i ++) {
-////                    System.out.println("Task");
-////                    System.out.println(i);
-////                    System.out.println("Processor");
-////                    System.out.println(taskProcessors[i]);
-////                    System.out.println("Weight");
-////                    System.out.println(taskInformation[i][1]);
-////                    System.out.println("Start Time");
-////                    System.out.println(taskInformation[i][0]);
-////                    System.out.println("Comm");
-////                    System.out.println(taskInformation[i][3]);
-//                }
             }
         }
 
@@ -104,14 +95,9 @@ public class SequentialSearch extends BranchAndBound{
             if (candidateTasks[i]) {
                 for (int j = 0; j < numProcessors; j++) {
                     if (candidateProcessors[j]) {
-
                         int commCost = commCost(i,j);
-                        boolean seen = checkSeen(i,j,commCost);
-
-                        if (!seen) {
-                            DSL dsl = new DSL(bottomLevel[i],commCost,processorTimes[j],i,j);
-                            lowestCost.add(dsl);
-                        }
+                        DSL dsl = new DSL(bottomLevel[i],commCost,processorTimes[j],i,j);
+                        lowestCost.add(dsl);
 //                        branchBound(candidateTask,j ,commCost);
                     }
                 }

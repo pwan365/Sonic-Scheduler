@@ -8,12 +8,13 @@ public abstract class BranchAndBound {
     IntGraph intGraph;
     int numProcessors;
     int  numTasks;
+    int scheduled = 0;
 
     //Schedule information
     protected Stack<Integer> time;
     private int idle;
-    private HashSet<Integer> scheduledTasks;
-    protected HashSet<Integer> unscheduledTasks;
+    private boolean [] scheduledTasks;
+    protected boolean[] unscheduledTasks;
 
     //Processor information
     protected int [] processorTimes;
@@ -40,8 +41,8 @@ public abstract class BranchAndBound {
         time = new Stack<>();
         time.push(0);
         idle = 0;
-        scheduledTasks = new HashSet<>();
-        unscheduledTasks = new HashSet<>();
+        scheduledTasks = new boolean[numTasks];
+        unscheduledTasks = new boolean[numTasks];
 
         addUnscheduledTasks();
 
@@ -70,7 +71,7 @@ public abstract class BranchAndBound {
 
     private void addUnscheduledTasks() {
         for (int i = 0; i < numTasks; i++) {
-            unscheduledTasks.add(i);
+            unscheduledTasks[i] = true;
         }
     }
 
@@ -109,8 +110,9 @@ public abstract class BranchAndBound {
 
         //Set Schedule information
         idle += cost;
-        scheduledTasks.add(task);
-        unscheduledTasks.remove(task);
+        scheduledTasks[task] = true;
+        unscheduledTasks[task] = false;
+        scheduled += 1;
 
         //Set new schedule end time.
         int currentTime = time.peek();
@@ -121,8 +123,9 @@ public abstract class BranchAndBound {
         //Reset Schedule info
         time.pop();
         idle -= cost;
-        scheduledTasks.remove(task);
-        unscheduledTasks.add(task);
+        scheduledTasks[task] = false;
+        unscheduledTasks[task] = true;
+        scheduled -= 1;
 
         //Reset Processor Information
         int taskWeight = taskInformation[task][1];
@@ -170,7 +173,7 @@ public abstract class BranchAndBound {
             int nodeIndex = i;
 
             // if input is 0 size, find all root tasks
-            if(intGraph.inEdges[i].size() == 0 && !scheduledTasks.contains(nodeIndex)){
+            if(intGraph.inEdges[i].size() == 0 && !scheduledTasks[nodeIndex]){
                 validTasks[nodeIndex] = true;
                 continue;
             }
@@ -178,13 +181,13 @@ public abstract class BranchAndBound {
             boolean flag = true;
             for(int j = 0; j <intGraph.inEdges[i].size(); j++){
                 int parent = intGraph.inEdges[i].get(j)[0];
-                if(!scheduledTasks.contains(parent)){
+                if(!scheduledTasks[parent]){
                     flag = false;
                     validTasks[nodeIndex] = false;
                     break;
                 }
             }
-            if(flag && !scheduledTasks.contains(nodeIndex)){
+            if(flag && !scheduledTasks[nodeIndex]){
                 validTasks[nodeIndex] = true;
             }
         }
@@ -264,12 +267,17 @@ public abstract class BranchAndBound {
             stacks[i] = new Stack<>();
         }
 
-        for(int scheduledTask: scheduledTasks){
-            int startTime = taskInformation[scheduledTask][0];
-            int allocatedProcessor = taskProcessors[scheduledTask];
-            stacks[allocatedProcessor].add(scheduledTask);
-            stacks[allocatedProcessor].add(startTime);
+
+
+        for(int i = 0; i <numTasks; i ++){
+            if (scheduledTasks[i]) {
+                int startTime = taskInformation[i][0];
+                int allocatedProcessor = taskProcessors[i];
+                stacks[allocatedProcessor].add(i);
+                stacks[allocatedProcessor].add(startTime);
+            }
         }
+
         stacks[candProcessor].add(candTask);
         int taskStart = processorTimes[candProcessor] + cost;
         stacks[candProcessor].add(taskStart);
@@ -287,5 +295,4 @@ public abstract class BranchAndBound {
         }
         return false;
     }
-
 }
