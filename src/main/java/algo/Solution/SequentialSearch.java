@@ -89,16 +89,13 @@ public class SequentialSearch extends BranchAndBound{
 
         boolean[] candidateTasks = getOrder();
         PriorityQueue<DSL> lowestCost = new PriorityQueue<>();
-        boolean[] candidateProcessors = normalise();
+//        boolean[] candidateProcessors = normalise();
         for (int i = 0; i < numTasks; i++) {
             if (candidateTasks[i]) {
                 for (int j = 0; j < numProcessors; j++) {
-                    if (candidateProcessors[j]) {
                         int commCost = commCost(i,j);
-                        DSL dsl = new DSL(commCost,processorTimes[j],i,j);
+                        DSL dsl = new DSL(bottomLevel[i],commCost,processorTimes[j],i,j);
                         lowestCost.add(dsl);
-//                        branchBound(candidateTask,j ,commCost);
-                    }
                 }
             }
         }
@@ -115,9 +112,6 @@ public class SequentialSearch extends BranchAndBound{
 //                    } else {
 //                        prune += 1;
 //                    }
-
-
-
             while (!lowestCost.isEmpty()) {
                 DSL candidate = lowestCost.poll();
                 int candidateTask = candidate.task;

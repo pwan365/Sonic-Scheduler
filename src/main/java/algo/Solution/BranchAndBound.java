@@ -35,7 +35,7 @@ public abstract class BranchAndBound {
     //Set of seen schedules.
     protected HashSet<Integer> seenStates = new HashSet<>();
 
-    Stack<Integer>[] stacks;
+//    Stack<Integer>[] stacks;
 
     public BranchAndBound(IntGraph graph,int numberOfProcessors) {
         intGraph = graph;
@@ -73,11 +73,11 @@ public abstract class BranchAndBound {
         //Initialize Load Balancer
         initLB();
 
-        stacks = new Stack[numProcessors];
-
-        for (int i = 0; i < stacks.length; i++){
-            stacks[i] = new Stack<>();
-        }
+//        stacks = new Stack[numProcessors];
+//
+//        for (int i = 0; i < stacks.length; i++){
+//            stacks[i] = new Stack<>();
+//        }
 
     }
 
@@ -90,7 +90,6 @@ public abstract class BranchAndBound {
     private void setDefaultTaskInfo() {
         for (int i = 0; i < numTasks; i++) {
             taskInformation[i] = new int[]{-1,-1,-1,-1};
-            test[i] = new int[]{-1,-1,-1,-1,-1};
         }
     }
 
@@ -106,21 +105,16 @@ public abstract class BranchAndBound {
         //Set Task StartTime
         int startTime = processorTimes[processor] + cost;
         taskInformation[task][0] = startTime;
-        test[task][0] = startTime;
         //Set Task WeightTime
         int weight = intGraph.weights[task];
         taskInformation[task][1] = weight;
-        test[task][1] = weight;
         //Set Task EndTime
         int endTime = startTime + weight;
         taskInformation[task][2] = endTime;
-        test[task][2] = endTime;
         //Set Task Communication cost.
         taskInformation[task][3] = cost;
-        test[task][3] = cost;
         //Set processor task is scheduled on
         taskProcessors[task] = processor;
-        test[task][4] = processor;
 
         //Set Processor information
         //Set Processor latest time.
@@ -136,8 +130,8 @@ public abstract class BranchAndBound {
         int currentTime = time.peek();
         time.push(Math.max(endTime,currentTime));
 
-        stacks[processor].add(task);
-        stacks[processor].add(startTime);
+//        stacks[processor].add(task);
+//        stacks[processor].add(task);
     }
 
     protected void removeTask(int task, int processor, int cost) {
@@ -157,22 +151,17 @@ public abstract class BranchAndBound {
         //Reset Task Info
         //Set Task StartTime
         taskInformation[task][0] = -1;
-        test[task][0] = -1;
         //Set Task WeightTime
         taskInformation[task][1] = -1;
-        test[task][1] = -1;
         //Set Task EndTime
         taskInformation[task][2] = -1;
-        test[task][2] = -1;
         //Set Task Communication cost.
         taskInformation[task][3] = -1;
-        test[task][3] = -1;
         //Set processor task is scheduled on
         taskProcessors[task] = -1;
-        test[task][4] = -1;
 
-        stacks[processor].pop();
-        stacks[processor].pop();
+//        stacks[processor].pop();
+//        stacks[processor].pop();
     }
 
     protected int commCost(int task,int processor) {
@@ -289,12 +278,12 @@ public abstract class BranchAndBound {
     }
 
     public boolean checkSeen() {
-        Set<Stack<Integer>> scheduleSet = new HashSet<>();
-
-        for(Stack<Integer> stack : stacks){
-            scheduleSet.add(stack);
-        }
-        int id = scheduleSet.hashCode();
+//        Set<Stack<Integer>> scheduleSet = new HashSet<>();
+//
+//        for(Stack<Integer> stack : stacks){
+//            scheduleSet.add(stack);
+//        }
+        int id = Arrays.deepHashCode(taskInformation);
         if (seenStates.contains(id)) {
             return true;
         }
