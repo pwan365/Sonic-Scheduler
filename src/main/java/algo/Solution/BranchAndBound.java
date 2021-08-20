@@ -51,7 +51,7 @@ public abstract class BranchAndBound {
 
     private void setDefaultTaskInfo() {
         for (int i = 0; i < numTasks; i++) {
-            taskInformation[i] = [-1,-1,-1,-1];
+            taskInformation[i] = new int[]{-1,-1,-1,-1};
         }
     }
 
