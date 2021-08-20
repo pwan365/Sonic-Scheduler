@@ -70,11 +70,11 @@ public class Controller {
     }
 
     public void start(){
-        toggleBtn(control);
         startBtn.setDisable(true);
         scheduleThread.start();
         control.start();
         control.setStartTime();
+
     }
 
     public void toggleBtn(StatusRefresh control){
@@ -108,7 +108,7 @@ public class Controller {
         @Override
         public void handle(long now) {
 
-            if (now - lastUpdate < 50_000_000) {
+            if (now - lastUpdate < 50_000_0000) {
                 return;
             } else {
                 lastUpdate = now;
@@ -194,39 +194,47 @@ public class Controller {
                 return 0;
             });
 
-//            dataSeries1.setName("P" + procNum);
+            if(eachBar.size() != 0 && eachBar.get(0).getStartingTime() != 0){
+                Task idlePart = new Task(0,eachBar.get(0).getStartingTime(),true);
+                eachBar.add(idlePart);
+            }
+
+            int i = 1;
+            while(eachBar.size() > i){
+                Task currPart = eachBar.get(i);
+                Task prevPart = eachBar.get(i-1);
+                if(currPart.getStartingTime() != prevPart.getStartingTime() + prevPart.getDurationTime()){
+                    int idleStartTime = prevPart.getStartingTime() + prevPart.getDurationTime();
+                    int idleDuration = currPart.getStartingTime() -idleStartTime;
+                    Task idlePart = new Task(idleStartTime,idleDuration,true);
+                    eachBar.add(i,idlePart);
+                    i++;
+                }
+                i++;
+            }
+
+//            dataSeries1.setName("P"+procNum);
             for(Task eachPart : eachBar){
-//                System.out.println(eachPart.getStartingTime()+"----P"+procNum);
                 int length = eachPart.getDurationTime();
-                dataSeries1.getData().add(new XYChart.Data<Number, String>(length, "P" + procNum));
+                final XYChart.Data<Number, String> bar = new XYChart.Data<Number,String>(length, procNum+"P");
+                bar.nodeProperty().addListener((ov, oldNode, node) -> {
+                    if (node != null) {
+                        if(eachPart.isIdle()){
+                            node.setStyle("-fx-bar-fill: transparent");
+                        }else{
+                            node.setStyle("-fx-bar-fill: #79b4de;-fx-border-color: #336699;");
+                        }
+
+
+                    }
+                });
+                dataSeries1.getData().add(bar);
+
             }
             procNum++;
         }
         barChartSchedule.getData().addAll(dataSeries1);
-
-
-
-
-//        dataSeries1.setName("P1");
-//        dataSeries1.getData().add(new XYChart.Data<Number, String>(100, "P1"));
-//        final XYChart.Data<Number, String> bar = new XYChart.Data<Number,String>(50, "P1");
-//        bar.nodeProperty().addListener((ov, oldNode, node) -> {
-//            if (node != null) {
-//
-//                // Idle tasks should be transparent
-//                node.setStyle("-fx-bar-fill: transparent");
-//
-//            }
-//        });
-//
-//        dataSeries1.getData().add(bar);
-//        dataSeries1.getData().add(new XYChart.Data<Number, String>(120, "P1"));
-//
-//
-//        XYChart.Series<Number, String> dataSeries2 = new XYChart.Series<Number, String>();
-//        dataSeries2.setName("P2");
-//        dataSeries2.getData().add(new XYChart.Data<Number, String>(120, "P2"));
-//        barChartSchedule.getData().addAll(dataSeries1,dataSeries2);
+        barChartSchedule.setLegendVisible(false);
 
     }
 
@@ -255,6 +263,7 @@ public class Controller {
             }
             barList.add(eachBar);
         }
+
         return barList;
     }
 }
