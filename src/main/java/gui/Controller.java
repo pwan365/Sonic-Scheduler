@@ -104,6 +104,10 @@ public class Controller {
         }
     }
 
+    /**
+     * Polls periodically for new information to update the GUI
+     * Starts a timer whilst running the scheduler to display the time elapsed.
+     */
     private class StatusRefresh extends AnimationTimer {
         long startTime;
         long lastUpdate = 0;
@@ -146,7 +150,10 @@ public class Controller {
         }
     }
 
-    /* Updates the states examined and formats large numbers into abbreviations */
+    /**
+     * Updates the states examined on the GUI and formats large numbers into abbreviations (i.e. thousand, million)
+     * @param currentStates The number of states the scheduler has searched through so far
+     */
     public void formatStatesExamined(long currentStates) {
         if ( currentStates < 1000 ) {
             statesExamined.setText(String.valueOf(currentStates));
@@ -163,6 +170,10 @@ public class Controller {
         }
     }
 
+    /**
+     * Alters the bar chart to display tasks as bars aligned with the specific, dedicated
+     * processor on the y-axis.
+     */
     public void updateBarChart() {
 
         List<List<Task>> barList = getBestSchedule();
@@ -208,7 +219,7 @@ public class Controller {
 //            dataSeries1.setName("P"+procNum);
             for(Task eachPart : eachBar){
                 int length = eachPart.getDurationTime();
-                final XYChart.Data<Number, String> bar = new XYChart.Data<Number,String>(length, procNum+"P");
+                final XYChart.Data<Number, String> bar = new XYChart.Data<Number,String>(length, "P" + procNum);
                 bar.nodeProperty().addListener((ov, oldNode, node) -> {
                     if (node != null) {
                         if(eachPart.isIdle()){
@@ -226,6 +237,11 @@ public class Controller {
         barChartSchedule.setLegendVisible(false);
     }
 
+    /**
+     * Method used to extract a list of a list of tasks from a bestSchedule object
+     * stored as global variable.
+     * @return a list of tasks
+     */
     public List<List<Task>> getBestSchedule(){
         BestSchedule b = scheduleThread.getBestSchedule();
         List<List<Task>> barList = new ArrayList<>();
