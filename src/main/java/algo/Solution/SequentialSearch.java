@@ -198,9 +198,9 @@ public class SequentialSearch extends BranchAndBound{
 //        return bestSchedule.getTime();
 //    }
 
-    public void done() {
+    public int done() {
         System.out.println(bestTime);
         System.out.println(states);
-
+        return bestTime;
     }
 }

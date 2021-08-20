@@ -3,10 +3,7 @@ package graphTests.speedTests;
 import algo.CostFunctions.CriticalPath;
 import algo.CostFunctions.LoadBalancer;
 import algo.Schedule.Task;
-import algo.Solution.AllOrders;
-import algo.Solution.DuplicateStart;
-import algo.Solution.SequentialSearch;
-import algo.Solution.ValidScheduler;
+import algo.Solution.*;
 import graphTests.validateTests.InputReaderHelper;
 import org.graphstream.graph.Graph;
 import org.junit.jupiter.api.AfterEach;
@@ -31,7 +28,6 @@ public class SpeedTester {
         Graph inputGraph = reader.read();
 
         int best = this.scheduling(inputGraph, numProc);
-
 
         assertEquals(best, 28);
     }
@@ -203,21 +199,10 @@ public class SpeedTester {
     }
 
     private int scheduling(Graph input, int numberOfProcessors) {
-//        ValidScheduler v = new ValidScheduler(1);
-//        v.topologicalorder(input);
-//
-//        SequentialSearch d = new SequentialSearch(numberOfProcessors,input);
-//        AllOrders a = AllOrders.init(input);
-//
-//        HashSet<Task> empty = new HashSet<>();
-//        ArrayList<Task> tasks = a.getOrder(empty);
-//        for (Task task : tasks) {
-//            for(int i=0; i<numberOfProcessors;i++) {
-//                d.branchBound(task,i,0);
-//            }
-//        }
-//        return d.getBestSchedule();
-//    }
-        return 0;
+        IntGraph graph = new IntGraph(input);
+        SequentialSearch s = new SequentialSearch(graph,numberOfProcessors);
+        s.run();
+
+        return s.done();
     }
 }
