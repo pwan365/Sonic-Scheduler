@@ -19,16 +19,16 @@ public class IntGraph {
         int numTasks = g.getNodeCount();
         tasks = new int [numTasks];
         weights = new int [numTasks];
-
-
         outEdges = new LinkedList[numTasks];
         inEdges = new LinkedList[numTasks];
+        for(int i = 0; i < numTasks; i++){
+            inEdges[i] = new LinkedList<>();
+            outEdges[i] = new LinkedList<>();
+        }
         initEdges(g);
     }
-
     private void initEdges(Graph g) {
         for(int i = 0; i < tasks.length; i++) {
-            int currentTask = i;
             tasks[i] = i;
             Node currentNode = g.getNode(i);
             int weight = ((Double)currentNode.getAttribute("Weight")).intValue();
@@ -37,12 +37,10 @@ public class IntGraph {
             for(Edge e : edges){
                 int childNode = e.getNode1().getIndex();
                 int edgeWeight = ((Double) e.getAttribute("Weight")).intValue();
-                Integer [] outEdge = new Integer[]{childNode, edgeWeight};
-                Integer [] inEdge = new Integer[]{i,edgeWeight};
-                outEdges[i] = new LinkedList<>();
-                inEdges[i]= new LinkedList<>();
+                Integer[] outEdge = new Integer[]{childNode, edgeWeight};
+                Integer[] inEdge = new Integer[]{i,edgeWeight};
                 outEdges[i].add(outEdge);
-                inEdges[i].add(inEdge);
+                inEdges[childNode].add(inEdge);
             }
         }
     }
@@ -57,12 +55,13 @@ public class IntGraph {
     }
 
     public void testEdge() {
-        for (int i =0;i < inEdges.length; i++) {
-            for (int j =0; j < inEdges[i].size(); j++) {
+        for (int i =0;i < outEdges.length; i++) {
+            for (int j =0; j < outEdges[i].size(); j++) {
                 System.out.println("Task");
-                System.out.println(inEdges[i].get(i)[0]);
+                System.out.println(outEdges[i].get(j)[0]);
+                System.out.println(i);
                 System.out.println("Weight");
-                System.out.println(inEdges[i].get(i)[1]);
+                System.out.println(outEdges[i].get(j)[1]);
             }
         }
     }
