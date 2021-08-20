@@ -13,6 +13,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -266,5 +267,6 @@ public class Controller {
 
     public void setGUIInitial(){
         chartTitle.setText("");
+        chartTitle.setFill(Paint.valueOf("#336699"));
     }
 }

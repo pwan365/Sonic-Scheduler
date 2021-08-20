@@ -31,5 +31,8 @@
 
 #statusText{
     -fx-font-size: 20px;
+}
 
+#chartTitle{
+    -fx-font-size: 30px;
 }
