@@ -14,7 +14,7 @@ public class DuplicateStart {
 
     private HashSet<Task> startZero = new HashSet<>();
     private static DuplicateStart duplicateStart;
-    private int count = 0;
+    public int count = 0;
 
     private DuplicateStart() {}
 
@@ -51,6 +51,7 @@ public class DuplicateStart {
 //        System.out.println(processor.getTime());
         if ((processor.getTime() + cost) == 0) {
             if (startZero.contains(task)) {
+                count += 1;
                 return true;
             }
             else {

@@ -119,6 +119,8 @@ public class TopologicalSort implements Algorithm {
     public Queue<Task> getSortedTasks() {
         List<Task> taskList = new ArrayList<>();
         for (Node n : sortedNodes){
+            System.out.println(n.getId());
+            System.out.println(n.getIndex());
             Task t = new Task(n);
             n.setAttribute("Task", t);
             taskList.add(t);

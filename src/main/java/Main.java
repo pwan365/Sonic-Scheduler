@@ -4,6 +4,7 @@ import algo.Solution.CommunicationCost;
 import algo.Solution.ValidScheduler;
 import algo.Solution.SequentialSearch;
 import io.InputReader;
+import io.IntGraph;
 import io.OutputWriter;
 import org.graphstream.graph.Graph;
 
@@ -56,27 +57,30 @@ public class Main  {
         InputReader reader = new InputReader(fileName);
         Graph inputGraph = reader.read();
 
-        ValidScheduler v = new ValidScheduler(1);
-        v.topologicalorder(inputGraph);
-
-        SequentialSearch d = new SequentialSearch(numberOfProcessors,inputGraph);
-        AllOrders a = AllOrders.init(inputGraph);
-
-
-        HashSet<Task> empty = new HashSet<>();
-        ArrayList<Task> tasks = a.getOrder(empty);
-        for (Task task : tasks) {
-            for(int i=0; i<numberOfProcessors;i++) {
-                d.branchBound(task,i,0);
-            }
-
-        }
-
-        int best = d.getBestSchedule();
-        // Write the scheduled graph to a file.
-        OutputWriter writer = new OutputWriter();
-        writer.write(inputGraph, outputFileName);
-        // 27 seconds
+        IntGraph graph = new IntGraph(inputGraph);
+        graph.testEdge();
+//
+//        ValidScheduler v = new ValidScheduler(1);
+//        v.topologicalorder(inputGraph);
+//
+//        SequentialSearch d = new SequentialSearch(numberOfProcessors,inputGraph);
+//        AllOrders a = AllOrders.init(inputGraph);
+//
+//
+//        HashSet<Task> empty = new HashSet<>();
+//        ArrayList<Task> tasks = a.getOrder(empty);
+//        for (Task task : tasks) {
+//            for(int i=0; i<numberOfProcessors;i++) {
+//                d.branchBound(task,i,0);
+//            }
+//
+//        }
+//
+//        int best = d.getBestSchedule();
+//        // Write the scheduled graph to a file.
+//        OutputWriter writer = new OutputWriter();
+//        writer.write(inputGraph, outputFileName);
+//        // 27 seconds
 
     }
 }

@@ -38,17 +38,17 @@ public class SpeedTester {
 
     @Test
     public void test16_4() {
-        String inputFileName ="Join_Nodes_16_CCR_0.10_WeightType_Random#3_Homogeneous-4.gxl.dot";
+        String inputFileName ="Random_Nodes_10_Density_1.50_CCR_2.03_WeightType_Random_GB_Homogeneous-8.gxl.dot";
         int numProc = 2;
         //read the graph using the absolute path
         String inputGraphPath = pathGetter(inputFileName);
         InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
         Graph inputGraph = reader.read();
 
-        int best = this.scheduling(inputGraph, 4);
+        int best = this.scheduling(inputGraph, 8);
 
 
-        assertEquals(best, 283);
+        assertEquals(best, 34);
     }
     @Test
     public void test7N_4P() {

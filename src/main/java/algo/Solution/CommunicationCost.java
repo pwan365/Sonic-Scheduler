@@ -24,7 +24,7 @@ public class CommunicationCost implements Comparable<CommunicationCost> {
         processor = candidateProcessor;
         cost = communicationCost();
         start = cost + processor.getTime();
-        dsl = -(c-(start));
+        dsl = (c-(start));
     }
     @Override
     public int compareTo(CommunicationCost e) {

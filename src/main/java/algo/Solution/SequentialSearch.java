@@ -15,7 +15,7 @@ import java.util.*;
  *
  * @author Luxman Jeyarajah
  */
-public class SequentialSearch extends BranchAndBound {
+public class SequentialSearch{
 
     private PartialSchedule partialSchedule;
     private BestSchedule bestSchedule;
@@ -29,6 +29,8 @@ public class SequentialSearch extends BranchAndBound {
     private int numProcessors;
     private Processor[] processorList;
     private HashSet<Integer> duplicateDetector;
+    private int states = 0;
+    int s = 0;
 
     public SequentialSearch(int processors, Graph inputGraph) {
         input = inputGraph;
@@ -63,59 +65,59 @@ public class SequentialSearch extends BranchAndBound {
         Processor candidateProcessor = processorList[processor];
         int start = partialSchedule.getTime();
 
-        int bWeight = criticalPath.getCriticalPath(task)+ cost + candidateProcessor.getTime();
+        int bWeight = criticalPath.getCriticalPath(task) + cost + candidateProcessor.getTime();
         int loadBalance = loadBalancer.calculateLB(partialSchedule.idle + cost);
         int candidateTime = Math.max(start, Math.max(bWeight, loadBalance));
-        boolean checkZeroTask =  duplicateStart.checkZeroTask(candidateProcessor,task,cost);
+//        boolean checkZeroTask =  duplicateStart.checkZeroTask(candidateProcessor,task,cost);
 
-        if (bestSchedule.getTime() <= candidateTime || checkZeroTask) {
+        if (bestSchedule.getTime() <= candidateTime) {
             prune += 1;
             return;
         }
 
-        partialSchedule.scheduleTask(task,processor,cost);
+        partialSchedule.scheduleTask(task, processor, cost);
 
         HashSet<Task> scheduledTasks = partialSchedule.getScheduledTasks();
         ArrayList<Task> allPossibilities = allOrders.getOrder(scheduledTasks);
 
         if (allPossibilities.isEmpty()) {
-                int candidateBest = partialSchedule.getTime();
-                if (candidateBest < bestSchedule.getTime()) {
-                    bestSchedule.makeCopy(candidateBest, partialSchedule.getProcessors());
-                }
+            int candidateBest = partialSchedule.getTime();
+            if (candidateBest < bestSchedule.getTime()) {
+                bestSchedule.makeCopy(candidateBest, partialSchedule.getProcessors());
+            }
         }
 
         PriorityQueue<CommunicationCost> lowestCost = new PriorityQueue<>();
-        boolean [] candidateProcessors = normalise();
-        for(int i = 0; i < allPossibilities.size(); i++) {
+        boolean[] candidateProcessors = normalise();
+        for (int i = 0; i < allPossibilities.size(); i++) {
             for (int j = 0; j < numProcessors; j++) {
                 if (candidateProcessors[j]) {
 
                     CommunicationCost startTask = new CommunicationCost(allPossibilities.get(i),
-                            partialSchedule.getProcessors()[j],partialSchedule,criticalPath.
+                            partialSchedule.getProcessors()[j], partialSchedule, criticalPath.
                             getCriticalPath(allPossibilities.get(i)));
 
-                    int hashCode = hashCodeGenerator(numProcessors,allPossibilities.get(i),j,startTask.startTime());
+                    int hashCode = hashCodeGenerator(numProcessors, allPossibilities.get(i), j, startTask.startTime());
                     if (!duplicateDetector.contains(hashCode)) {
                         lowestCost.add(startTask);
                         duplicateDetector.add(hashCode);
-                    }
-                    else {
+                    } else {
                         prune += 1;
                     }
-
                 }
             }
         }
 
-        while (!lowestCost.isEmpty()) {
-            CommunicationCost candidate = lowestCost.poll();
-            Task candidateTask = candidate.getTask();
-            int processorID = candidate.getProcessorID();
-            int candidateCost = candidate.commCost();
-            branchBound(candidateTask,processorID,candidateCost);
-        }
-        partialSchedule.removeTasks(task);
+            while (!lowestCost.isEmpty()) {
+                CommunicationCost candidate = lowestCost.poll();
+                Task candidateTask = candidate.getTask();
+                int processorID = candidate.getProcessorID();
+                int candidateCost = candidate.commCost();
+                branchBound(candidateTask, processorID, candidateCost);
+            }
+            partialSchedule.removeTasks(task);
+            states += 1;
+
     }
 
     private boolean [] normalise() {
@@ -128,6 +130,7 @@ public class SequentialSearch extends BranchAndBound {
                     processorStarted[i] = true;
                 }
                 else {
+                    s+= 1;
                     processorStarted[i] = false;
                 }
             }
@@ -165,11 +168,11 @@ public class SequentialSearch extends BranchAndBound {
     }
 
     public int getBestSchedule() {
-        System.out.println("PRUNED");
-        System.out.println(prune);
         bestSchedule.done();
         bestSchedule.writeToGraph(input);
         System.out.println(bestSchedule.getTime());
+        System.out.println(states);
+        System.out.println(s);
         return bestSchedule.getTime();
     }
 }
