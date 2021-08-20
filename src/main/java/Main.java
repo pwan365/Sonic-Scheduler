@@ -1,3 +1,4 @@
+import algo.Solution.SequentialSearch;
 import io.InputReader;
 import algo.Solution.IntGraph;
 import org.graphstream.graph.Graph;
@@ -51,7 +52,11 @@ public class Main  {
         Graph inputGraph = reader.read();
 
         IntGraph graph = new IntGraph(inputGraph);
-        graph.testEdge();
+//        graph.testEdge();
+
+        SequentialSearch s = new SequentialSearch(graph,numberOfProcessors);
+        s.run();
+        s.done();
 //
 //        ValidScheduler v = new ValidScheduler(1);
 //        v.topologicalorder(inputGraph);

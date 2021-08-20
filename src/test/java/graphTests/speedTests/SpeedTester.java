@@ -23,7 +23,7 @@ public class SpeedTester {
 
     @Test
     public void test7N_2P() {
-        String inputFileName ="Nodes_7_OutTree.dot";
+        String inputFileName = "Nodes_7_OutTree.dot";
         int numProc = 2;
         //read the graph using the absolute path
         String inputGraphPath = pathGetter(inputFileName);
@@ -38,7 +38,7 @@ public class SpeedTester {
 
     @Test
     public void test16_4() {
-        String inputFileName ="Random_Nodes_10_Density_1.50_CCR_2.03_WeightType_Random_GB_Homogeneous-8.gxl.dot";
+        String inputFileName = "Random_Nodes_10_Density_1.50_CCR_2.03_WeightType_Random_GB_Homogeneous-8.gxl.dot";
         int numProc = 2;
         //read the graph using the absolute path
         String inputGraphPath = pathGetter(inputFileName);
@@ -50,9 +50,10 @@ public class SpeedTester {
 
         assertEquals(best, 34);
     }
+
     @Test
     public void test7N_4P() {
-        String inputFileName ="Nodes_7_OutTree.dot";
+        String inputFileName = "Nodes_7_OutTree.dot";
         int numProc = 4;
         //read the graph using the absolute path
         String inputGraphPath = pathGetter(inputFileName);
@@ -66,7 +67,7 @@ public class SpeedTester {
 
     @Test
     public void test8N_2P() {
-        String inputFileName ="Nodes_8_Random.dot";
+        String inputFileName = "Nodes_8_Random.dot";
         int numProc = 2;
         //read the graph using the absolute path
         String inputGraphPath = pathGetter(inputFileName);
@@ -80,7 +81,7 @@ public class SpeedTester {
 
     @Test
     public void test8N_4P() {
-        String inputFileName ="Nodes_8_Random.dot";
+        String inputFileName = "Nodes_8_Random.dot";
         int numProc = 4;
         //read the graph using the absolute path
         String inputGraphPath = pathGetter(inputFileName);
@@ -94,7 +95,7 @@ public class SpeedTester {
 
     @Test
     public void test9N_2P() {
-        String inputFileName ="Nodes_9_SeriesParallel.dot";
+        String inputFileName = "Nodes_9_SeriesParallel.dot";
         int numProc = 2;
         //read the graph using the absolute path
         String inputGraphPath = pathGetter(inputFileName);
@@ -108,7 +109,7 @@ public class SpeedTester {
 
     @Test
     public void test9N_4P() {
-        String inputFileName ="Nodes_9_SeriesParallel.dot";
+        String inputFileName = "Nodes_9_SeriesParallel.dot";
         int numProc = 4;
         //read the graph using the absolute path
         String inputGraphPath = pathGetter(inputFileName);
@@ -122,7 +123,7 @@ public class SpeedTester {
 
     @Test
     public void test10N_2P() {
-        String inputFileName ="Nodes_10_Random.dot";
+        String inputFileName = "Nodes_10_Random.dot";
         int numProc = 2;
         //read the graph using the absolute path
         String inputGraphPath = pathGetter(inputFileName);
@@ -136,7 +137,7 @@ public class SpeedTester {
 
     @Test
     public void test10N_4P() {
-        String inputFileName ="Nodes_10_Random.dot";
+        String inputFileName = "Nodes_10_Random.dot";
         int numProc = 4;
         //read the graph using the absolute path
         String inputGraphPath = pathGetter(inputFileName);
@@ -150,7 +151,7 @@ public class SpeedTester {
 
     @Test
     public void test11N_2P() {
-        String inputFileName ="Nodes_11_OutTree.dot";
+        String inputFileName = "Nodes_11_OutTree.dot";
         int numProc = 2;
         //read the graph using the absolute path
         String inputGraphPath = pathGetter(inputFileName);
@@ -164,7 +165,7 @@ public class SpeedTester {
 
     @Test
     public void test11N_4P() {
-        String inputFileName ="Nodes_11_OutTree.dot";
+        String inputFileName = "Nodes_11_OutTree.dot";
         int numProc = 4;
         //read the graph using the absolute path
         String inputGraphPath = pathGetter(inputFileName);
@@ -177,19 +178,18 @@ public class SpeedTester {
     }
 
     @AfterEach
-    public void clear(){
+    public void clear() {
         CriticalPath.clearObject();
         LoadBalancer.clearObject();
         DuplicateStart.clearObject();
     }
 
 
-
-
     //----------------------------------helper--------------------------------------------
 
     /**
      * The method will get the full path for the filename pass into the method
+     *
      * @param filename
      * @return full path of file
      */
@@ -203,20 +203,21 @@ public class SpeedTester {
     }
 
     private int scheduling(Graph input, int numberOfProcessors) {
-        ValidScheduler v = new ValidScheduler(1);
-        v.topologicalorder(input);
-
-        SequentialSearch d = new SequentialSearch(numberOfProcessors,input);
-        AllOrders a = AllOrders.init(input);
-
-        HashSet<Task> empty = new HashSet<>();
-        ArrayList<Task> tasks = a.getOrder(empty);
-        for (Task task : tasks) {
-            for(int i=0; i<numberOfProcessors;i++) {
-                d.branchBound(task,i,0);
-            }
-        }
-        return d.getBestSchedule();
+//        ValidScheduler v = new ValidScheduler(1);
+//        v.topologicalorder(input);
+//
+//        SequentialSearch d = new SequentialSearch(numberOfProcessors,input);
+//        AllOrders a = AllOrders.init(input);
+//
+//        HashSet<Task> empty = new HashSet<>();
+//        ArrayList<Task> tasks = a.getOrder(empty);
+//        for (Task task : tasks) {
+//            for(int i=0; i<numberOfProcessors;i++) {
+//                d.branchBound(task,i,0);
+//            }
+//        }
+//        return d.getBestSchedule();
+//    }
+        return 0;
     }
-
 }

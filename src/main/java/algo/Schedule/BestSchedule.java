@@ -40,7 +40,4 @@ public class BestSchedule {
     public int[][] getTaskInformation() {
         return taskInformation;
     }
-
-
-
 }
