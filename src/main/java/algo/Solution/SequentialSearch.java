@@ -106,7 +106,7 @@ public class SequentialSearch extends BranchAndBound{
                     if (candidateProcessors[j]) {
 
                         int commCost = commCost(i,j);
-                        boolean seen = hashCode(i,j,commCost);
+                        boolean seen = checkSeen(i,j,commCost);
 
                         if (!seen) {
                             DSL dsl = new DSL(bottomLevel[i],commCost,processorTimes[j],i,j);

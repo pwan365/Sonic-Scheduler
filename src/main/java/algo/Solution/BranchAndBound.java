@@ -256,7 +256,7 @@ public abstract class BranchAndBound {
         return processorStarted;
     }
 
-    public boolean hashCode(int candTask, int candProcessor, int cost) {
+    public boolean checkSeen(int candTask, int candProcessor, int cost) {
         Set<Stack<Integer>> scheduleSet = new HashSet<>();
         Stack<Integer>[] stacks = new Stack[numProcessors];
 
@@ -280,12 +280,12 @@ public abstract class BranchAndBound {
 
         int id = scheduleSet.hashCode();
         if (seenStates.contains(id)) {
-            return false;
+            return true;
         }
         else {
             seenStates.add(id);
         }
-        return true;
+        return false;
     }
 
 }
