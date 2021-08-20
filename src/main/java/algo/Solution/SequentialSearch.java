@@ -141,22 +141,22 @@ public class SequentialSearch{
         return processorStarted;
     }
 
-    public int hashCodeGenerator(int numberOfProcessors,Task candTask, int candProcessor, int start) {
-        HashSet<Task> scheduledTasks = partialSchedule.getScheduledTasks();
+    private int hashCodeGenerator(int candTask, int candProcessor, int start) {
+        HashSet<Integer> scheduledTasks = scheduledTasks;
         Set<Stack<Integer>> scheduleSet = new HashSet<>();
-        Stack<Integer>[] stacks = new Stack[numberOfProcessors];
+        Stack<Integer>[] stacks = new Stack[numProcessors];
 
         for (int i = 0; i < stacks.length; i++){
             stacks[i] = new Stack<>();
         }
 
-        for(Task scheduledTask: scheduledTasks){
-            int startTime = scheduledTask.getStartingTime();
-            int allocatedProcessor = scheduledTask.getAllocatedProcessor().getProcessNum();
-                stacks[allocatedProcessor - 1].add(scheduledTask.getNode().getIndex());
-                stacks[allocatedProcessor - 1].add(startTime);
+        for(int scheduledTask: scheduledTasks){
+            int startTime = taskInformation[scheduledTask][0];
+            int allocatedProcessor = taskProcessors[scheduledTask];
+            stacks[allocatedProcessor - 1].add(scheduledTask);
+            stacks[allocatedProcessor - 1].add(startTime);
         }
-        stacks[candProcessor].add(candTask.getNode().getIndex());
+        stacks[candProcessor].add(candTask);
         stacks[candProcessor].add(start);
 
         for(Stack<Integer> stack : stacks){
@@ -164,7 +164,6 @@ public class SequentialSearch{
         }
 
         return scheduleSet.hashCode();
-
     }
 
     public int getBestSchedule() {
