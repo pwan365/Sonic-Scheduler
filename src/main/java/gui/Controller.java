@@ -115,13 +115,13 @@ public class Controller {
             }
 
             formatStatesExamined(scheduleThread.getStates());
-            //bestTime.setText(scheduleThread.getBestTime() + "");
-            //updateBarChart();
+            bestTime.setText(scheduleThread.getBestTime() + "");
+            updateBarChart();
 
-            if (scheduleThread.getBestChanged()) {
+            /*if (scheduleThread.getBestChanged()) {
                 bestTime.setText(scheduleThread.getBestTime() + "");
                 updateBarChart();
-            }
+            }*/
 
             System.out.println(scheduleThread.isDone());
             if(scheduleThread.isDone()){
@@ -216,7 +216,7 @@ public class Controller {
 //            dataSeries1.setName("P"+procNum);
             for(Task eachPart : eachBar){
                 int length = eachPart.getDurationTime();
-                final XYChart.Data<Number, String> bar = new XYChart.Data<Number,String>(length, procNum+"P");
+                final XYChart.Data<Number, String> bar = new XYChart.Data<Number,String>(length, "P" + procNum);
                 bar.nodeProperty().addListener((ov, oldNode, node) -> {
                     if (node != null) {
                         if(eachPart.isIdle()){

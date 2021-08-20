@@ -79,7 +79,7 @@
             <CategoryAxis label="Processors" side="LEFT" />
         </yAxis>
     </StackedBarChart>
-    <Text fx:id="statesMagnitude" fill="WHITE" layoutX="72.0" layoutY="446.0" strokeType="OUTSIDE" strokeWidth="0.0" text="million" textAlignment="CENTER" wrappingWidth="159.7294921875">
+    <Text fx:id="statesMagnitude" fill="WHITE" layoutX="72.0" layoutY="446.0" strokeType="OUTSIDE" strokeWidth="0.0" text="" textAlignment="CENTER" wrappingWidth="159.7294921875">
         <font>
             <Font name="System Bold" size="14.0" />
         </font>
