@@ -1,5 +1,5 @@
 * {
-    -fx-font-family: System;
+    -fx-font-family: "Microsoft Sans Serif";
 }
 
 .statsBG {
@@ -20,11 +20,16 @@
 #startBtn {
     -fx-background-radius: 10px;
     -fx-background-color: #56b661;
-    -fx-font-size: 18px;
+    -fx-font-size: 20px;
     -fx-font-weight: bold;
 }
 
 #startBtn:hover {
     -fx-background-color: #489a52;
     -fx-cursor: hand;
+}
+
+#statusText{
+    -fx-font-size: 20px;
+
 }

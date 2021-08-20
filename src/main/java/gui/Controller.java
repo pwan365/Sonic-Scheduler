@@ -12,6 +12,9 @@ import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 import java.util.*;
@@ -24,8 +27,10 @@ public class Controller {
     private ScheduleThread scheduleThread;
     private int procNum;
 
+    String fontFamily = "Microsoft Sans Serif";
+
     @FXML
-    private Label graphName;
+    private Text graphName;
     @FXML
     private Text timeElapsed;
     @FXML
@@ -42,6 +47,8 @@ public class Controller {
     private Text statesMagnitude;
     @FXML
     private Text bestTime;
+    @FXML
+    private Text chartTitle;
 
     @FXML
     private StackedBarChart<Number, String> barChartSchedule ;
@@ -62,16 +69,14 @@ public class Controller {
         this.procNum=procNum;
         numProcess.setText(String.valueOf(procNum));
         Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-
+        setGUIInitial();
     }
 
     /**
      * Method is called when the START button is pressed to begin the scheduling algorithm on the thread.
      */
     public void start(){
-        // Start button is disabled and status of the GUI is changed
-        startBtn.setDisable(true);
-        statusText.setText("SCHEDULING");
+        setGUIRunning();
         // Starts running the scheduling algorithm
         scheduleThread.start();
         control.start();
@@ -79,30 +84,6 @@ public class Controller {
 
     }
 
-    public void toggleBtn(StatusRefresh control){
-        if(init){
-            init = false;
-            isRunning = true;
-            scheduleThread.start();
-            control.start();
-            control.setStartTime();
-        }else{
-            isRunning = !isRunning;
-        }
-        if(isRunning){
-            startBtn.setText("STOP");
-            startBtn.setStyle("-fx-background-color: #A30000");
-            statusText.setText("SCHEDULING");
-            scheduleThread.start();
-            control.start();
-            control.setStartTime();
-        }else{
-            startBtn.setText("START");
-            startBtn.setStyle("-fx-background-color: #56b661");
-            statusText.setText("STANDBY");
-            control.stop();
-        }
-    }
 
     /**
      * Polls periodically for new information to update the GUI
@@ -128,7 +109,7 @@ public class Controller {
 
             System.out.println(scheduleThread.isDone());
             if(scheduleThread.isDone()){
-                statusText.setText("FINISHED");
+                setGUICompleted();
                 this.stop();
             }
 
@@ -268,5 +249,22 @@ public class Controller {
 
         }
         return barList;
+    }
+
+    public void setGUIRunning(){
+        // Start button is disabled and status of the GUI is changed
+        startBtn.setDisable(true);
+        chartTitle.setText("PARTIAL BEST SCHEDULE");
+        statusText.setFill(Color.GREEN);
+        statusText.setText("SCHEDULING");
+    }
+
+    public void setGUICompleted(){
+        statusText.setText("FINISHED");
+        chartTitle.setText("BEST SCHEDULE");
+    }
+
+    public void setGUIInitial(){
+        chartTitle.setText("");
     }
 }
