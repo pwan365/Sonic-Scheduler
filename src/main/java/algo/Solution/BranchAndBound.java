@@ -260,33 +260,37 @@ public abstract class BranchAndBound {
     }
 
     public boolean checkSeen(int candTask, int candProcessor, int cost) {
-        Set<Stack<Integer>> scheduleSet = new HashSet<>();
-        Stack<Integer>[] stacks = new Stack[numProcessors];
-
-        for (int i = 0; i < stacks.length; i++){
-            stacks[i] = new Stack<>();
-        }
-
-
-
-        for(int i = 0; i <numTasks; i ++){
-            if (scheduledTasks[i]) {
-                int startTime = taskInformation[i][0];
-                int allocatedProcessor = taskProcessors[i];
-                stacks[allocatedProcessor].add(i);
-                stacks[allocatedProcessor].add(startTime);
-            }
-        }
-
-        stacks[candProcessor].add(candTask);
-        int taskStart = processorTimes[candProcessor] + cost;
-        stacks[candProcessor].add(taskStart);
-
-        for(Stack<Integer> stack : stacks){
-            scheduleSet.add(stack);
-        }
-
-        int id = scheduleSet.hashCode();
+//        Set<Stack<Integer>> scheduleSet = new HashSet<>();
+//        Stack<Integer>[] stacks = new Stack[numProcessors];
+//
+//        for (int i = 0; i < stacks.length; i++){
+//            stacks[i] = new Stack<>();
+//        }
+//
+//
+//
+//        for(int i = 0; i <numTasks; i ++){
+//            if (scheduledTasks[i]) {
+//                int startTime = taskInformation[i][0];
+//                int allocatedProcessor = taskProcessors[i];
+//                stacks[allocatedProcessor].add(i);
+//                stacks[allocatedProcessor].add(startTime);
+//            }
+//        }
+//
+//        stacks[candProcessor].add(candTask);
+//        int taskStart = processorTimes[candProcessor] + cost;
+//        stacks[candProcessor].add(taskStart);
+//
+//        for(Stack<Integer> stack : stacks){
+//            scheduleSet.add(stack);
+//        }
+        int id2 = Arrays.hashCode(taskProcessors);
+        int id1 = Arrays.deepHashCode(taskInformation);
+        Stack<Integer> stacks = new Stack<>();
+        stacks.add(id1);
+        stacks.add(id2);
+        int id = stacks.hashCode();
         if (seenStates.contains(id)) {
             return true;
         }

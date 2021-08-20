@@ -72,14 +72,17 @@ public class SequentialSearch extends BranchAndBound{
             prune += 1;
             return;
         }
+
+
+        addTask(task, processor, cost);
+
         boolean seen = checkSeen(task,processor,cost);
 
         if (seen) {
+            removeTask(task,processor,cost);
             prune+= 1;
             return;
         }
-
-        addTask(task, processor, cost);
 
         if (scheduled == numTasks) {
             int candidateBest = time.peek();
