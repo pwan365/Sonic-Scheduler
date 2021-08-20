@@ -140,31 +140,6 @@ public class SequentialSearch extends BranchAndBound{
 
     }
 
-//    public int hashCodeGenerator(int numberOfProcessors,Task candTask, int candProcessor, int start) {
-//        HashSet<Task> scheduledTasks = partialSchedule.getScheduledTasks();
-//        Set<Stack<Integer>> scheduleSet = new HashSet<>();
-//        Stack<Integer>[] stacks = new Stack[numberOfProcessors];
-//
-//        for (int i = 0; i < stacks.length; i++){
-//            stacks[i] = new Stack<>();
-//        }
-//
-//        for(Task scheduledTask: scheduledTasks){
-//            int startTime = scheduledTask.getStartingTime();
-//            int allocatedProcessor = scheduledTask.getAllocatedProcessor().getProcessNum();
-//                stacks[allocatedProcessor - 1].add(scheduledTask.getNode().getIndex());
-//                stacks[allocatedProcessor - 1].add(startTime);
-//        }
-//        stacks[candProcessor].add(candTask.getNode().getIndex());
-//        stacks[candProcessor].add(start);
-//
-//        for(Stack<Integer> stack : stacks){
-//            scheduleSet.add(stack);
-//        }
-//
-//        return scheduleSet.hashCode();
-//
-//    }
 
 //    public int getBestSchedule() {
 //        bestSchedule.done();

@@ -1,10 +1,7 @@
 package algo.Solution;
 
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Stack;
+import java.util.*;
 
 public abstract class BranchAndBound {
     //Graph
@@ -255,4 +252,32 @@ public abstract class BranchAndBound {
         }
         return processorStarted;
     }
+
+    public int hashCodeGenerator(int numberOfProcessors,int candTask, int candProcessor, int start) {
+        Set<Stack<Integer>> scheduleSet = new HashSet<>();
+        Stack<Integer>[] stacks = new Stack[numberOfProcessors];
+
+        for (int i = 0; i < stacks.length; i++){
+            stacks[i] = new Stack<>();
+        }
+
+        for(int scheduledTask: scheduledTasks){
+            int startTime = taskInformation[scheduledTask][0];
+            int allocatedProcessor = taskProcessors[scheduledTask];
+            stacks[allocatedProcessor].add(scheduledTask);
+            stacks[allocatedProcessor].add(startTime);
+        }
+        stacks[candProcessor].add(candTask);
+        stacks[candProcessor].add(start);
+
+        for(Stack<Integer> stack : stacks){
+            scheduleSet.add(stack);
+        }
+
+        return scheduleSet.hashCode();
+
+    }
+
+
+
 }
