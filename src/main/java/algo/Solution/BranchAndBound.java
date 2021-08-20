@@ -288,4 +288,8 @@ public abstract class BranchAndBound {
         return false;
     }
 
+    public BranchAndBound deepCopy(){
+
+    }
+
 }
