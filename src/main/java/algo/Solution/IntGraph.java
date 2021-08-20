@@ -1,4 +1,4 @@
-package io;
+package algo.Solution;
 
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 
 public class IntGraph {
 
-    private int [] tasks;
-    private int [] weights;
-    private  LinkedList<Integer[]>[] outEdges;
-    private  LinkedList<Integer[]>[] inEdges;
+    protected int [] tasks;
+    protected int [] weights;
+    protected  LinkedList<Integer[]>[] outEdges;
+    protected  LinkedList<Integer[]>[] inEdges;
 
     public IntGraph(Graph g) {
         int numTasks = g.getNodeCount();

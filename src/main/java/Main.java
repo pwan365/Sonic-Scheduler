@@ -1,14 +1,7 @@
-import algo.Schedule.Task;
-import algo.Solution.AllOrders;
-import algo.Solution.CommunicationCost;
-import algo.Solution.ValidScheduler;
-import algo.Solution.SequentialSearch;
 import io.InputReader;
-import io.IntGraph;
-import io.OutputWriter;
+import algo.Solution.IntGraph;
 import org.graphstream.graph.Graph;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class Main  {
