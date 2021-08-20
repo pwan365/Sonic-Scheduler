@@ -4,10 +4,7 @@ import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * Singleton class to calculate all possible tasks a partial schedule can add at that point in time.
@@ -41,37 +38,30 @@ public class AllOrders {
      * @param scheduled
      * @return
      */
-    public ArrayList<Task> getOrder(HashSet<Task> scheduled) {
-        if (memo.containsKey(scheduled)) {
-            return memo.get(scheduled);
-        }
-        ArrayList<Task> result = new ArrayList<>();
+    public ArrayList<Integer> getOrder(HashSet<Integer> scheduled, int numTask, LinkedList<Integer[]> inEdges) {
+        ArrayList<Integer> result = new ArrayList<>();
 
-        for(int i = 0; i < g.getNodeCount(); i++){
-            Node node = g.getNode(i);
-            Task task = (Task)node.getAttribute("Task");
-            List<Edge> parentEdges = task.getParentEdgeList();
+        for(int i = 0; i < numTask; i++){
+            int nodeIndex = i;
 
             // if input is 0 size, find all root tasks
-            if(parentEdges.size() == 0 && !scheduled.contains(task)){
-                result.add(task);
+            if(inEdges.size() == 0 && !scheduled.contains(nodeIndex)){
+                result.add(nodeIndex);
                 continue;
             }
 
             boolean flag = true;
-            for(Edge edge: parentEdges){
-                Node parent = edge.getNode0();
-                Task parentTask = (Task)parent.getAttribute("Task");
-                if(!scheduled.contains(parentTask)){
+            for(int j = 0; j < inEdges.size(); j++){
+                int parent = inEdges.get(j)[0];
+                if(!scheduled.contains(parent)){
                     flag = false;
                     break;
                 }
             }
-            if(flag && !scheduled.contains(task)){
-                result.add(task);
+            if(flag && !scheduled.contains(nodeIndex)){
+                result.add(nodeIndex);
             }
         }
-        memo.put(scheduled,result);
         return result;
     }
 }
