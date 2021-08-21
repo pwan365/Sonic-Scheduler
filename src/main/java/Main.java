@@ -1,6 +1,7 @@
 import algo.Solution.SequentialSearch;
 import io.InputReader;
 import algo.Solution.IntGraph;
+import io.OutputWriter;
 import org.graphstream.graph.Graph;
 
 import java.util.*;
@@ -54,9 +55,14 @@ public class Main  {
         IntGraph graph = new IntGraph(inputGraph);
 //        graph.testEdge();
 
-        SequentialSearch s = new SequentialSearch(graph,numberOfProcessors);
+        SequentialSearch s = new SequentialSearch(inputGraph, graph,numberOfProcessors);
         s.run();
         s.done();
+
+        OutputWriter writer = new OutputWriter();
+        writer.write(inputGraph, outputFileName);
+
+
 //
 //        ValidScheduler v = new ValidScheduler(1);
 //        v.topologicalorder(inputGraph);

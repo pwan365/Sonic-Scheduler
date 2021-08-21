@@ -86,13 +86,13 @@ public class GraphWriter extends FileSinkDOT {
                 //Formatting for the "Weight" of the element.
                 int weightValue = ((Number) value).intValue();
                 buffer.append(String.format("%s%s=%s", first.get() ? "" : ",", key, weightValue));
-            }else if (key.equals("Task")){
+            }else if (key.equals("Processor")){
                 //Formatting if the element contains its start time and processor information.
-                Task nodeTask = (Task) e.getAttribute("Task");
-                int startTime = (int) nodeTask.getStartingTime();
-                int processor = nodeTask.getAllocatedProcessor().getProcessNum();
+                int allocatedProcessor = ((Double) e.getAttribute("Processor")).intValue();
+                buffer.append(String.format("%s%s=%s", first.get() ? "" : ",", "Processor", allocatedProcessor));
+            }else if (key.equals("Start")){
+                int startTime = ((Double) e.getAttribute("Start")).intValue();
                 buffer.append(String.format("%s%s=%s", first.get() ? "" : ",", "Start", startTime));
-                buffer.append(String.format("%s%s=%s", first.get() ? "" : ",", "Processor", processor));
             }
 
             first.set(false);

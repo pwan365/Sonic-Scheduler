@@ -1,6 +1,8 @@
 package algo.Solution;
 
 
+import org.graphstream.graph.Graph;
+
 import java.util.*;
 
 /**
@@ -24,10 +26,12 @@ public class SequentialSearch extends BranchAndBound{
 //    private HashSet<Integer> duplicateDetector;
     private int states = 0;
     private BestSchedule bestSchedule;
+    private Graph inputGraph;
 
-    public SequentialSearch(IntGraph graph, int processors) {
+    public SequentialSearch(Graph input, IntGraph graph, int processors) {
         super(graph,processors);
         bestSchedule = new BestSchedule();
+        inputGraph = input;
 //        input = inputGraph;
 //        partialSchedule = new PartialSchedule(processors,inputGraph);
 //        bestSchedule = new BestSchedule();
@@ -137,6 +141,7 @@ public class SequentialSearch extends BranchAndBound{
 //        bestSchedule.printTasks();
         System.out.println(bestSchedule.bestTime);
         System.out.println(states);
+        bestSchedule.writeToGraph(inputGraph);
 //        System.out.println(prune);
         return bestSchedule.bestTime;
     }

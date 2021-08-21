@@ -17,7 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @RunWith(Parallelized.class)
 public class AutomaticSpeedTester {
 
-    IntGraph _graph;
+    Graph _inputGraph;
+    IntGraph _intGraph;
     String _file;
     int _numOfProcessors;
     int _expected;
@@ -31,35 +32,37 @@ public class AutomaticSpeedTester {
         File folder = new File(folderLocation);
 
         for (final File file: folder.listFiles()){
-            if(file.getName().charAt(0) != 'N'){
+            String fileName = file.getName();
+            if(!fileName.contains(".gxl")){
                 continue;
             }
             InputReader inputReader = new InputReader(file.getPath());
             Graph inputGraph = inputReader.read();
             IntGraph intGraph = new IntGraph(inputGraph);
 
-            int processors = 2;
+            int processors = fileName.charAt(fileName.length()-9);
 
             int result = ((Double)inputGraph.getAttribute("Total schedule length")).intValue();
 
 
-            parameters.add(new Object[]{intGraph, file.getAbsolutePath(), processors, result});
+            parameters.add(new Object[]{inputGraph, intGraph, file.getAbsolutePath(), processors, result});
 
         }
         return parameters;
     }
 
-    public AutomaticSpeedTester(IntGraph intGraph, String file, int processors, int expected){
-        _graph = intGraph;
+    public AutomaticSpeedTester(Graph input, IntGraph intGraph, String file, int processors, int expected){
+        _inputGraph = input;
+        _intGraph = intGraph;
         _file = file;
         _numOfProcessors = processors;
         _expected = expected;
     }
 
-    @Test(timeout = 10000)
+    @Test
     public void testing(){
         System.out.println(_file);
-        SequentialSearch s = new SequentialSearch(_graph,_numOfProcessors);
+        SequentialSearch s = new SequentialSearch(_inputGraph, _intGraph,_numOfProcessors);
         s.run();
         int result = s.done();
 

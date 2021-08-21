@@ -48,7 +48,12 @@ public class BestSchedule {
         return bestTime;
     }
 
-    public int[][] getTaskInformation() {
-        return taskInformation;
+    public void writeToGraph(Graph graph){
+        int nodeCount = graph.getNodeCount();
+        for (int i = 0; i < nodeCount; i++){
+            Node node = graph.getNode(i);
+            node.setAttribute("Start", taskInformation[i][0]);
+            node.setAttribute("Processor", taskProcessors[i]);
+        }
     }
 }

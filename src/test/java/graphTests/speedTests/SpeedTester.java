@@ -147,7 +147,7 @@ public class SpeedTester {
 
     @Test
     public void test11N_2P() {
-        String inputFileName = "Nodes_11_OutTree.dot";
+        String inputFileName = "input.dot";
         int numProc = 2;
         //read the graph using the absolute path
         String inputGraphPath = pathGetter(inputFileName);
@@ -161,7 +161,7 @@ public class SpeedTester {
 
     @Test
     public void test11N_4P() {
-        String inputFileName = "Nodes_11_OutTree.dot";
+        String inputFileName = "input.dot";
         int numProc = 4;
         //read the graph using the absolute path
         String inputGraphPath = pathGetter(inputFileName);
@@ -736,7 +736,7 @@ public class SpeedTester {
 
     private int scheduling(Graph input, int numberOfProcessors) {
         IntGraph graph = new IntGraph(input);
-        SequentialSearch s = new SequentialSearch(graph,numberOfProcessors);
+        SequentialSearch s = new SequentialSearch(input, graph,numberOfProcessors);
         s.run();
 
         return s.done();
