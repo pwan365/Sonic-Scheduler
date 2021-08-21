@@ -14,6 +14,7 @@ public class BestSchedule {
     private int[] taskProcessors;
     protected int bestTime;
 
+
     public BestSchedule(){
         bestTime = Integer.MAX_VALUE;
     }

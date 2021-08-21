@@ -423,18 +423,13 @@ public class GraphTester {
      * @return a string of the name of the output file
      */
     private static String outputGenerator(Graph input, String inputFileName, int numberOfProcessors) {
-        Graph copyOfInput = input;
-
-//        ValidScheduler v = new ValidScheduler(numberOfProcessors);
-//        v.topologicalorder(copyOfInput);
-//        v.scheduleTasks();
-
         IntGraph graph = new IntGraph(input);
+
         SequentialSearch s = new SequentialSearch(input, graph,numberOfProcessors);
         s.run();
         s.done();
         OutputWriter writer = new OutputWriter();
-        writer.write(copyOfInput,inputFileName.replace(".dot", "-output.dot"));
+        writer.write(input,inputFileName.replace(".dot", "-output.dot"));
 
         return inputFileName.replace(".dot", "-output.dot");
 

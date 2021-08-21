@@ -27,7 +27,6 @@ public abstract class BranchAndBound {
     //Index 0 is StartTime, Index 1 is Weight, Index 2 is Finish Time, Index 3 is communication cost.
     protected int [][] taskInformation;
 
-//    protected int [][] test;
 
     //Cost Functions
     //Bottom Level
@@ -40,8 +39,9 @@ public abstract class BranchAndBound {
 
     //List of equivalent nodes
     protected LinkedList<Integer>[] equivalentList;
+    int s=0;
 
-//    Stack<Integer>[] stacks;
+    protected boolean childAdded;
 
     public BranchAndBound(IntGraph graph,int numberOfProcessors) {
         intGraph = graph;
@@ -60,7 +60,6 @@ public abstract class BranchAndBound {
         taskProcessors = new int[numTasks];
 
         taskInformation = new int[numTasks][];
-//        test = new int[numTasks][];
 
         setDefaultTaskInfo();
         setDefaultTaskProcessor();
@@ -69,21 +68,8 @@ public abstract class BranchAndBound {
         bottomLevel = new int[numTasks];
         initB();
 
-//        for (int i =0; i < bottomLevel.length; i ++) {
-//            System.out.println("Task");
-//            System.out.println(i);
-//            System.out.println("B Level");
-//            System.out.println(bottomLevel[i]);
-//        }
-
         //Initialize Load Balancer
         initLB();
-
-//        stacks = new Stack[numProcessors];
-//
-//        for (int i = 0; i < stacks.length; i++){
-//            stacks[i] = new Stack<>();
-//        }
 
         equivalentList = this.getEquivalentNodes();
 
@@ -138,8 +124,6 @@ public abstract class BranchAndBound {
         int currentTime = time.peek();
         time.push(Math.max(endTime,currentTime));
 
-//        stacks[processor].add(task);
-//        stacks[processor].add(task);
     }
 
     protected void removeTask(int task, int processor, int cost) {
@@ -168,8 +152,6 @@ public abstract class BranchAndBound {
         //Set processor task is scheduled on
         taskProcessors[task] = -1;
 
-//        stacks[processor].pop();
-//        stacks[processor].pop();
     }
 
     protected int commCost(int task,int processor) {
@@ -285,15 +267,10 @@ public abstract class BranchAndBound {
         for(Stack<Integer> stack : stacks) {
             scheduleSet.add(stack);
         }
-
-//        Set<Stack<Integer>> scheduleSet = new HashSet<>();
-//
-//        for(Stack<Integer> stack : stacks){
-//            scheduleSet.add(stack);
-//        }
 //        int id = Arrays.deepHashCode(taskInformation);
         int id = scheduleSet.hashCode();
         if (seenStates.contains(id)) {
+            s += 1;
             return true;
         }
         else {
@@ -354,7 +331,6 @@ public abstract class BranchAndBound {
 
         // sort by non-decreasing data ready time, i.e. finish time of parent + weight of edge
         sortByDataReadyTime(result);
-//            System.out.println(result);
             // verify if the candidate tasks are ordered by out edge cost in non-increasing order,
             // if not we do not have a FTO.
         int prevOutEdgeCost = Integer.MAX_VALUE;
@@ -385,7 +361,6 @@ public abstract class BranchAndBound {
     }
 
     private void sortByDataReadyTime(LinkedList<Integer> candidateTasks) {
-//        System.out.println("START");
         candidateTasks.sort((task1, task2) -> {
             int task1DataReadyTime = 0;
             int task2DataReadyTime = 0;
@@ -401,13 +376,6 @@ public abstract class BranchAndBound {
                 int commCost = intGraph.inEdges[task2].get(0)[1];
                 task2DataReadyTime = taskInformation[parent][2] + commCost;
             }
-
-//            System.out.println("Task 1");
-//            System.out.println(task1);
-//            System.out.println(task1DataReadyTime);
-//            System.out.println("Task 2");
-//            System.out.println(task2);
-//            System.out.println(task2DataReadyTime);
 
             if (task1DataReadyTime < task2DataReadyTime) {
                 return -1;
@@ -425,12 +393,6 @@ public abstract class BranchAndBound {
             if (intGraph.outEdges[task2].size() != 0) {
                 task2OutEdgeCost = intGraph.outEdges[task2].get(0)[1];
             }
-//            System.out.println("Task 1 OUT");
-//            System.out.println(task1);
-//            System.out.println(task1OutEdgeCost);
-//            System.out.println("Task 2 OUT");
-//            System.out.println(task2);
-//            System.out.println(task2OutEdgeCost);
 
             return Integer.compare(task2OutEdgeCost, task1OutEdgeCost);
         });

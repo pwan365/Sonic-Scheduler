@@ -14,6 +14,7 @@ public class IntGraph {
     protected int [] weights;
     protected  LinkedList<int[]>[] outEdges;
     protected  LinkedList<int[]>[] inEdges;
+    protected int [] inDegrees;
 
     public IntGraph(Graph g) {
         int numTasks = g.getNodeCount();
@@ -25,8 +26,10 @@ public class IntGraph {
             inEdges[i] = new LinkedList<>();
             outEdges[i] = new LinkedList<>();
         }
+        inDegrees = new int [numTasks];
         initEdges(g);
     }
+
     private void initEdges(Graph g) {
         for(int i = 0; i < tasks.length; i++) {
             tasks[i] = i;
@@ -41,6 +44,8 @@ public class IntGraph {
                 int[] inEdge = new int[]{i,edgeWeight};
                 outEdges[i].add(outEdge);
                 inEdges[childNode].add(inEdge);
+                
+                inDegrees[childNode] += 1;
             }
         }
     }
@@ -55,14 +60,25 @@ public class IntGraph {
     }
 
     public void testEdge() {
-        for (int i =0;i < outEdges.length; i++) {
-            for (int j =0; j < outEdges[i].size(); j++) {
-                System.out.println("Task");
-                System.out.println(outEdges[i].get(j)[0]);
-                System.out.println(i);
-                System.out.println("Weight");
-                System.out.println(outEdges[i].get(j)[1]);
-            }
-        }
+//        for (int i =0;i < inEdges.length; i++) {
+//            for (int j =0; j < inEdges[i].size(); j++) {
+//                System.out.println("Task");
+//                System.out.println(inEdges[i].get(j)[0]);
+//                System.out.println(i);
+//                System.out.println("Weight");
+//                System.out.println(inEdges[i].get(j)[1]);
+//            }
+
+//            for (int j =0;j < inDegrees.length; j++) {
+//                System.out.println("Task");
+//                System.out.println(j);
+//                System.out.println(inDegrees[j]);
+//            }
+//        }
+//
+//        for (int i=0; i< weights.length; i++) {
+//            System.out.println(weights[i]);
+//            System.out.println(i);
+//        }
     }
 }

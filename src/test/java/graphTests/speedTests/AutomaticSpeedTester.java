@@ -4,7 +4,7 @@ import algo.Solution.IntGraph;
 import algo.Solution.SequentialSearch;
 import io.InputReader;
 import org.graphstream.graph.Graph;
-import org.junit.Test;
+import org.testng.annotations.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 

@@ -45,15 +45,23 @@ public class SequentialSearch extends BranchAndBound{
     }
 
     public void run() {
-        boolean[] startTasks = getOrder();
-        for (int i = 0; i < numTasks; i++) {
-            if (startTasks[i]) {
-                for (int j = 0; j < numProcessors; j++) {
-                    int candidateTask = i;
-                    int candidateProcessor = j;
-                    int commCost = commCost(candidateTask, candidateProcessor);
-                    branchBound(candidateTask, candidateProcessor, commCost);
+        boolean[] candidateTasks = getOrder();
+        LinkedList<Integer> fto = toFTOList(candidateTasks);
+        if (fto != null) {
+            int first = fto.poll();
+            for (int i =0;i < numTasks;i++) {
+                if (i != first) {
+                    candidateTasks[i] = false;
                 }
+            }
+        }
+
+        for (int i = 0; i < numTasks; i++) {
+            if (candidateTasks[i]) {
+                int candidateTask = i;
+                int candidateProcessor = 0;
+                int commCost = commCost(candidateTask, candidateProcessor);
+                branchBound(candidateTask, candidateProcessor, commCost);
             }
         }
     }
@@ -68,7 +76,9 @@ public class SequentialSearch extends BranchAndBound{
         states += 1;
         int bWeight = bottomLevel[task] + cost + processorTimes[processor];
         int loadBalance = loadBalance(cost);
+        int processort = processorTimes[processor] + cost + intGraph.weights[task];
         int candidateTime = Math.max(time.peek(), Math.max(bWeight, loadBalance));
+        candidateTime = Math.max(candidateTime,processort);
 
         if (bestSchedule.bestTime <= candidateTime) {
             prune += 1;
@@ -149,6 +159,7 @@ public class SequentialSearch extends BranchAndBound{
 //        bestSchedule.printTasks();
         System.out.println(bestSchedule.bestTime);
         System.out.println(states);
+        System.out.println(s);
         bestSchedule.writeToGraph(inputGraph);
 //        System.out.println(prune);
         return bestSchedule.bestTime;
