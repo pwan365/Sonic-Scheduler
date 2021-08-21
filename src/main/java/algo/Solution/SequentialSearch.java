@@ -60,10 +60,6 @@ public class SequentialSearch extends BranchAndBound{
      * @param cost Cost to schedule the task on the processor.
      */
     public void branchBound(int task, int processor,int cost) {
-//        System.out.println(cost);
-//        Processor candidateProcessor = processorList[processor];
-//        int start = partialSchedule.getTime();
-//
         int bWeight = bottomLevel[task] + cost + processorTimes[processor];
         int loadBalance = loadBalance(cost);
         int candidateTime = Math.max(time.peek(), Math.max(bWeight, loadBalance));
@@ -73,76 +69,64 @@ public class SequentialSearch extends BranchAndBound{
             return;
         }
 
+
         addTask(task, processor, cost);
 
-        if (unscheduledTasks.isEmpty()) {
+        boolean seen = checkSeen();
+
+        if (seen) {
+            removeTask(task,processor,cost);
+            prune+= 1;
+            return;
+        }
+
+        if (scheduled == numTasks) {
             int candidateBest = time.peek();
             if (candidateBest < bestSchedule.bestTime) {
-//                bestSchedule.makeCopy(candidateBest, partialSchedule.getProcessors());
                 bestSchedule.makeCopy(candidateBest,taskProcessors,taskInformation);
-//                System.out.println("START");
-//                System.out.println(bestTime);
-//                for (int i =0; i < numTasks; i ++) {
-////                    System.out.println("Task");
-////                    System.out.println(i);
-////                    System.out.println("Processor");
-////                    System.out.println(taskProcessors[i]);
-////                    System.out.println("Weight");
-////                    System.out.println(taskInformation[i][1]);
-////                    System.out.println("Start Time");
-////                    System.out.println(taskInformation[i][0]);
-////                    System.out.println("Comm");
-////                    System.out.println(taskInformation[i][3]);
-//                }
             }
         }
 
         boolean[] candidateTasks = getOrder();
+        LinkedList<Integer> fto = toFTOList(candidateTasks);
+        if (fto != null) {
+            int first = fto.poll();
+            for (int i =0;i < numTasks;i++) {
+                if (i != first) {
+                    candidateTasks[i] = false;
+                }
+            }
+        }
         PriorityQueue<DSL> lowestCost = new PriorityQueue<>();
-        boolean[] candidateProcessors = normalise();
+
         for (int i = 0; i < numTasks; i++) {
             if (candidateTasks[i]) {
+                boolean zero = false;
                 for (int j = 0; j < numProcessors; j++) {
-                    if (candidateProcessors[j]) {
-
-                        int commCost = commCost(i,j);
-                        boolean seen = checkSeen(i,j,commCost);
-
-                        if (!seen) {
-                            DSL dsl = new DSL(bottomLevel[i],commCost,processorTimes[j],i,j);
-                            lowestCost.add(dsl);
+                    if (processorTimes[j] == 0) {
+                        if (zero) {
+                            continue;
                         }
-//                        branchBound(candidateTask,j ,commCost);
+                        else {
+                            zero = true;
+                        }
                     }
+                    int commCost = commCost(i,j);
+                    DSL dsl = new DSL(bottomLevel[i],commCost,processorTimes[j],i,j);
+                    lowestCost.add(dsl);
                 }
             }
         }
 
-//
-//                    CommunicationCost startTask = new CommunicationCost(allPossibilities.get(i),
-//                            partialSchedule.getProcessors()[j], partialSchedule, criticalPath.
-//                            getCriticalPath(allPossibilities.get(i)));
-//
-//                    int hashCode = hashCodeGenerator(numProcessors, allPossibilities.get(i), j, startTask.startTime());
-//                    if (!duplicateDetector.contains(hashCode)) {
-//                        lowestCost.add(startTask);
-//                        duplicateDetector.add(hashCode);
-//                    } else {
-//                        prune += 1;
-//                    }
-
-
-
-            while (!lowestCost.isEmpty()) {
-                DSL candidate = lowestCost.poll();
-                int candidateTask = candidate.task;
-                int processorID = candidate.processor;
-                int candidateCost = candidate.cost;
-                branchBound(candidateTask, processorID, candidateCost);
-            }
-//            partialSchedule.removeTasks(task);
-            removeTask(task,processor,cost);
-            states += 1;
+        while (!lowestCost.isEmpty()) {
+            DSL candidate = lowestCost.poll();
+            int candidateTask = candidate.task;
+            int processorID = candidate.processor;
+            int candidateCost = candidate.cost;
+            branchBound(candidateTask, processorID, candidateCost);
+        }
+        removeTask(task,processor,cost);
+        states += 1;
 
     }
 

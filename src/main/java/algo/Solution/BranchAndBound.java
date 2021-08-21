@@ -8,7 +8,7 @@ public class BranchAndBound {
     IntGraph intGraph;
     int numProcessors;
     int  numTasks;
-
+    int scheduled = 0;
     //Schedule information
     public Stack<Integer> time;
     public int idle;
