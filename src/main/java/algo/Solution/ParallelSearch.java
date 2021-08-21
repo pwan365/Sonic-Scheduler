@@ -39,7 +39,7 @@ public class ParallelSearch{
                 break;
             }
         }
-        ForkJoinPool pool = new ForkJoinPool();
+        ForkJoinPool pool = new ForkJoinPool(4);
         RecursiveSearch re = new RecursiveSearch(bb, candidateTask, candidateProcessor, commCost);
         pool.invoke(re);
         //branchBound(candidateTask, candidateProcessor, commCost);
@@ -138,10 +138,6 @@ public class ParallelSearch{
         }
     }
     public int done() {
-//        bestSchedule.printTasks();
-        //System.out.println(bestSchedule.bestTime);
-        //System.out.println(states);
-//        System.out.println(prune);
         return bestSchedule.bestTime;
     }
 
