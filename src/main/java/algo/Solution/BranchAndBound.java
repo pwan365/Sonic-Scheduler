@@ -1,83 +1,68 @@
 package algo.Solution;
 
 
-
+import java.util.*;
 import helpers.EdgesComparator;
 
-import java.util.*;
-
-public abstract class BranchAndBound {
+public class BranchAndBound {
     //Graph
-    protected IntGraph intGraph;
-    protected int numProcessors;
-    protected int  numTasks;
-    protected int scheduled = 0;
-
+    IntGraph intGraph;
+    int numProcessors;
+    int  numTasks;
+    int scheduled = 0;
     //Schedule information
-    protected Stack<Integer> time;
-    protected int idle;
-    protected boolean [] scheduledTasks;
-    protected boolean[] unscheduledTasks;
+    public Stack<Integer> time;
+    public int idle;
+    public HashSet<Integer> scheduledTasks;
+    public HashSet<Integer> unscheduledTasks;
+
 
     //Processor information
-    protected int [] processorTimes;
+    public int [] processorTimes;
 
     //Task information
-    protected int [] taskProcessors;
+    public int [] taskProcessors;
     //Index 0 is StartTime, Index 1 is Weight, Index 2 is Finish Time, Index 3 is communication cost.
-    protected int [][] taskInformation;
-
+    public int [][] taskInformation;
 
     //Cost Functions
     //Bottom Level
-    protected int [] bottomLevel;
+    public int [] bottomLevel;
     //Load Balancer
-    protected int graphWeight =0;
+    public int graphWeight =0;
 
     //Set of seen schedules.
-    protected HashSet<Integer> seenStates = new HashSet<>();
+    public HashSet<Integer> seenStates = new HashSet<>();
 
-    //List of equivalent nodes
-    protected LinkedList<Integer>[] equivalentList;
-    int s=0;
+    public LinkedList<Integer>[] equivalentList;
 
-    protected boolean childAdded;
-
-    public BranchAndBound(IntGraph graph,int numberOfProcessors) {
+    public BranchAndBound(IntGraph graph,int numberOfProcessors, boolean init) {
         intGraph = graph;
         numProcessors = numberOfProcessors;
         numTasks = graph.tasks.length;
-
         time = new Stack<>();
-        time.push(0);
-        idle = 0;
-        scheduledTasks = new boolean[numTasks];
-        unscheduledTasks = new boolean[numTasks];
-
-        addUnscheduledTasks();
-
+        scheduledTasks = new HashSet<>();
+        unscheduledTasks = new HashSet<>();
         processorTimes = new int[numberOfProcessors];
         taskProcessors = new int[numTasks];
-
-        taskInformation = new int[numTasks][];
-
-        setDefaultTaskInfo();
-        setDefaultTaskProcessor();
-
-        //Initialize bottom levels
+        taskInformation = new int[numTasks][4];
         bottomLevel = new int[numTasks];
-        initB();
+        equivalentList = getEquivalentNodes();
 
-        //Initialize Load Balancer
-        initLB();
-
-        equivalentList = this.getEquivalentNodes();
-
+        if (init){
+            time.push(0);
+            idle = 0;
+            addUnscheduledTasks();
+            setDefaultTaskInfo();
+            setDefaultTaskProcessor();
+            initB();
+            initLB();
+        }
     }
 
     private void addUnscheduledTasks() {
         for (int i = 0; i < numTasks; i++) {
-            unscheduledTasks[i] = true;
+            unscheduledTasks.add(i);
         }
     }
 
@@ -116,22 +101,22 @@ public abstract class BranchAndBound {
 
         //Set Schedule information
         idle += cost;
-        scheduledTasks[task] = true;
-        unscheduledTasks[task] = false;
+        scheduledTasks.add(task);
+        unscheduledTasks.remove(task);
         scheduled += 1;
+
 
         //Set new schedule end time.
         int currentTime = time.peek();
         time.push(Math.max(endTime,currentTime));
-
     }
 
     protected void removeTask(int task, int processor, int cost) {
         //Reset Schedule info
         time.pop();
         idle -= cost;
-        scheduledTasks[task] = false;
-        unscheduledTasks[task] = true;
+        scheduledTasks.remove(task);
+        unscheduledTasks.add(task);
         scheduled -= 1;
 
         //Reset Processor Information
@@ -181,7 +166,7 @@ public abstract class BranchAndBound {
             int nodeIndex = i;
 
             // if input is 0 size, find all root tasks
-            if(intGraph.inEdges[i].size() == 0 && !scheduledTasks[nodeIndex]){
+            if(intGraph.inEdges[i].size() == 0 && !scheduledTasks.contains(nodeIndex)){
                 validTasks[nodeIndex] = true;
                 continue;
             }
@@ -189,13 +174,13 @@ public abstract class BranchAndBound {
             boolean flag = true;
             for(int j = 0; j <intGraph.inEdges[i].size(); j++){
                 int parent = intGraph.inEdges[i].get(j)[0];
-                if(!scheduledTasks[parent]){
+                if(!scheduledTasks.contains(parent)){
                     flag = false;
                     validTasks[nodeIndex] = false;
                     break;
                 }
             }
-            if(flag && !scheduledTasks[nodeIndex]){
+            if(flag && !scheduledTasks.contains(nodeIndex)){
                 validTasks[nodeIndex] = true;
             }
         }
@@ -267,10 +252,9 @@ public abstract class BranchAndBound {
         for(Stack<Integer> stack : stacks) {
             scheduleSet.add(stack);
         }
-//        int id = Arrays.deepHashCode(taskInformation);
+
         int id = scheduleSet.hashCode();
         if (seenStates.contains(id)) {
-            s += 1;
             return true;
         }
         else {
@@ -278,7 +262,6 @@ public abstract class BranchAndBound {
         }
         return false;
     }
-
 
 
     protected LinkedList<Integer> toFTOList(boolean[] candidateTasks) {
@@ -299,7 +282,7 @@ public abstract class BranchAndBound {
 
         for (int i = 0; i < candidateTasks.length; i++) {
             // To be an FTO, every node must have at most one parent and at most one child
-            if (candidateTasks[i]) {
+            if(candidateTasks[i]){
                 int childrenSize = intGraph.outEdges[i].size();
 
                 if (intGraph.inEdges[i].size() > 1 || childrenSize > 1) {
@@ -327,34 +310,34 @@ public abstract class BranchAndBound {
                     }
                 }
             }
-        }
 
-        // sort by non-decreasing data ready time, i.e. finish time of parent + weight of edge
-        sortByDataReadyTime(result);
+            // sort by non-decreasing data ready time, i.e. finish time of parent + weight of edge
+            sortByDataReadyTime(result);
             // verify if the candidate tasks are ordered by out edge cost in non-increasing order,
             // if not we do not have a FTO.
-        int prevOutEdgeCost = Integer.MAX_VALUE;
-        for (int j : result) {
-                int edgeCost;
-                if (intGraph.outEdges[j].size() == 0) {
-                    // there is no out edge, cost is 0
-                    edgeCost = 0;
-                }
-                else {
-                    int taskChild = intGraph.outEdges[j].get(0)[0];
-                    edgeCost = intGraph.outEdges[j].get(0)[1];
-                }
+            int prevOutEdgeCost = Integer.MAX_VALUE;
+            for (int j = 0; j < candidateTasks.length; j++) {
+                if(candidateTasks[j]){
+                    int edgeCost;
+                    if (intGraph.outEdges[j].size() == 0) {
+                        // there is no out edge, cost is 0
+                        edgeCost = 0;
+                    }
+                    else {
+                        int taskChild = intGraph.outEdges[j].get(0)[0];
+                        edgeCost = intGraph.outEdges[j].get(0)[1];
+                    }
 
-                // if our current edge is larger than the previous edge, we don't have a FTO.
-                if (edgeCost > prevOutEdgeCost) {
+                    // if our current edge is larger than the previous edge, we don't have a FTO.
+                    if (edgeCost > prevOutEdgeCost) {
                         return null;
-                } else {
-                    prevOutEdgeCost = edgeCost;
+                    } else {
+                        prevOutEdgeCost = edgeCost;
+                    }
                 }
 
-
+            }
         }
-
 
         // we have a FTO!
         return result;
@@ -393,12 +376,11 @@ public abstract class BranchAndBound {
             if (intGraph.outEdges[task2].size() != 0) {
                 task2OutEdgeCost = intGraph.outEdges[task2].get(0)[1];
             }
-
             return Integer.compare(task2OutEdgeCost, task1OutEdgeCost);
         });
     }
 
-    private LinkedList<Integer>[] getEquivalentNodes(){
+    public LinkedList<Integer>[] getEquivalentNodes(){
         HashSet<Integer> memo = new HashSet<>();
         LinkedList<Integer>[] equivalentNodesList = new LinkedList[numTasks];
 
@@ -468,4 +450,47 @@ public abstract class BranchAndBound {
 
         return true;
     }
+
+
+    /**
+     * DeepCopy a current BranchAndBound object.
+     * @return a deep copied current BranchAndBound object.
+     */
+    public BranchAndBound deepCopy(){
+        BranchAndBound c_branchandbound = new BranchAndBound(intGraph, numProcessors, false);
+        int numTasks = intGraph.tasks.length;
+        for (int i = 0; i < numTasks; i++){
+            c_branchandbound.taskProcessors[i] = taskProcessors[i];
+            c_branchandbound.bottomLevel[i] = bottomLevel[i];
+            for (int j = 0; j < 4; j ++){
+                c_branchandbound.taskInformation[i][j] = taskInformation[i][j];
+            }
+        }
+        for (int i = 0; i < time.size(); i++){
+            c_branchandbound.time.add(i, time.get(i));
+        }
+        c_branchandbound.idle = idle;
+
+        Iterator<Integer> it = scheduledTasks.iterator();
+        while (it.hasNext()){
+            int task = (Integer)it.next();
+            c_branchandbound.scheduledTasks.add(task);
+        }
+
+        Iterator<Integer> unit = unscheduledTasks.iterator();
+        while (unit.hasNext()){
+            int task = (Integer)unit.next();
+            c_branchandbound.unscheduledTasks.add(task);
+        }
+
+
+        for (int i = 0; i < numProcessors; i++){
+            c_branchandbound.processorTimes[i] = processorTimes[i];
+        }
+        c_branchandbound.scheduled = scheduled;
+
+        return c_branchandbound;
+
+    }
+
 }
