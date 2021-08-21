@@ -15,11 +15,11 @@ import java.util.concurrent.RecursiveAction;
 public class ParallelSearch{
 
     public BestSchedule bestSchedule;
-    private IntGraph graph;
-    private int numProcessors;
+    private final IntGraph graph;
+    private final int numProcessors;
 
     // Initial BranchAndBound class for initialization.
-    private BranchAndBound bb;
+    private final BranchAndBound bb;
 
     // Seen states of a BranchAndBound.
     public HashSet<Integer> seenStates = new HashSet<>();
@@ -36,8 +36,8 @@ public class ParallelSearch{
         bestSchedule = new BestSchedule();
         bb = new BranchAndBound(graph, processors, true);
         int [] weights = graph.weights;
-        for (int i = 0; i< weights.length; i++) {
-            graphWeight += weights[i];
+        for (int weight : weights) {
+            graphWeight += weight;
         }
     }
 
@@ -51,12 +51,8 @@ public class ParallelSearch{
         int commCost = 0;
         for (int i = 0; i < bb.numTasks; i++) {
             if (startTasks[i]) {
-                for (int j = 0; j < numProcessors; j++) {
-                    candidateTask = i;
-                    candidateProcessor = j;
-                    commCost = bb.commCost(candidateTask, candidateProcessor);
-                    break;
-                }
+                candidateTask = i;
+                commCost = bb.commCost(candidateTask, candidateProcessor);
                 break;
             }
         }
@@ -73,10 +69,10 @@ public class ParallelSearch{
      */
     private class RecursiveSearch extends RecursiveAction{
 
-        private BranchAndBound branchAndBound;
-        private int task;
-        private int processor;
-        private int cost;
+        private final BranchAndBound branchAndBound;
+        private final int task;
+        private final int processor;
+        private final int cost;
 
         /**
          *
