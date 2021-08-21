@@ -149,8 +149,6 @@ public class SequentialSearch extends BranchAndBound{
                 branchBound(candidateTask, processorID, candidateCost);
             }
             removeTask(task,processor,cost);
-
-
     }
 
 
