@@ -29,7 +29,7 @@ public class SequentialSearch extends BranchAndBound{
     private Graph inputGraph;
 
     public SequentialSearch(Graph input, IntGraph graph, int processors) {
-        super(graph,processors);
+        super(graph,processors, true);
         bestSchedule = new BestSchedule();
         inputGraph = input;
 //        input = inputGraph;
@@ -159,7 +159,6 @@ public class SequentialSearch extends BranchAndBound{
 //        bestSchedule.printTasks();
         System.out.println(bestSchedule.bestTime);
         System.out.println(states);
-        System.out.println(s);
         bestSchedule.writeToGraph(inputGraph);
 //        System.out.println(prune);
         return bestSchedule.bestTime;
