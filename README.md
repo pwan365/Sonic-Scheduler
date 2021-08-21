@@ -23,6 +23,10 @@ and
 ```
 maven
 ```
+To build and generate the executable jar file, type following command under the project folder：
+```
+mvn clean install
+```
 Also the jar file has to be executable, which can be done using command 
 ```
 chmod 777 scheduler.jar
