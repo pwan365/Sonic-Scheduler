@@ -60,6 +60,7 @@ public class ParallelSearch{
 
         @Override
         protected void compute() {
+            //System.out.println(Thread.currentThread().getId());
             int bWeight = branchAndBound.bottomLevel[task] + cost + branchAndBound.processorTimes[processor];
             int loadBalance = branchAndBound.loadBalance(cost);
             int candidateTime = Math.max(branchAndBound.time.peek(), Math.max(bWeight, loadBalance));
@@ -71,9 +72,6 @@ public class ParallelSearch{
                 } else {
                     branchAndBound.addTask(task, processor, cost);
                 }
-
-
-
 
                 if (branchAndBound.unscheduledTasks.isEmpty()) {
                     int candidateBest = branchAndBound.time.peek();
@@ -114,15 +112,14 @@ public class ParallelSearch{
                 list.add(re);
             }
             invokeAll(list);
-            branchAndBound.removeTask(task,processor,cost);
+            //branchAndBound.removeTask(task,processor,cost);
             states += 1;
-
         }
     }
     public int done() {
 //        bestSchedule.printTasks();
-        System.out.println(bestSchedule.bestTime);
-        System.out.println(states);
+        //System.out.println(bestSchedule.bestTime);
+        //System.out.println(states);
 //        System.out.println(prune);
         return bestSchedule.bestTime;
     }
