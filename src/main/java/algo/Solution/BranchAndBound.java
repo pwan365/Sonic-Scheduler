@@ -376,8 +376,10 @@ public class BranchAndBound {
     }
 
 
-
-
+    /**
+     * DeepCopy a current BranchAndBound object.
+     * @return a deep copied current BranchAndBound object.
+     */
     public BranchAndBound deepCopy(){
         BranchAndBound c_branchandbound = new BranchAndBound(intGraph, numProcessors, false);
         int numTasks = intGraph.tasks.length;
@@ -393,27 +395,18 @@ public class BranchAndBound {
         }
         c_branchandbound.idle = idle;
 
-        Iterator it = scheduledTasks.iterator();
+        Iterator<Integer> it = scheduledTasks.iterator();
         while (it.hasNext()){
             int task = (Integer)it.next();
             c_branchandbound.scheduledTasks.add(task);
         }
 
-        Iterator unit = unscheduledTasks.iterator();
+        Iterator<Integer> unit = unscheduledTasks.iterator();
         while (unit.hasNext()){
             int task = (Integer)unit.next();
             c_branchandbound.unscheduledTasks.add(task);
         }
 
-/*        Iterator seenit = seenStates.iterator();
-        while (seenit.hasNext()){
-            int task = (Integer)seenit.next();
-            c_branchandbound.seenStates.add(task);
-        }*/
-        while (unit.hasNext()){
-            int task = (Integer)unit.next();
-            c_branchandbound.unscheduledTasks.add(task);
-        }
 
         for (int i = 0; i < numProcessors; i++){
             c_branchandbound.processorTimes[i] = processorTimes[i];
