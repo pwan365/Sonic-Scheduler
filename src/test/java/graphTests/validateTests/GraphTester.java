@@ -1,5 +1,7 @@
 package graphTests.validateTests;
 
+import algo.Solution.IntGraph;
+import algo.Solution.SequentialSearch;
 import io.OutputWriter;
 import org.graphstream.graph.Graph;
 
@@ -208,7 +210,7 @@ public class GraphTester {
      */
     @Test
     public void test11N_2P() {
-        String inputFileName ="Nodes_11_OutTree.dot";
+        String inputFileName ="input.dot";
         int numProc = 2;
         String inputGraphPath = pathGetter(inputFileName);
         InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
@@ -229,7 +231,7 @@ public class GraphTester {
      */
     @Test
     public void test11N_4P() {
-        String inputFileName ="Nodes_11_OutTree.dot";
+        String inputFileName ="input.dot";
         int numProc = 4;
         String inputGraphPath = pathGetter(inputFileName);
         InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
@@ -426,6 +428,11 @@ public class GraphTester {
 //        ValidScheduler v = new ValidScheduler(numberOfProcessors);
 //        v.topologicalorder(copyOfInput);
 //        v.scheduleTasks();
+
+        IntGraph graph = new IntGraph(input);
+        SequentialSearch s = new SequentialSearch(input, graph,numberOfProcessors);
+        s.run();
+        s.done();
         OutputWriter writer = new OutputWriter();
         writer.write(copyOfInput,inputFileName.replace(".dot", "-output.dot"));
 
@@ -449,5 +456,6 @@ public class GraphTester {
             e.printStackTrace();
         }
     }
+
 
 }

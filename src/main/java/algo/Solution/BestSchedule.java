@@ -53,7 +53,7 @@ public class BestSchedule {
         for (int i = 0; i < nodeCount; i++){
             Node node = graph.getNode(i);
             node.setAttribute("Start", taskInformation[i][0]);
-            node.setAttribute("Processor", taskProcessors[i]);
+            node.setAttribute("Processor", taskProcessors[i] + 1);
         }
     }
 }
