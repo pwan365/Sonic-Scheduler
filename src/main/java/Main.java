@@ -1,3 +1,4 @@
+import algo.Solution.ParallelSearch;
 import algo.Solution.SequentialSearch;
 import io.InputReader;
 import algo.Solution.IntGraph;
@@ -55,9 +56,16 @@ public class Main  {
         IntGraph graph = new IntGraph(inputGraph);
 //        graph.testEdge();
 
+        /*
         SequentialSearch s = new SequentialSearch(inputGraph, graph,numberOfProcessors);
         s.run();
         s.done();
+
+         */
+        ParallelSearch s = new ParallelSearch(graph, numberOfProcessors);
+        s.run();
+        s.done();
+
 
         OutputWriter writer = new OutputWriter();
         writer.write(inputGraph, outputFileName);

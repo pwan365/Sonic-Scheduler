@@ -8,35 +8,35 @@ public class BranchAndBound {
     //Graph
     IntGraph intGraph;
     int numProcessors;
-    int  numTasks;
+    int numTasks;
     int scheduled = 0;
     //Schedule information
     public Stack<Integer> time;
     public int idle;
-    public boolean [] scheduledTasks;
-    public boolean [] unscheduledTasks;
+    public boolean[] scheduledTasks;
+    public boolean[] unscheduledTasks;
 
 
     //Processor information
-    public int [] processorTimes;
+    public int[] processorTimes;
 
     //Task information
-    public int [] taskProcessors;
+    public int[] taskProcessors;
     //Index 0 is StartTime, Index 1 is Weight, Index 2 is Finish Time, Index 3 is communication cost.
-    public int [][] taskInformation;
+    public int[][] taskInformation;
 
     //Cost Functions
     //Bottom Level
-    public int [] bottomLevel;
+    public int[] bottomLevel;
     //Load Balancer
-    public int graphWeight =0;
+    public int graphWeight = 0;
 
     //Set of seen schedules.
     public HashSet<Integer> seenStates = new HashSet<>();
 
     public LinkedList<Integer>[] equivalentList;
 
-    public BranchAndBound(IntGraph graph,int numberOfProcessors, boolean init) {
+    public BranchAndBound(IntGraph graph, int numberOfProcessors, boolean init) {
         intGraph = graph;
         numProcessors = numberOfProcessors;
         numTasks = graph.tasks.length;
@@ -45,11 +45,11 @@ public class BranchAndBound {
         unscheduledTasks = new boolean[numTasks];
         processorTimes = new int[numberOfProcessors];
         taskProcessors = new int[numTasks];
-        taskInformation = new int[numTasks][];
+        taskInformation = new int[numTasks][4];
         bottomLevel = new int[numTasks];
         equivalentList = getEquivalentNodes();
 
-        if (init){
+        if (init) {
             time.push(0);
             idle = 0;
             addUnscheduledTasks();
@@ -68,7 +68,7 @@ public class BranchAndBound {
 
     private void setDefaultTaskInfo() {
         for (int i = 0; i < numTasks; i++) {
-            taskInformation[i] = new int[]{-1,-1,-1,-1};
+            taskInformation[i] = new int[]{-1, -1, -1, -1};
         }
     }
 
@@ -107,7 +107,7 @@ public class BranchAndBound {
 
         //Set new schedule end time.
         int currentTime = time.peek();
-        time.push(Math.max(endTime,currentTime));
+        time.push(Math.max(endTime, currentTime));
 
     }
 
@@ -139,11 +139,11 @@ public class BranchAndBound {
 
     }
 
-    protected int commCost(int task,int processor) {
+    protected int commCost(int task, int processor) {
         LinkedList<int[]> parents = intGraph.inEdges[task];
         int calcCost = 0;
         int processorTime = processorTimes[processor];
-        for(int i=0; i<parents.size(); i ++) {
+        for (int i = 0; i < parents.size(); i++) {
             //Index 0 is parent task, 1 is edge Weight.
             int[] parentInfo = parents.get(i);
             int parent = parentInfo[0];
@@ -153,34 +153,34 @@ public class BranchAndBound {
             if (parentProcessor != processor) {
                 int parentEndTime = taskInformation[parentInfo[0]][2];
                 int comm = parentEndTime + edgeWeight - processorTime;
-                calcCost = Math.max(calcCost,comm);
+                calcCost = Math.max(calcCost, comm);
             }
         }
         return calcCost;
     }
 
-    public boolean [] getOrder() {
-        boolean [] validTasks = new boolean[numTasks];
+    public boolean[] getOrder() {
+        boolean[] validTasks = new boolean[numTasks];
 
-        for(int i = 0; i < numTasks; i++){
+        for (int i = 0; i < numTasks; i++) {
             int nodeIndex = i;
 
             // if input is 0 size, find all root tasks
-            if(intGraph.inEdges[i].size() == 0 && !scheduledTasks[nodeIndex]){
+            if (intGraph.inEdges[i].size() == 0 && !scheduledTasks[nodeIndex]) {
                 validTasks[nodeIndex] = true;
                 continue;
             }
 
             boolean flag = true;
-            for(int j = 0; j <intGraph.inEdges[i].size(); j++){
+            for (int j = 0; j < intGraph.inEdges[i].size(); j++) {
                 int parent = intGraph.inEdges[i].get(j)[0];
-                if(!scheduledTasks[parent]){
+                if (!scheduledTasks[parent]) {
                     flag = false;
                     validTasks[nodeIndex] = false;
                     break;
                 }
             }
-            if(flag && !scheduledTasks[nodeIndex]){
+            if (flag && !scheduledTasks[nodeIndex]) {
                 validTasks[nodeIndex] = true;
             }
         }
@@ -188,17 +188,17 @@ public class BranchAndBound {
     }
 
     private void initB() {
-        for(int i=0; i < numTasks;i++) {
+        for (int i = 0; i < numTasks; i++) {
             bottomLevel[i] = -1;
         }
-        for (int i=0; i<numTasks;i++) {
+        for (int i = 0; i < numTasks; i++) {
             int weight = intGraph.weights[i];
-            bottomLevel(i,weight);
+            bottomLevel(i, weight);
         }
     }
 
     private int bottomLevel(int task, int total) {
-        if (bottomLevel[task]!= -1) {
+        if (bottomLevel[task] != -1) {
             return bottomLevel[task];
         }
         LinkedList<int[]> outEdges = intGraph.outEdges[task];
@@ -209,12 +209,12 @@ public class BranchAndBound {
 
         int max = 0;
         // Traverse through edges and pick the subtree with the maximum weight to form the critical path for this node.
-        for (int i =0; i < outEdges.size(); i ++) {
+        for (int i = 0; i < outEdges.size(); i++) {
             int child = outEdges.get(i)[0];
             int weight = intGraph.weights[child];
-            int temp = total+ bottomLevel(child,weight);
+            int temp = total + bottomLevel(child, weight);
 
-            max = Math.max(max,temp);
+            max = Math.max(max, temp);
         }
 
         bottomLevel[task] = max;
@@ -222,8 +222,8 @@ public class BranchAndBound {
     }
 
     private void initLB() {
-        int [] weights = intGraph.weights;
-        for (int i = 0; i< weights.length; i++) {
+        int[] weights = intGraph.weights;
+        for (int i = 0; i < weights.length; i++) {
             graphWeight += weights[i];
         }
     }
@@ -241,28 +241,26 @@ public class BranchAndBound {
         }
 
         //Add tasks ids and start times to the stack which represents the processor
-        for(int i = 0; i < numTasks; i++){
-            if(taskInformation[i][0] != -1){
+        for (int i = 0; i < numTasks; i++) {
+            if (taskInformation[i][0] != -1) {
                 stacks[taskProcessors[i]].add(i);
                 stacks[taskProcessors[i]].add(taskInformation[i][0]);
             }
         }
 
         // Add the stacks to a set.
-        for(Stack<Integer> stack : stacks) {
+        for (Stack<Integer> stack : stacks) {
             scheduleSet.add(stack);
         }
 //        int id = Arrays.deepHashCode(taskInformation);
         int id = scheduleSet.hashCode();
         if (seenStates.contains(id)) {
             return true;
-        }
-        else {
+        } else {
             seenStates.add(id);
         }
         return false;
     }
-
 
 
     protected LinkedList<Integer> toFTOList(boolean[] candidateTasks) {
@@ -270,8 +268,8 @@ public class BranchAndBound {
         int parentProcessor = -1;
         LinkedList<Integer> result = new LinkedList<>();
 
-        for(int i = 0; i < candidateTasks.length; i++){
-            if(candidateTasks[i]){
+        for (int i = 0; i < candidateTasks.length; i++) {
+            if (candidateTasks[i]) {
                 result.add(i);
             }
         }
@@ -323,8 +321,7 @@ public class BranchAndBound {
             if (intGraph.outEdges[j].size() == 0) {
                 // there is no out edge, cost is 0
                 edgeCost = 0;
-            }
-            else {
+            } else {
                 int taskChild = intGraph.outEdges[j].get(0)[0];
                 edgeCost = intGraph.outEdges[j].get(0)[1];
             }
@@ -382,26 +379,26 @@ public class BranchAndBound {
         });
     }
 
-    private LinkedList<Integer>[] getEquivalentNodes(){
+    protected LinkedList<Integer>[] getEquivalentNodes() {
         HashSet<Integer> memo = new HashSet<>();
         LinkedList<Integer>[] equivalentNodesList = new LinkedList[numTasks];
 
-        for(int i = 0; i < numTasks; i++){
-            if(!memo.contains(i)){
+        for (int i = 0; i < numTasks; i++) {
+            if (!memo.contains(i)) {
                 LinkedList<Integer> equivalentNodes = new LinkedList<>();
                 equivalentNodes.add(i);
-                for(int j = 0; j < numTasks; j++){
-                    if(i == j){
+                for (int j = 0; j < numTasks; j++) {
+                    if (i == j) {
                         continue;
                     }
-                    if(!memo.contains(j)){
-                        if(this.equivalentCheck(i, j)){
+                    if (!memo.contains(j)) {
+                        if (this.equivalentCheck(i, j)) {
                             equivalentNodes.add(j);
                         }
                     }
                 }
 
-                for(int j = 0; j < equivalentNodes.size(); j++){
+                for (int j = 0; j < equivalentNodes.size(); j++) {
                     equivalentNodesList[equivalentNodes.get(j)] = equivalentNodes;
                     memo.add(equivalentNodes.get(j));
                 }
@@ -410,13 +407,13 @@ public class BranchAndBound {
         return equivalentNodesList;
     }
 
-    private boolean equivalentCheck(int taskA, int taskB){
-        if(intGraph.weights[taskA] != intGraph.weights[taskB]){
+    private boolean equivalentCheck(int taskA, int taskB) {
+        if (intGraph.weights[taskA] != intGraph.weights[taskB]) {
             return false;
         }
 
-        if((intGraph.inEdges[taskA].size() != intGraph.inEdges[taskB].size()) ||
-                (intGraph.outEdges[taskA].size() != intGraph.outEdges[taskB].size())){
+        if ((intGraph.inEdges[taskA].size() != intGraph.inEdges[taskB].size()) ||
+                (intGraph.outEdges[taskA].size() != intGraph.outEdges[taskB].size())) {
             return false;
         }
 
@@ -430,22 +427,22 @@ public class BranchAndBound {
         Collections.sort(AChildren, new EdgesComparator());
         Collections.sort(BChildren, new EdgesComparator());
 
-        for(int i = 0; i < AParents.size(); i++){
+        for (int i = 0; i < AParents.size(); i++) {
             int parentA = AParents.get(i)[0];
             int parentACost = AParents.get(i)[1];
             int parentB = BParents.get(i)[0];
             int parentBCost = BParents.get(i)[1];
-            if(parentA != parentB || parentACost != parentBCost){
+            if (parentA != parentB || parentACost != parentBCost) {
                 return false;
             }
         }
 
-        for(int i = 0; i < AChildren.size(); i++){
+        for (int i = 0; i < AChildren.size(); i++) {
             int childA = AChildren.get(i)[0];
             int childACost = AChildren.get(i)[1];
             int childB = BChildren.get(i)[0];
             int childBCost = BChildren.get(i)[1];
-            if(childA != childB || childACost != childBCost){
+            if (childA != childB || childACost != childBCost) {
                 return false;
             }
         }
@@ -454,45 +451,42 @@ public class BranchAndBound {
     }
 
 
-//    /**
-//     * DeepCopy a current BranchAndBound object.
-//     * @return a deep copied current BranchAndBound object.
-//     */
-//    public BranchAndBound deepCopy(){
-//        BranchAndBound c_branchandbound = new BranchAndBound(intGraph, numProcessors, false);
-//        int numTasks = intGraph.tasks.length;
-//        for (int i = 0; i < numTasks; i++){
-//            c_branchandbound.taskProcessors[i] = taskProcessors[i];
-//            c_branchandbound.bottomLevel[i] = bottomLevel[i];
-//            for (int j = 0; j < 4; j ++){
-//                c_branchandbound.taskInformation[i][j] = taskInformation[i][j];
-//            }
-//        }
-//        for (int i = 0; i < time.size(); i++){
-//            c_branchandbound.time.add(i, time.get(i));
-//        }
-//        c_branchandbound.idle = idle;
-//
-//        Iterator<Integer> it = scheduledTasks.iterator();
-//        while (it.hasNext()){
-//            int task = (Integer)it.next();
-//            c_branchandbound.scheduledTasks.add(task);
-//        }
-//
-//        Iterator<Integer> unit = unscheduledTasks.iterator();
-//        while (unit.hasNext()){
-//            int task = (Integer)unit.next();
-//            c_branchandbound.unscheduledTasks.add(task);
-//        }
-//
-//
-//        for (int i = 0; i < numProcessors; i++){
-//            c_branchandbound.processorTimes[i] = processorTimes[i];
-//        }
-//        c_branchandbound.scheduled = scheduled;
-//
-//        return c_branchandbound;
-//
-//    }
+    /**
+     * DeepCopy a current BranchAndBound object.
+     * @return a deep copied current BranchAndBound object.
+     *
+     * */
+    public BranchAndBound deepCopy() {
+        BranchAndBound c_branchandbound = new BranchAndBound(intGraph, numProcessors, false);
+        int numTasks = intGraph.tasks.length;
+        for (int i = 0; i < numTasks; i++) {
+            c_branchandbound.taskProcessors[i] = taskProcessors[i];
+            c_branchandbound.bottomLevel[i] = bottomLevel[i];
+            for (int j = 0; j < 4; j++) {
+                System.out.println();
+                c_branchandbound.taskInformation[i][j] = taskInformation[i][j];
+            }
+        }
+        for (int i = 0; i < time.size(); i++) {
+            c_branchandbound.time.add(i, time.get(i));
+        }
+        c_branchandbound.idle = idle;
+
+        for (int i = 0; i < scheduledTasks.length; i++){
+            c_branchandbound.scheduledTasks[i] = scheduledTasks[i];
+        }
+
+        for (int i = 0; i < unscheduledTasks.length; i++){
+            c_branchandbound.unscheduledTasks[i] = unscheduledTasks[i];
+        }
+
+        for (int i = 0; i < numProcessors; i++) {
+            c_branchandbound.processorTimes[i] = processorTimes[i];
+        }
+        c_branchandbound.scheduled = scheduled;
+
+        return c_branchandbound;
+
+    }
 
 }
