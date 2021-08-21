@@ -50,7 +50,6 @@ public class BranchAndBound {
             addUnscheduledTasks();
             setDefaultTaskInfo();
             setDefaultTaskProcessor();
-
             initB();
             initLB();
         }
@@ -228,26 +227,6 @@ public class BranchAndBound {
         return (int) Math.ceil((graphWeight + idle + currentCost) / numProcessors);
     }
 
-    protected boolean [] normalise() {
-        boolean zeroFlag = false;
-        boolean [] processorStarted = new boolean[numProcessors];
-        for (int i = 0; i < numProcessors; i ++) {
-            if (processorTimes[i] == 0) {
-                if (!zeroFlag) {
-                    zeroFlag = true;
-                    processorStarted[i] = true;
-                }
-                else {
-                    processorStarted[i] = false;
-                }
-            }
-            else {
-                processorStarted[i] = true;
-            }
-        }
-        return processorStarted;
-    }
-
     public boolean checkSeen() {
         Set<Stack<Integer>> scheduleSet = new HashSet<>();
         Stack<Integer>[] stacks = new Stack[numProcessors];
@@ -269,12 +248,6 @@ public class BranchAndBound {
             scheduleSet.add(stack);
         }
 
-//        Set<Stack<Integer>> scheduleSet = new HashSet<>();
-//
-//        for(Stack<Integer> stack : stacks){
-//            scheduleSet.add(stack);
-//        }
-//        int id = Arrays.deepHashCode(taskInformation);
         int id = scheduleSet.hashCode();
         if (seenStates.contains(id)) {
             return true;
@@ -335,7 +308,6 @@ public class BranchAndBound {
 
             // sort by non-decreasing data ready time, i.e. finish time of parent + weight of edge
             sortByDataReadyTime(result);
-//            System.out.println(result);
             // verify if the candidate tasks are ordered by out edge cost in non-increasing order,
             // if not we do not have a FTO.
             int prevOutEdgeCost = Integer.MAX_VALUE;
@@ -367,7 +339,6 @@ public class BranchAndBound {
     }
 
     private void sortByDataReadyTime(LinkedList<Integer> candidateTasks) {
-//        System.out.println("START");
         candidateTasks.sort((task1, task2) -> {
             int task1DataReadyTime = 0;
             int task2DataReadyTime = 0;
@@ -383,13 +354,6 @@ public class BranchAndBound {
                 int commCost = intGraph.inEdges[task2].get(0)[1];
                 task2DataReadyTime = taskInformation[parent][2] + commCost;
             }
-
-//            System.out.println("Task 1");
-//            System.out.println(task1);
-//            System.out.println(task1DataReadyTime);
-//            System.out.println("Task 2");
-//            System.out.println(task2);
-//            System.out.println(task2DataReadyTime);
 
             if (task1DataReadyTime < task2DataReadyTime) {
                 return -1;
@@ -407,13 +371,6 @@ public class BranchAndBound {
             if (intGraph.outEdges[task2].size() != 0) {
                 task2OutEdgeCost = intGraph.outEdges[task2].get(0)[1];
             }
-//            System.out.println("Task 1 OUT");
-//            System.out.println(task1);
-//            System.out.println(task1OutEdgeCost);
-//            System.out.println("Task 2 OUT");
-//            System.out.println(task2);
-//            System.out.println(task2OutEdgeCost);
-
             return Integer.compare(task2OutEdgeCost, task1OutEdgeCost);
         });
     }
@@ -423,7 +380,6 @@ public class BranchAndBound {
 
     public BranchAndBound deepCopy(){
         BranchAndBound c_branchandbound = new BranchAndBound(intGraph, numProcessors, false);
-
         int numTasks = intGraph.tasks.length;
         for (int i = 0; i < numTasks; i++){
             c_branchandbound.taskProcessors[i] = taskProcessors[i];

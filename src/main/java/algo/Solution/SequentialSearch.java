@@ -8,35 +8,13 @@ import java.util.*;
  * @author Luxman Jeyarajah
  */
 public class SequentialSearch extends BranchAndBound{
-
-//    private PartialSchedule partialSchedule;
-//    private BestSchedule bestSchedule;
-//    private LoadBalancer loadBalancer;
-//    private CriticalPath criticalPath;
-//    private AllOrders allOrders;
-//    private DuplicateStart duplicateStart;
-//    //Optional, may remove.
     private long prune = 0;
-//    private Graph input;
-//    private int numProcessors;
-//    private Processor[] processorList;
-//    private HashSet<Integer> duplicateDetector;
     private int states = 0;
-    private BestSchedule bestSchedule;
+    public BestSchedule bestSchedule;
 
     public SequentialSearch(IntGraph graph, int processors) {
         super(graph,processors,true);
         bestSchedule = new BestSchedule();
-//        input = inputGraph;
-//        partialSchedule = new PartialSchedule(processors,inputGraph);
-//        bestSchedule = new BestSchedule();
-//        criticalPath = CriticalPath.init(inputGraph);
-//        loadBalancer = LoadBalancer.init(inputGraph,processors);
-//        allOrders = AllOrders.init(inputGraph);
-//        duplicateStart = DuplicateStart.init();
-//        processorList = partialSchedule.getProcessors();
-//        numProcessors = processors;
-//        duplicateDetector = new HashSet<>();
     }
 
     public void run() {
@@ -129,16 +107,6 @@ public class SequentialSearch extends BranchAndBound{
         states += 1;
 
     }
-
-
-//    public int getBestSchedule() {
-//        bestSchedule.done();
-//        bestSchedule.writeToGraph(input);
-//        System.out.println(bestSchedule.getTime());
-//        System.out.println(states);
-//        System.out.println(s);
-//        return bestSchedule.getTime();
-//    }
 
     public int done() {
 //        bestSchedule.printTasks();

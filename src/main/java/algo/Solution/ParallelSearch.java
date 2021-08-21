@@ -65,8 +65,6 @@ public class ParallelSearch{
             int bWeight = branchAndBound.bottomLevel[task] + cost + branchAndBound.processorTimes[processor];
             int loadBalance = branchAndBound.loadBalance(cost);
             int candidateTime = Math.max(branchAndBound.time.peek(), Math.max(bWeight, loadBalance));
-
-
                 if (bestSchedule.bestTime <= candidateTime) {
                     prune += 1;
                     return;
@@ -128,13 +126,10 @@ public class ParallelSearch{
                 int candidateTask = candidate.task;
                 int processorID = candidate.processor;
                 int candidateCost = candidate.cost;
-                BranchAndBound c_branchAndBound = branchAndBound.deepCopy();
-                RecursiveSearch re = new RecursiveSearch(c_branchAndBound, candidateTask, processorID, candidateCost);
+                RecursiveSearch re = new RecursiveSearch(branchAndBound.deepCopy(), candidateTask, processorID, candidateCost);
                 list.add(re);
             }
             invokeAll(list);
-            //branchAndBound.removeTask(task,processor,cost);
-            states += 1;
         }
     }
     public int done() {
