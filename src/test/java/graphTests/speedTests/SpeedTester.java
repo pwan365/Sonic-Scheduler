@@ -285,6 +285,346 @@ public class SpeedTester {
         assertEquals(best, 69);
     }
 
+//    @Test
+    public void test16_1() {
+        String inputFileName = "Join_Nodes_16_CCR_10.00_WeightType_Random#1_Homogeneous-2.gxl.dot";
+        int numProc = 2;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 63);
+    }
+//
+//    @Test
+    public void test16_2() {
+        String inputFileName = "Join_Nodes_16_CCR_10.00_WeightType_Random#1_Homogeneous-4.gxl.dot";
+        int numProc = 4;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 56);
+    }
+
+//    @Test
+    public void test16_3() {
+        String inputFileName = "Join_Nodes_16_CCR_10.00_WeightType_Random#4_Homogeneous-2.gxl.dot";
+        int numProc = 2;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 69);
+    }
+
+//    @Test
+    public void test16_4_1() {
+        String inputFileName = "Join_Nodes_16_CCR_10.01_WeightType_Random_Homogeneous-6.gxl.dot";
+        int numProc = 6;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 67);
+    }
+
+    @Test
+    public void test16_4_5() {
+        String inputFileName = "Random_Nodes_16_Density_4.81_CCR_10.10_WeightType_Random_Homogeneous-4.gxl.dot";
+        int numProc = 4;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 92);
+    }
+
+    @Test
+    public void test16_4_6() {
+        String inputFileName = "Random_Nodes_16_Density_1.38_CCR_0.10_WeightType_Random_Homogeneous-4.gxl.dot";
+        int numProc = 4;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 520);
+    }
+
+
+
+
+
+//    @Test
+    public void test21_1() {
+        String inputFileName = "Join_Nodes_21_CCR_0.10_WeightType_Random#3_Homogeneous-2.gxl.dot";
+        int numProc = 2;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 589);
+    }
+
+//    @Test
+    public void test21_2() {
+        String inputFileName = "Join_Nodes_21_CCR_0.10_WeightType_Random#8_Homogeneous-6.gxl.dot";
+        int numProc = 6;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 239);
+    }
+
+    @Test
+    public void test10_1() {
+        String inputFileName = "OutTree-Balanced-MaxBf-3_Nodes_10_CCR_0.10_WeightType_Random#7_Homogeneous-2.gxl.dot";
+        int numProc = 2;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 376);
+    }
+
+    @Test
+    public void test10_2() {
+        String inputFileName = "OutTree-Balanced-MaxBf-3_Nodes_10_CCR_0.10_WeightType_Random_Homogeneous-6.gxl.dot";
+        int numProc = 6;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 242);
+    }
+
+    @Test
+    public void test10_3() {
+        String inputFileName = "Random_Nodes_10_Density_1.70_CCR_0.10_WeightType_Random#1_Homogeneous-6.gxl.dot";
+        int numProc = 6;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 547);
+    }
+
+    @Test
+    public void test10_4() {
+        String inputFileName = "Random_Nodes_10_Density_2.00_CCR_10.00_WeightType_Random_Homogeneous-6.gxl.dot";
+        int numProc = 6;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 46);
+    }
+
+    @Test
+    public void test10_5() {
+        String inputFileName = "Random_Nodes_10_Density_2.20_CCR_10.00_WeightType_Random_Homogeneous-6.gxl.dot";
+        int numProc = 6;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 46);
+    }
+
+    @Test
+    public void test10_6() {
+        String inputFileName = "Random_Nodes_10_Density_4.50_CCR_9.97_WeightType_Random_Homogeneous-4.gxl.dot";
+        int numProc = 4;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 67);
+    }
+
+    @Test
+    public void test10_7() {
+        String inputFileName = "Random_Nodes_10_Density_0.20_CCR_1.00_WeightType_Random_GB_Homogeneous-2.gxl.dot";
+        int numProc = 2;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 26);
+    }
+
+    @Test
+    public void test10_8() {
+        String inputFileName = "Random_Nodes_10_Density_0.20_CCR_1.00_WeightType_Random_GB_Homogeneous-4.gxl.dot";
+        int numProc = 4;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 17);
+    }
+
+    @Test
+    public void test10_9() {
+        String inputFileName = "Random_Nodes_10_Density_0.20_CCR_1.00_WeightType_Random_GB_Homogeneous-8.gxl.dot";
+        int numProc = 8;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 17);
+    }
+
+    @Test
+    public void test10_10() {
+        String inputFileName = "Random_Nodes_10_Density_0.20_CCR_1.00_WeightType_Random_GB_Homogeneous-16.gxl.dot";
+        int numProc = 16;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 17);
+    }
+
+    @Test
+    public void test10_11() {
+        String inputFileName = "Random_Nodes_10_Density_0.40_CCR_10.00_WeightType_Random_GB_Homogeneous-2.gxl.dot";
+        int numProc = 2;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 31);
+    }
+
+    @Test
+    public void test10_12() {
+        String inputFileName = "Random_Nodes_10_Density_0.40_CCR_10.00_WeightType_Random_GB_Homogeneous-4.gxl.dot";
+        int numProc = 4;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 17);
+    }
+
+    @Test
+    public void test10_13() {
+        String inputFileName = "Random_Nodes_10_Density_0.40_CCR_10.00_WeightType_Random_GB_Homogeneous-8.gxl.dot";
+        int numProc = 8;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 17);
+    }
+
+    @Test
+    public void test10_14() {
+        String inputFileName = "Random_Nodes_10_Density_0.40_CCR_10.00_WeightType_Random_GB_Homogeneous-16.gxl.dot";
+        int numProc = 16;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 17);
+    }
+
+    @Test
+    public void test10_15() {
+        String inputFileName = "Random_Nodes_10_Density_0.40_CCR_10.02_WeightType_Random_GB_Homogeneous-2.gxl.dot";
+        int numProc = 2;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 32);
+    }
+
+    @Test
+    public void test10_16() {
+        String inputFileName = "Random_Nodes_10_Density_0.40_CCR_10.02_WeightType_Random_GB_Homogeneous-4.gxl.dot";
+        int numProc = 4;
+        //read the graph using the absolute path
+        String inputGraphPath = pathGetter(inputFileName);
+        InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
+        Graph inputGraph = reader.read();
+
+        int best = this.scheduling(inputGraph, numProc);
+
+        assertEquals(best, 18);
+    }
+
     @AfterEach
     public void clear() {
         CriticalPath.clearObject();

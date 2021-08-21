@@ -6,15 +6,15 @@ import java.util.*;
 
 public abstract class BranchAndBound {
     //Graph
-    IntGraph intGraph;
-    int numProcessors;
-    int  numTasks;
-    int scheduled = 0;
+    protected IntGraph intGraph;
+    protected int numProcessors;
+    protected int  numTasks;
+    protected int scheduled = 0;
 
     //Schedule information
     protected Stack<Integer> time;
-    private int idle;
-    private boolean [] scheduledTasks;
+    protected int idle;
+    protected boolean [] scheduledTasks;
     protected boolean[] unscheduledTasks;
 
     //Processor information
@@ -258,33 +258,34 @@ public abstract class BranchAndBound {
         return (int) Math.ceil((graphWeight + idle + currentCost) / numProcessors);
     }
 
-    protected boolean [] normalise() {
-        boolean zeroFlag = false;
-        boolean [] processorStarted = new boolean[numProcessors];
-        for (int i = 0; i < numProcessors; i ++) {
-            if (processorTimes[i] == 0) {
-                if (!zeroFlag) {
-                    zeroFlag = true;
-                    processorStarted[i] = true;
-                }
-                else {
-                    processorStarted[i] = false;
-                }
-            }
-            else {
-                processorStarted[i] = true;
+    public boolean checkSeen() {
+        Set<Stack<Integer>> scheduleSet = new HashSet<>();
+        Stack<Integer>[] stacks = new Stack[numProcessors];
+
+        for (int i = 0; i < stacks.length; i++) {
+            stacks[i] = new Stack<>();
+        }
+
+        //Add tasks ids and start times to the stack which represents the processor
+        for(int i = 0; i < numTasks; i++){
+            if(taskInformation[i][0] != -1){
+                stacks[taskProcessors[i]].add(i);
+                stacks[taskProcessors[i]].add(taskInformation[i][0]);
             }
         }
-        return processorStarted;
-    }
 
-    public boolean checkSeen() {
+        // Add the stacks to a set.
+        for(Stack<Integer> stack : stacks) {
+            scheduleSet.add(stack);
+        }
+
 //        Set<Stack<Integer>> scheduleSet = new HashSet<>();
 //
 //        for(Stack<Integer> stack : stacks){
 //            scheduleSet.add(stack);
 //        }
-        int id = Arrays.deepHashCode(taskInformation);
+//        int id = Arrays.deepHashCode(taskInformation);
+        int id = scheduleSet.hashCode();
         if (seenStates.contains(id)) {
             return true;
         }
@@ -316,6 +317,7 @@ public abstract class BranchAndBound {
             // To be an FTO, every node must have at most one parent and at most one child
             if(candidateTasks[i]){
                 int childrenSize = intGraph.outEdges[i].size();
+
                 if (intGraph.inEdges[i].size() > 1 || childrenSize > 1) {
                     return null;
                 }
@@ -331,8 +333,8 @@ public abstract class BranchAndBound {
                 }
 
                 // every node must have their parents on the same processor IF they have a parent.
-                if (intGraph.outEdges[i].size() > 0) {
-                    int taskParent = intGraph.outEdges[i].get(0)[0];
+                if (intGraph.inEdges[i].size() > 0) {
+                    int taskParent = intGraph.inEdges[i].get(0)[0];
                     int taskParentProcessor = taskProcessors[taskParent];
                     if (parentProcessor == -1) {
                         parentProcessor = taskParentProcessor;
@@ -344,7 +346,7 @@ public abstract class BranchAndBound {
 
             // sort by non-decreasing data ready time, i.e. finish time of parent + weight of edge
             sortByDataReadyTime(result);
-
+//            System.out.println(result);
             // verify if the candidate tasks are ordered by out edge cost in non-increasing order,
             // if not we do not have a FTO.
             int prevOutEdgeCost = Integer.MAX_VALUE;
@@ -371,12 +373,12 @@ public abstract class BranchAndBound {
             }
         }
 
-
         // we have a FTO!
         return result;
     }
 
     private void sortByDataReadyTime(LinkedList<Integer> candidateTasks) {
+//        System.out.println("START");
         candidateTasks.sort((task1, task2) -> {
             int task1DataReadyTime = 0;
             int task2DataReadyTime = 0;
@@ -390,8 +392,15 @@ public abstract class BranchAndBound {
             if (intGraph.inEdges[task2].size() != 0) {
                 int parent = intGraph.inEdges[task2].get(0)[0];
                 int commCost = intGraph.inEdges[task2].get(0)[1];
-                task1DataReadyTime = taskInformation[parent][2] + commCost;
+                task2DataReadyTime = taskInformation[parent][2] + commCost;
             }
+
+//            System.out.println("Task 1");
+//            System.out.println(task1);
+//            System.out.println(task1DataReadyTime);
+//            System.out.println("Task 2");
+//            System.out.println(task2);
+//            System.out.println(task2DataReadyTime);
 
             if (task1DataReadyTime < task2DataReadyTime) {
                 return -1;
@@ -409,6 +418,12 @@ public abstract class BranchAndBound {
             if (intGraph.outEdges[task2].size() != 0) {
                 task2OutEdgeCost = intGraph.outEdges[task2].get(0)[1];
             }
+//            System.out.println("Task 1 OUT");
+//            System.out.println(task1);
+//            System.out.println(task1OutEdgeCost);
+//            System.out.println("Task 2 OUT");
+//            System.out.println(task2);
+//            System.out.println(task2OutEdgeCost);
 
             return Integer.compare(task2OutEdgeCost, task1OutEdgeCost);
         });

@@ -99,19 +99,19 @@ public class SequentialSearch extends BranchAndBound{
             }
         }
         PriorityQueue<DSL> lowestCost = new PriorityQueue<>();
-//        boolean[] candidateProcessors = normalise();
+
         for (int i = 0; i < numTasks; i++) {
             if (candidateTasks[i]) {
-//                boolean zero = false;
+                boolean zero = false;
                 for (int j = 0; j < numProcessors; j++) {
-//                    if (processorTimes[j] == 0) {
-//                        if (zero) {
-//                            continue;
-//                        }
-//                        else {
-//                            zero = true;
-//                        }
-//                    }
+                    if (processorTimes[j] == 0) {
+                        if (zero) {
+                         continue;
+                      }
+                       else {
+                           zero = true;
+                      }
+                    }
                     int commCost = commCost(i,j);
                     DSL dsl = new DSL(bottomLevel[i],commCost,processorTimes[j],i,j);
                     lowestCost.add(dsl);
