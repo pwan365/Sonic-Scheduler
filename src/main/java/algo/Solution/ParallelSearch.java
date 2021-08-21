@@ -60,11 +60,17 @@ public class ParallelSearch{
                 break;
             }
         }
+
+        // Initialization of thread pool and invoking
         ForkJoinPool pool = new ForkJoinPool();
         RecursiveSearch re = new RecursiveSearch(bb, candidateTask, candidateProcessor, commCost);
         pool.invoke(re);
     }
 
+    /**
+     * Inner RecursiveSearch class. Each object of the class would contain the sub-task of the total scheduling.
+     * The class extends RecursiveAction class which provides compute method for ForkJoinPool to invoke.
+     */
     private class RecursiveSearch extends RecursiveAction{
 
         private BranchAndBound branchAndBound;
@@ -72,6 +78,14 @@ public class ParallelSearch{
         private int processor;
         private int cost;
 
+        /**
+         *
+         * @param branchAndBound Deepcopy of last BranchAndBound class for each thread to access their
+         *                       individual information
+         * @param task Candidate task for algorithm to run on.
+         * @param processor Candidate processor for algorithm to run on the processor.
+         * @param cost The cost of the task.
+         */
         public RecursiveSearch(BranchAndBound branchAndBound, int task, int processor, int cost){
             this.branchAndBound = branchAndBound;
             this.task = task;
@@ -79,9 +93,14 @@ public class ParallelSearch{
             this.cost = cost;
         }
 
+        /**
+         * The compute method is the overridden method from RecursiveAction class for ForkJoinPool to invoke.
+         * This method contains the core algorithm from the sequential search. It searches through all the information
+         * from the allocated BranchAndBound class and recursively creates more thread to search for a deep copied
+         * BranchAndBound class to search on multiple threads.
+         */
         @Override
         protected void compute() {
-            //System.out.println(Thread.currentThread().getId());
             int bWeight = branchAndBound.bottomLevel[task] + cost + branchAndBound.processorTimes[processor];
             int loadBalance = (int) Math.ceil((graphWeight + branchAndBound.idle + cost) / numProcessors);
             int candidateTime = Math.max(branchAndBound.time.peek(), Math.max(bWeight, loadBalance));
