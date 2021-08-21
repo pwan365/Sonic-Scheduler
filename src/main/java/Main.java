@@ -62,10 +62,9 @@ public class Main  {
         s.done();
 
          */
-        ParallelSearch s = new ParallelSearch(graph, numberOfProcessors);
+        ParallelSearch s = new ParallelSearch(inputGraph, graph, numberOfProcessors);
         s.run();
         s.done();
-
 
         OutputWriter writer = new OutputWriter();
         writer.write(inputGraph, outputFileName);

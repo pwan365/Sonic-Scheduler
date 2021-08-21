@@ -463,7 +463,6 @@ public class BranchAndBound {
             c_branchandbound.taskProcessors[i] = taskProcessors[i];
             c_branchandbound.bottomLevel[i] = bottomLevel[i];
             for (int j = 0; j < 4; j++) {
-                System.out.println();
                 c_branchandbound.taskInformation[i][j] = taskInformation[i][j];
             }
         }

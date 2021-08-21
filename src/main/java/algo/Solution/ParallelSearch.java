@@ -1,5 +1,7 @@
 package algo.Solution;
 
+import org.graphstream.graph.Graph;
+
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
@@ -25,13 +27,15 @@ public class ParallelSearch{
     public HashSet<Integer> seenStates = new HashSet<>();
     public LinkedList<Integer>[] equivalentList;
     int graphWeight = 0;
+    private Graph inputGraph;
 
     /**
      *
      * @param graph Input graph with all information stored in Integer
      * @param processors Number of processors.
      */
-    public ParallelSearch(IntGraph graph, int processors){
+    public ParallelSearch(Graph inputGraph, IntGraph graph, int processors){
+        this.inputGraph = inputGraph;
         this.graph = graph;
         this.numProcessors = processors;
         bestSchedule = new BestSchedule();
@@ -206,6 +210,8 @@ public class ParallelSearch{
         }
     }
     public int done() {
+        System.out.println(bestSchedule.bestTime);
+        bestSchedule.writeToGraph(inputGraph);
         return bestSchedule.bestTime;
     }
 
