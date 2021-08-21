@@ -1,6 +1,7 @@
 package algo.Solution;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.concurrent.ForkJoinPool;
@@ -73,6 +74,14 @@ public class ParallelSearch{
                     branchAndBound.addTask(task, processor, cost);
                 }
 
+            boolean seen = branchAndBound.checkSeen();
+
+            if (seen) {
+                branchAndBound.removeTask(task,processor,cost);
+                prune+= 1;
+                return;
+            }
+
                 if (branchAndBound.unscheduledTasks.isEmpty()) {
                     int candidateBest = branchAndBound.time.peek();
                     synchronized (RecursiveSearch.class) {
@@ -83,20 +92,32 @@ public class ParallelSearch{
                 }
 
             boolean[] candidateTasks = branchAndBound.getOrder();
+            LinkedList<Integer> fto = branchAndBound.toFTOList(candidateTasks);
+            if (fto != null) {
+                int first = fto.poll();
+                for (int i =0;i < branchAndBound.numTasks;i++) {
+                    if (i != first) {
+                        candidateTasks[i] = false;
+                    }
+                }
+            }
             PriorityQueue<DSL> lowestCost = new PriorityQueue<>();
-            boolean[] candidateProcessors = branchAndBound.normalise();
+
             for (int i = 0; i < branchAndBound.numTasks; i++) {
                 if (candidateTasks[i]) {
+                    boolean zero = false;
                     for (int j = 0; j < numProcessors; j++) {
-                        if (candidateProcessors[j]) {
-                            int commCost = branchAndBound.commCost(i,j);
-                            boolean seen = branchAndBound.checkSeen(i,j,commCost);
-
-                            if (!seen) {
-                                DSL dsl = new DSL(branchAndBound.bottomLevel[i],commCost,branchAndBound.processorTimes[j],i,j);
-                                lowestCost.add(dsl);
+                        if (branchAndBound.processorTimes[j] == 0) {
+                            if (zero) {
+                                continue;
+                            }
+                            else {
+                                zero = true;
                             }
                         }
+                        int commCost = branchAndBound.commCost(i,j);
+                        DSL dsl = new DSL(branchAndBound.bottomLevel[i],commCost,branchAndBound.processorTimes[j],i,j);
+                        lowestCost.add(dsl);
                     }
                 }
             }
