@@ -59,13 +59,13 @@ public class Main  {
         s.run();
         s.done();*/
 
-
-
+        long start, end;
+        start = System.currentTimeMillis();
         ParallelSearch ps = new ParallelSearch(graph, numberOfProcessors);
         ps.run();
         System.out.println(ps.bestSchedule.getTime());
-
-
+        end = System.currentTimeMillis();
+        System.out.println("Run time: " + (end - start));
 
     }
 }
