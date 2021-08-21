@@ -4,15 +4,32 @@ import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
 
+/**
+ * ParallelSearch class runs the code of finding optimal schedule for a DAG in a multithreading environment,
+ * given an input graph and number of processors.
+ *
+ * The level of parallelization would dependent on how many threads can the current machine provide.
+ * The algorithm makes use of BranchAndBound class which contains all the necessary information and methods to run the algorithm.
+ * The principle of the algorithm is consistent with sequential search.
+ */
 public class ParallelSearch{
 
     public BestSchedule bestSchedule;
     private IntGraph graph;
     private int numProcessors;
+
+    // Initial BranchAndBound class for initialization.
     private BranchAndBound bb;
+
+    // Seen states of a BranchAndBound.
     public HashSet<Integer> seenStates = new HashSet<>();
     int graphWeight = 0;
 
+    /**
+     *
+     * @param graph Input graph with all information stored in Integer
+     * @param processors Number of processors.
+     */
     public ParallelSearch(IntGraph graph, int processors){
         this.graph = graph;
         this.numProcessors = processors;
@@ -24,6 +41,9 @@ public class ParallelSearch{
         }
     }
 
+    /**
+     * Run the algorithm.
+     */
     public void run() {
         boolean[] startTasks = bb.getOrder();
         int candidateTask = 0;
@@ -43,7 +63,6 @@ public class ParallelSearch{
         ForkJoinPool pool = new ForkJoinPool();
         RecursiveSearch re = new RecursiveSearch(bb, candidateTask, candidateProcessor, commCost);
         pool.invoke(re);
-        //branchBound(candidateTask, candidateProcessor, commCost);
     }
 
     private class RecursiveSearch extends RecursiveAction{
