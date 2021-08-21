@@ -65,6 +65,7 @@ public class SequentialSearch extends BranchAndBound{
      * @param cost Cost to schedule the task on the processor.
      */
     public void branchBound(int task, int processor,int cost) {
+        states += 1;
         int bWeight = bottomLevel[task] + cost + processorTimes[processor];
         int loadBalance = loadBalance(cost);
         int candidateTime = Math.max(time.peek(), Math.max(bWeight, loadBalance));
@@ -104,8 +105,15 @@ public class SequentialSearch extends BranchAndBound{
         }
         PriorityQueue<DSL> lowestCost = new PriorityQueue<>();
 
+        HashSet<Integer> seenTasks = new HashSet<>();
+
         for (int i = 0; i < numTasks; i++) {
             if (candidateTasks[i]) {
+                if(seenTasks.contains(i)){
+                    continue;
+                }else{
+                    seenTasks.addAll(equivalentList[i]);
+                }
                 boolean zero = false;
                 for (int j = 0; j < numProcessors; j++) {
                     if (processorTimes[j] == 0) {
@@ -131,7 +139,7 @@ public class SequentialSearch extends BranchAndBound{
                 branchBound(candidateTask, processorID, candidateCost);
             }
             removeTask(task,processor,cost);
-            states += 1;
+
 
     }
 

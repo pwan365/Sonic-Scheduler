@@ -39,7 +39,7 @@ public abstract class BranchAndBound {
     protected HashSet<Integer> seenStates = new HashSet<>();
 
     //List of equivalent nodes
-    protected LinkedList<Integer>[] equivalentNodesList;
+    protected LinkedList<Integer>[] equivalentList;
 
 //    Stack<Integer>[] stacks;
 
@@ -85,7 +85,7 @@ public abstract class BranchAndBound {
 //            stacks[i] = new Stack<>();
 //        }
 
-        equivalentNodesList = this.getEquivalentNodes();
+        equivalentList = this.getEquivalentNodes();
 
     }
 
@@ -322,7 +322,7 @@ public abstract class BranchAndBound {
 
         for (int i = 0; i < candidateTasks.length; i++) {
             // To be an FTO, every node must have at most one parent and at most one child
-            if(candidateTasks[i]){
+            if (candidateTasks[i]) {
                 int childrenSize = intGraph.outEdges[i].size();
 
                 if (intGraph.inEdges[i].size() > 1 || childrenSize > 1) {
@@ -350,35 +350,35 @@ public abstract class BranchAndBound {
                     }
                 }
             }
+        }
 
-            // sort by non-decreasing data ready time, i.e. finish time of parent + weight of edge
-            sortByDataReadyTime(result);
+        // sort by non-decreasing data ready time, i.e. finish time of parent + weight of edge
+        sortByDataReadyTime(result);
 //            System.out.println(result);
             // verify if the candidate tasks are ordered by out edge cost in non-increasing order,
             // if not we do not have a FTO.
-            int prevOutEdgeCost = Integer.MAX_VALUE;
-            for (int j = 0; j < candidateTasks.length; j++) {
-                if(candidateTasks[j]){
-                    int edgeCost;
-                    if (intGraph.outEdges[j].size() == 0) {
-                        // there is no out edge, cost is 0
-                        edgeCost = 0;
-                    }
-                    else {
-                        int taskChild = intGraph.outEdges[j].get(0)[0];
-                        edgeCost = intGraph.outEdges[j].get(0)[1];
-                    }
-
-                    // if our current edge is larger than the previous edge, we don't have a FTO.
-                    if (edgeCost > prevOutEdgeCost) {
-                        return null;
-                    } else {
-                        prevOutEdgeCost = edgeCost;
-                    }
+        int prevOutEdgeCost = Integer.MAX_VALUE;
+        for (int j : result) {
+                int edgeCost;
+                if (intGraph.outEdges[j].size() == 0) {
+                    // there is no out edge, cost is 0
+                    edgeCost = 0;
+                }
+                else {
+                    int taskChild = intGraph.outEdges[j].get(0)[0];
+                    edgeCost = intGraph.outEdges[j].get(0)[1];
                 }
 
-            }
+                // if our current edge is larger than the previous edge, we don't have a FTO.
+                if (edgeCost > prevOutEdgeCost) {
+                        return null;
+                } else {
+                    prevOutEdgeCost = edgeCost;
+                }
+
+
         }
+
 
         // we have a FTO!
         return result;
