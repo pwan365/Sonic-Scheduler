@@ -405,11 +405,19 @@ public class BranchAndBound {
             c_branchandbound.unscheduledTasks.add(task);
         }
 
+/*        Iterator seenit = seenStates.iterator();
+        while (seenit.hasNext()){
+            int task = (Integer)seenit.next();
+            c_branchandbound.seenStates.add(task);
+        }*/
+        while (unit.hasNext()){
+            int task = (Integer)unit.next();
+            c_branchandbound.unscheduledTasks.add(task);
+        }
+
         for (int i = 0; i < numProcessors; i++){
             c_branchandbound.processorTimes[i] = processorTimes[i];
         }
-
-        c_branchandbound.graphWeight = graphWeight;
         c_branchandbound.scheduled = scheduled;
 
         return c_branchandbound;

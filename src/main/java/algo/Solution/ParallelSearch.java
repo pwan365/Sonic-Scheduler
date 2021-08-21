@@ -1,26 +1,27 @@
 package algo.Solution;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
 
 public class ParallelSearch{
 
     public BestSchedule bestSchedule;
-    private int states = 0;
-    private long prune = 0;
     private IntGraph graph;
     private int numProcessors;
     private BranchAndBound bb;
+    public HashSet<Integer> seenStates = new HashSet<>();
+    int graphWeight = 0;
 
     public ParallelSearch(IntGraph graph, int processors){
         this.graph = graph;
         this.numProcessors = processors;
         bestSchedule = new BestSchedule();
         bb = new BranchAndBound(graph, processors, true);
+        int [] weights = graph.weights;
+        for (int i = 0; i< weights.length; i++) {
+            graphWeight += weights[i];
+        }
     }
 
     public void run() {
@@ -63,20 +64,43 @@ public class ParallelSearch{
         protected void compute() {
             //System.out.println(Thread.currentThread().getId());
             int bWeight = branchAndBound.bottomLevel[task] + cost + branchAndBound.processorTimes[processor];
-            int loadBalance = branchAndBound.loadBalance(cost);
+            int loadBalance = (int) Math.ceil((graphWeight + branchAndBound.idle + cost) / numProcessors);
             int candidateTime = Math.max(branchAndBound.time.peek(), Math.max(bWeight, loadBalance));
                 if (bestSchedule.bestTime <= candidateTime) {
-                    prune += 1;
                     return;
                 } else {
                     branchAndBound.addTask(task, processor, cost);
                 }
+                Set<Stack<Integer>> scheduleSet = new HashSet<>();
+                Stack<Integer>[] stacks = new Stack[numProcessors];
 
-            boolean seen = branchAndBound.checkSeen();
+                for (int i = 0; i < stacks.length; i++) {
+                    stacks[i] = new Stack<>();
+                }
 
+                boolean seen;
+                //Add tasks ids and start times to the stack which represents the processor
+                for(int i = 0; i < branchAndBound.numTasks; i++){
+                    if(branchAndBound.taskInformation[i][0] != -1){
+                        stacks[branchAndBound.taskProcessors[i]].add(i);
+                        stacks[branchAndBound.taskProcessors[i]].add(branchAndBound.taskInformation[i][0]);
+                    }
+                }
+                for(Stack<Integer> stack : stacks) {
+                    scheduleSet.add(stack);
+                }
+                int id = scheduleSet.hashCode();
+                synchronized (RecursiveSearch.class){
+                    if (seenStates.contains(id)) {
+                        seen = true;
+                    }
+                    else {
+                        seenStates.add(id);
+                        seen = false;
+                    }
+                }
             if (seen) {
                 branchAndBound.removeTask(task,processor,cost);
-                prune+= 1;
                 return;
             }
 
