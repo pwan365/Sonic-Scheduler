@@ -271,7 +271,7 @@ public class SpeedTester {
         assertEquals(best, 51);
     }
 
-//    @Test
+    @Test
     public void test16N_03_4P() {
         String inputFileName = "N16-03-4P.dot";
         int numProc = 4;
@@ -282,14 +282,13 @@ public class SpeedTester {
 
         int best = this.scheduling(inputGraph, numProc);
 
-        assertEquals(best, 76);
+        assertEquals(best, 69);
     }
 
     @AfterEach
     public void clear() {
         CriticalPath.clearObject();
         LoadBalancer.clearObject();
-        DuplicateStart.clearObject();
     }
 
 

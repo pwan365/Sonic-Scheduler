@@ -1,6 +1,5 @@
 package algo.Schedule;
 
-import algo.Solution.CommunicationCost;
 import org.graphstream.graph.Edge;
 
 import java.util.HashSet;

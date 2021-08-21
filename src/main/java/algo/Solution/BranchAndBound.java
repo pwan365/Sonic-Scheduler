@@ -1,6 +1,7 @@
 package algo.Solution;
 
 
+
 import java.util.*;
 
 public abstract class BranchAndBound {
@@ -295,15 +296,19 @@ public abstract class BranchAndBound {
 
 
 
-    public List<Integer> toFTOList(boolean[] candidateTasks) {
+    protected LinkedList<Integer> toFTOList(boolean[] candidateTasks) {
         int child = -1;
         int parentProcessor = -1;
-        List<Integer> result = new LinkedList<>();
+        LinkedList<Integer> result = new LinkedList<>();
 
         for(int i = 0; i < candidateTasks.length; i++){
             if(candidateTasks[i]){
                 result.add(i);
             }
+        }
+
+        if (result.size() == 0) {
+            return null;
         }
 
 
@@ -349,9 +354,10 @@ public abstract class BranchAndBound {
                     if (intGraph.outEdges[j].size() == 0) {
                         // there is no out edge, cost is 0
                         edgeCost = 0;
-                    } else {
-                        int taskChild = intGraph.outEdges[i].get(0)[0];
-                        edgeCost = intGraph.outEdges[i].get(0)[1];
+                    }
+                    else {
+                        int taskChild = intGraph.outEdges[j].get(0)[0];
+                        edgeCost = intGraph.outEdges[j].get(0)[1];
                     }
 
                     // if our current edge is larger than the previous edge, we don't have a FTO.
@@ -370,18 +376,18 @@ public abstract class BranchAndBound {
         return result;
     }
 
-    private void sortByDataReadyTime(List<Integer> candidateTasks) {
+    private void sortByDataReadyTime(LinkedList<Integer> candidateTasks) {
         candidateTasks.sort((task1, task2) -> {
             int task1DataReadyTime = 0;
             int task2DataReadyTime = 0;
 
-            if (intGraph.inEdges[task1].size() == 0) {
+            if (intGraph.inEdges[task1].size() != 0) {
                 int parent = intGraph.inEdges[task1].get(0)[0];
                 int commCost = intGraph.inEdges[task1].get(0)[1];
                 task1DataReadyTime = taskInformation[parent][2] + commCost;
             }
 
-            if (intGraph.inEdges[task2].size() == 0) {
+            if (intGraph.inEdges[task2].size() != 0) {
                 int parent = intGraph.inEdges[task2].get(0)[0];
                 int commCost = intGraph.inEdges[task2].get(0)[1];
                 task1DataReadyTime = taskInformation[parent][2] + commCost;
@@ -397,13 +403,11 @@ public abstract class BranchAndBound {
             // Data ready times are equal, break the tie using the out-edge cost
             int task1OutEdgeCost = 0;
             int task2OutEdgeCost = 0;
-            if (intGraph.outEdges[task1].size() == 0) {
-                int child = intGraph.outEdges[task1].get(0)[0];
+            if (intGraph.outEdges[task1].size() != 0) {
                 task1OutEdgeCost = intGraph.outEdges[task1].get(0)[1];
             }
-            if (intGraph.outEdges[task2].size() == 0) {
-                int child = intGraph.outEdges[task2].get(0)[0];
-                task1OutEdgeCost = intGraph.outEdges[task2].get(0)[1];
+            if (intGraph.outEdges[task2].size() != 0) {
+                task2OutEdgeCost = intGraph.outEdges[task2].get(0)[1];
             }
 
             return Integer.compare(task2OutEdgeCost, task1OutEdgeCost);
