@@ -25,7 +25,7 @@ public abstract class BranchAndBound {
     //Index 0 is StartTime, Index 1 is Weight, Index 2 is Finish Time, Index 3 is communication cost.
     protected int [][] taskInformation;
 
-    protected int [][] test;
+//    protected int [][] test;
 
     //Cost Functions
     //Bottom Level
@@ -55,7 +55,7 @@ public abstract class BranchAndBound {
         taskProcessors = new int[numTasks];
 
         taskInformation = new int[numTasks][];
-        test = new int[numTasks][];
+//        test = new int[numTasks][];
 
         setDefaultTaskInfo();
         setDefaultTaskProcessor();
