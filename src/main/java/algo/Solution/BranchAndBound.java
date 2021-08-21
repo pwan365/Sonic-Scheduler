@@ -15,6 +15,7 @@ public class BranchAndBound {
     public HashSet<Integer> scheduledTasks;
     public HashSet<Integer> unscheduledTasks;
 
+
     //Processor information
     public int [] processorTimes;
 
@@ -31,6 +32,8 @@ public class BranchAndBound {
 
     //Set of seen schedules.
     public HashSet<Integer> seenStates = new HashSet<>();
+
+    public LinkedList<Integer>[] equivalentList;
 
     public BranchAndBound(IntGraph graph,int numberOfProcessors, boolean init) {
         intGraph = graph;
@@ -375,7 +378,7 @@ public class BranchAndBound {
         });
     }
 
-    private LinkedList<Integer>[] getEquivalentNodes(){
+    public LinkedList<Integer>[] getEquivalentNodes(){
         HashSet<Integer> memo = new HashSet<>();
         LinkedList<Integer>[] equivalentNodesList = new LinkedList[numTasks];
 

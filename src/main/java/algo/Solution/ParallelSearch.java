@@ -23,6 +23,7 @@ public class ParallelSearch{
 
     // Seen states of a BranchAndBound.
     public HashSet<Integer> seenStates = new HashSet<>();
+    public LinkedList<Integer>[] equivalentList;
     int graphWeight = 0;
 
     /**
@@ -39,6 +40,7 @@ public class ParallelSearch{
         for (int weight : weights) {
             graphWeight += weight;
         }
+        equivalentList = bb.getEquivalentNodes();
     }
 
     /**
@@ -163,9 +165,15 @@ public class ParallelSearch{
             }
             PriorityQueue<DSL> lowestCost = new PriorityQueue<>();
 
+            HashSet<Integer> seenTasks = new HashSet<>();
             for (int i = 0; i < branchAndBound.numTasks; i++) {
                 if (candidateTasks[i]) {
                     boolean zero = false;
+                    if(seenTasks.contains(i)){
+                        continue;
+                    }else{
+                        seenTasks.addAll(equivalentList[i]);
+                    }
                     for (int j = 0; j < numProcessors; j++) {
                         if (branchAndBound.processorTimes[j] == 0) {
                             if (zero) {

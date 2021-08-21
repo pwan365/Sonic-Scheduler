@@ -77,9 +77,15 @@ public class SequentialSearch extends BranchAndBound{
         }
         PriorityQueue<DSL> lowestCost = new PriorityQueue<>();
 
+        HashSet<Integer> seenTasks = new HashSet<>();
         for (int i = 0; i < numTasks; i++) {
             if (candidateTasks[i]) {
                 boolean zero = false;
+                if(seenTasks.contains(i)){
+                    continue;
+                }else{
+                    seenTasks.addAll(equivalentList[i]);
+                }
                 for (int j = 0; j < numProcessors; j++) {
                     if (processorTimes[j] == 0) {
                         if (zero) {
