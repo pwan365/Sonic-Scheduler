@@ -375,6 +375,77 @@ public class BranchAndBound {
         });
     }
 
+    private LinkedList<Integer>[] getEquivalentNodes(){
+        HashSet<Integer> memo = new HashSet<>();
+        LinkedList<Integer>[] equivalentNodesList = new LinkedList[numTasks];
+
+        for(int i = 0; i < numTasks; i++){
+            if(!memo.contains(i)){
+                LinkedList<Integer> equivalentNodes = new LinkedList<>();
+                equivalentNodes.add(i);
+                for(int j = 0; j < numTasks; j++){
+                    if(i == j){
+                        continue;
+                    }
+                    if(!memo.contains(j)){
+                        if(this.equivalentCheck(i, j)){
+                            equivalentNodes.add(j);
+                        }
+                    }
+                }
+
+                for(int j = 0; j < equivalentNodes.size(); j++){
+                    equivalentNodesList[equivalentNodes.get(j)] = equivalentNodes;
+                    memo.add(equivalentNodes.get(j));
+                }
+            }
+        }
+        return equivalentNodesList;
+    }
+
+    private boolean equivalentCheck(int taskA, int taskB){
+        if(intGraph.weights[taskA] != intGraph.weights[taskB]){
+            return false;
+        }
+
+        if((intGraph.inEdges[taskA].size() != intGraph.inEdges[taskB].size()) ||
+                (intGraph.outEdges[taskA].size() != intGraph.outEdges[taskB].size())){
+            return false;
+        }
+
+        List<int[]> AParents = intGraph.inEdges[taskA];
+        List<int[]> BParents = intGraph.inEdges[taskB];
+        List<int[]> AChildren = intGraph.outEdges[taskA];
+        List<int[]> BChildren = intGraph.outEdges[taskB];
+
+        Collections.sort(AParents, new EdgesComparator());
+        Collections.sort(BParents, new EdgesComparator());
+        Collections.sort(AChildren, new EdgesComparator());
+        Collections.sort(BChildren, new EdgesComparator());
+
+        for(int i = 0; i < AParents.size(); i++){
+            int parentA = AParents.get(i)[0];
+            int parentACost = AParents.get(i)[1];
+            int parentB = BParents.get(i)[0];
+            int parentBCost = BParents.get(i)[1];
+            if(parentA != parentB || parentACost != parentBCost){
+                return false;
+            }
+        }
+
+        for(int i = 0; i < AChildren.size(); i++){
+            int childA = AChildren.get(i)[0];
+            int childACost = AChildren.get(i)[1];
+            int childB = BChildren.get(i)[0];
+            int childBCost = BChildren.get(i)[1];
+            if(childA != childB || childACost != childBCost){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 
     /**
      * DeepCopy a current BranchAndBound object.
