@@ -48,6 +48,15 @@ public class ParallelSearch{
      */
     public void run() {
         boolean[] startTasks = bb.getOrder();
+        LinkedList<Integer> fto = bb.toFTOList(startTasks);
+        if (fto != null){
+            int first = fto.poll();
+            for (int i = 0; i < bb.numTasks; i++){
+                if (i != first){
+                    startTasks[i] = false;
+                }
+            }
+        }
         int candidateTask = 0;
         int candidateProcessor = 0;
         int commCost = 0;

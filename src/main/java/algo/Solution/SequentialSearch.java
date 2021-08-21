@@ -19,6 +19,15 @@ public class SequentialSearch extends BranchAndBound{
 
     public void run() {
         boolean[] startTasks = getOrder();
+        LinkedList<Integer> fto = toFTOList(startTasks);
+        if (fto != null){
+            int first = fto.poll();
+            for (int i = 0; i < numTasks; i++){
+                if (i != first){
+                    startTasks[i] = false;
+                }
+            }
+        }
         for (int i = 0; i < numTasks; i++) {
             if (startTasks[i]) {
                 for (int j = 0; j < numProcessors; j++) {

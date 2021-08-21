@@ -2,6 +2,7 @@ package algo.Solution;
 
 
 import java.util.*;
+import helpers.EdgesComparator;
 
 public class BranchAndBound {
     //Graph
@@ -46,6 +47,7 @@ public class BranchAndBound {
         taskProcessors = new int[numTasks];
         taskInformation = new int[numTasks][4];
         bottomLevel = new int[numTasks];
+        equivalentList = getEquivalentNodes();
 
         if (init){
             time.push(0);
