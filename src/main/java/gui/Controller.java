@@ -236,13 +236,13 @@ public class Controller {
             System.out.println("P"+i);
 
             List<Task> eachBar = new ArrayList<>();
-            int j=0;
+//            int j=0;
 
                 tasks=processors[i].getTasks();
                 for(Task task:tasks){
 //                    System.out.println("StartTime:"+task.getStartingTime()+" DurationTime:"+task.getDurationTime()+" Total:"+(task.getStartingTime()+task.getDurationTime()));
                     eachBar.add(task);
-                    j++;
+//                    j++;
                 }
                 barList.add(eachBar);
 
