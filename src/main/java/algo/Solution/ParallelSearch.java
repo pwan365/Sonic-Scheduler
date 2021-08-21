@@ -103,53 +103,57 @@ public class ParallelSearch{
         protected void compute() {
             int bWeight = branchAndBound.bottomLevel[task] + cost + branchAndBound.processorTimes[processor];
             int loadBalance = (int) Math.ceil((graphWeight + branchAndBound.idle + cost) / numProcessors);
+
+
             int candidateTime = Math.max(branchAndBound.time.peek(), Math.max(bWeight, loadBalance));
-                if (bestSchedule.bestTime <= candidateTime) {
-                    return;
+
+            if (bestSchedule.bestTime <= candidateTime) {
+                return;
+            } else {
+                branchAndBound.addTask(task, processor, cost);
+            }
+            Set<Stack<Integer>> scheduleSet = new HashSet<>();
+            Stack<Integer>[] stacks = new Stack[numProcessors];
+
+            for (int i = 0; i < stacks.length; i++) {
+                stacks[i] = new Stack<>();
+            }
+
+            // Check whether the Current schedule has been visited before.
+            boolean seen;
+            //Add tasks ids and start times to the stack which represents the processor
+            for(int i = 0; i < branchAndBound.numTasks; i++){
+                if(branchAndBound.taskInformation[i][0] != -1){
+                    stacks[branchAndBound.taskProcessors[i]].add(i);
+                    stacks[branchAndBound.taskProcessors[i]].add(branchAndBound.taskInformation[i][0]);
+                }
+            }
+            for(Stack<Integer> stack : stacks) {
+                scheduleSet.add(stack);
+            }
+            int id = scheduleSet.hashCode();
+            synchronized (RecursiveSearch.class){
+                if (seenStates.contains(id)) {
+                    seen = true;
                 } else {
-                    branchAndBound.addTask(task, processor, cost);
+                    seenStates.add(id);
+                    seen = false;
                 }
-                Set<Stack<Integer>> scheduleSet = new HashSet<>();
-                Stack<Integer>[] stacks = new Stack[numProcessors];
+            }
 
-                for (int i = 0; i < stacks.length; i++) {
-                    stacks[i] = new Stack<>();
-                }
 
-                boolean seen;
-                //Add tasks ids and start times to the stack which represents the processor
-                for(int i = 0; i < branchAndBound.numTasks; i++){
-                    if(branchAndBound.taskInformation[i][0] != -1){
-                        stacks[branchAndBound.taskProcessors[i]].add(i);
-                        stacks[branchAndBound.taskProcessors[i]].add(branchAndBound.taskInformation[i][0]);
-                    }
-                }
-                for(Stack<Integer> stack : stacks) {
-                    scheduleSet.add(stack);
-                }
-                int id = scheduleSet.hashCode();
-                synchronized (RecursiveSearch.class){
-                    if (seenStates.contains(id)) {
-                        seen = true;
-                    }
-                    else {
-                        seenStates.add(id);
-                        seen = false;
-                    }
-                }
             if (seen) {
                 branchAndBound.removeTask(task,processor,cost);
                 return;
             }
 
-                if (branchAndBound.unscheduledTasks.isEmpty()) {
-                    int candidateBest = branchAndBound.time.peek();
-                    //synchronized (RecursiveSearch.class) {
-                        if (candidateBest < bestSchedule.bestTime) {
-                            bestSchedule.makeCopy(candidateBest, branchAndBound.taskProcessors, branchAndBound.taskInformation);
-                        //}
-                    }
+            if (branchAndBound.unscheduledTasks.isEmpty()) {
+                int candidateBest = branchAndBound.time.peek();
+                //synchronized (RecursiveSearch.class) {
+                if (candidateBest < bestSchedule.bestTime) {
+                    bestSchedule.makeCopy(candidateBest, branchAndBound.taskProcessors, branchAndBound.taskInformation);
                 }
+            }
 
             boolean[] candidateTasks = branchAndBound.getOrder();
             LinkedList<Integer> fto = branchAndBound.toFTOList(candidateTasks);
