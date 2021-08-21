@@ -285,6 +285,139 @@ public class BranchAndBound {
         return false;
     }
 
+
+    protected LinkedList<Integer> toFTOList(boolean[] candidateTasks) {
+        int child = -1;
+        int parentProcessor = -1;
+        LinkedList<Integer> result = new LinkedList<>();
+
+        for(int i = 0; i < candidateTasks.length; i++){
+            if(candidateTasks[i]){
+                result.add(i);
+            }
+        }
+
+        if (result.size() == 0) {
+            return null;
+        }
+
+
+        for (int i = 0; i < candidateTasks.length; i++) {
+            // To be an FTO, every node must have at most one parent and at most one child
+            if(candidateTasks[i]){
+                int childrenSize = intGraph.outEdges[i].size();
+
+                if (intGraph.inEdges[i].size() > 1 || childrenSize > 1) {
+                    return null;
+                }
+
+                // Every node must have the same child IF they have a child
+                if (childrenSize > 0) {
+                    int taskChild = intGraph.outEdges[i].get(0)[0];
+                    if (child == -1) {
+                        child = taskChild;
+                    } else if (child != taskChild) {
+                        return null;
+                    }
+                }
+
+                // every node must have their parents on the same processor IF they have a parent.
+                if (intGraph.inEdges[i].size() > 0) {
+                    int taskParent = intGraph.inEdges[i].get(0)[0];
+                    int taskParentProcessor = taskProcessors[taskParent];
+                    if (parentProcessor == -1) {
+                        parentProcessor = taskParentProcessor;
+                    } else if (parentProcessor != taskParentProcessor) {
+                        return null;
+                    }
+                }
+            }
+
+            // sort by non-decreasing data ready time, i.e. finish time of parent + weight of edge
+            sortByDataReadyTime(result);
+//            System.out.println(result);
+            // verify if the candidate tasks are ordered by out edge cost in non-increasing order,
+            // if not we do not have a FTO.
+            int prevOutEdgeCost = Integer.MAX_VALUE;
+            for (int j = 0; j < candidateTasks.length; j++) {
+                if(candidateTasks[j]){
+                    int edgeCost;
+                    if (intGraph.outEdges[j].size() == 0) {
+                        // there is no out edge, cost is 0
+                        edgeCost = 0;
+                    }
+                    else {
+                        int taskChild = intGraph.outEdges[j].get(0)[0];
+                        edgeCost = intGraph.outEdges[j].get(0)[1];
+                    }
+
+                    // if our current edge is larger than the previous edge, we don't have a FTO.
+                    if (edgeCost > prevOutEdgeCost) {
+                        return null;
+                    } else {
+                        prevOutEdgeCost = edgeCost;
+                    }
+                }
+
+            }
+        }
+
+        // we have a FTO!
+        return result;
+    }
+
+    private void sortByDataReadyTime(LinkedList<Integer> candidateTasks) {
+//        System.out.println("START");
+        candidateTasks.sort((task1, task2) -> {
+            int task1DataReadyTime = 0;
+            int task2DataReadyTime = 0;
+
+            if (intGraph.inEdges[task1].size() != 0) {
+                int parent = intGraph.inEdges[task1].get(0)[0];
+                int commCost = intGraph.inEdges[task1].get(0)[1];
+                task1DataReadyTime = taskInformation[parent][2] + commCost;
+            }
+
+            if (intGraph.inEdges[task2].size() != 0) {
+                int parent = intGraph.inEdges[task2].get(0)[0];
+                int commCost = intGraph.inEdges[task2].get(0)[1];
+                task2DataReadyTime = taskInformation[parent][2] + commCost;
+            }
+
+//            System.out.println("Task 1");
+//            System.out.println(task1);
+//            System.out.println(task1DataReadyTime);
+//            System.out.println("Task 2");
+//            System.out.println(task2);
+//            System.out.println(task2DataReadyTime);
+
+            if (task1DataReadyTime < task2DataReadyTime) {
+                return -1;
+            }
+            if (task1DataReadyTime > task2DataReadyTime) {
+                return 1;
+            }
+
+            // Data ready times are equal, break the tie using the out-edge cost
+            int task1OutEdgeCost = 0;
+            int task2OutEdgeCost = 0;
+            if (intGraph.outEdges[task1].size() != 0) {
+                task1OutEdgeCost = intGraph.outEdges[task1].get(0)[1];
+            }
+            if (intGraph.outEdges[task2].size() != 0) {
+                task2OutEdgeCost = intGraph.outEdges[task2].get(0)[1];
+            }
+//            System.out.println("Task 1 OUT");
+//            System.out.println(task1);
+//            System.out.println(task1OutEdgeCost);
+//            System.out.println("Task 2 OUT");
+//            System.out.println(task2);
+//            System.out.println(task2OutEdgeCost);
+
+            return Integer.compare(task2OutEdgeCost, task1OutEdgeCost);
+        });
+    }
+
     public BranchAndBound deepCopy(){
         BranchAndBound c_branchandbound = new BranchAndBound(intGraph, numProcessors, false);
 
