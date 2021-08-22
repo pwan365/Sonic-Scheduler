@@ -27,6 +27,18 @@ public class Main {
         String outputFileName = fileName.replace(".dot", "-output.dot");
 
         /*
+         * Output Code
+         * Used if the user specifies an output name
+         */
+        if (commands.contains("-o")){
+            int index = commands.indexOf("-o");
+            outputFileName = commands.get(index+1);
+            if (!outputFileName.contains(".dot")){
+                //Add .dot if the user did not enter the file extension
+                outputFileName += ".dot";
+            }
+        }
+        /*
          * Parallel code
          * TODO Implement Parallel Code by Milestone 2
          */
@@ -63,18 +75,7 @@ public class Main {
             scheduleThread.start();
         }
 
-        /*
-         * Output Code
-         * Used if the user specifies an output name
-         */
-        if (commands.contains("-o")){
-            int index = commands.indexOf("-o");
-            outputFileName = commands.get(index+1);
-            if (!outputFileName.contains(".dot")){
-                //Add .dot if the user did not enter the file extension
-                outputFileName += ".dot";
-            }
-        }
+
 
 
 
