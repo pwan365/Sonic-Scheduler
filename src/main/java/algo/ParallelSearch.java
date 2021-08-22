@@ -115,14 +115,16 @@ public class ParallelSearch extends RecursiveSearch implements VisualiseSearch {
             synchronized (RecursiveSearch.class){
                 state += 1;
             }
-
+            //Check whether this state can be pruned.
             boolean pruned = prune(scheduleState,task,cost,processor,bestSchedule);
             if (pruned) {
                 return;
             }
 
+            //Add the task to the schedule.
             scheduleState.addTask(task, processor, cost);
 
+            //Check whether we have seen this state.
             boolean seen = checkSeen(scheduleState,task,processor,cost);
             if (seen) {
                 return;
@@ -131,6 +133,7 @@ public class ParallelSearch extends RecursiveSearch implements VisualiseSearch {
             // Update best schedule
             updateBestSchedule(bestSchedule, scheduleState);
 
+            //Get a list of candidate tasks to be called, sorted by their DLS
             PriorityQueue<DLS> lowestCost = getCandidateTasks(scheduleState);
 
             List<ParallelRecursiveSearch> list = new ArrayList<>();
