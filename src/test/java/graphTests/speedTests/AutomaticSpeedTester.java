@@ -21,20 +21,29 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @RunWith(Parameterized.class)
 public class AutomaticSpeedTester {
 
-    Graph _inputGraph;
-    IntGraph _intGraph;
-    String _file;
-    int _numOfProcessors;
-    int _expected;
+    Graph inputGraph;
+    IntGraph intGraph;
+    int numOfProcessors;
+    int expected;
 
-    public AutomaticSpeedTester(Graph input, IntGraph intGraph, String file, int processors, int expected){
-        _inputGraph = input;
-        _intGraph = intGraph;
-        _file = file;
-        _numOfProcessors = processors;
-        _expected = expected;
+    /**
+     * This constructor will receive argument for each test case
+     * @param input inputGraph
+     * @param intGraph intGraph object
+     * @param processors number of Processors
+     * @param expected expected answer
+     */
+    public AutomaticSpeedTester(Graph input, IntGraph intGraph, int processors, int expected){
+        this.inputGraph = input;
+        this.intGraph = intGraph;
+        this.numOfProcessors = processors;
+        this.expected = expected;
     }
 
+    /**
+     * Construct the parameter list for the test cases from all the custom test files
+     * @return parameters in the constructors from each file
+     */
     @Parameterized.Parameters
     public static Collection<Object[]> getParameters(){
         Collection<Object[]> parameters = new LinkedList<>();
@@ -58,19 +67,22 @@ public class AutomaticSpeedTester {
             }
             int processors = Integer.parseInt(sb.reverse().toString());
             int result = ((Double)inputGraph.getAttribute("Total schedule length")).intValue();
-            parameters.add(new Object[]{inputGraph, intGraph, file.getAbsolutePath(), processors, result});
+            parameters.add(new Object[]{inputGraph, intGraph, processors, result});
 
         }
         return parameters;
     }
 
+    /**
+     * Test whether the optimal scheduling time is correct or not
+     */
     @Test(timeout = 1000)
     public void testing(){
-        SequentialSearch s = new SequentialSearch(_inputGraph, _intGraph,_numOfProcessors);
+        SequentialSearch s = new SequentialSearch(inputGraph, intGraph,numOfProcessors);
         s.run();
         int result = s.done();
 
-        assertEquals(result, _expected);
+        assertEquals(result, expected);
     }
 
 }

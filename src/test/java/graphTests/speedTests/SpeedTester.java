@@ -721,6 +721,12 @@ public class SpeedTester {
         return graphDir + filename;
     }
 
+    /**
+     * A helper method to scheduling and return the best time, reducing duplicating code
+     * @param input input graph
+     * @param numberOfProcessors number of processors
+     * @return the best time
+     */
     private int scheduling(Graph input, int numberOfProcessors) {
         IntGraph graph = new IntGraph(input);
         SequentialSearch s = new SequentialSearch(input, graph,numberOfProcessors);
