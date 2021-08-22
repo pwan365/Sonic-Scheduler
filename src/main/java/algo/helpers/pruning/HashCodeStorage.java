@@ -9,7 +9,7 @@ import java.util.Set;
  * HashCodeStorage is created as a helper class to store the states that has been seen
  * before during the search and check whether the current state of searching has been seen.
  *
- * @author Luxman Jeyarajah, Wayne Yao
+ * @author Wayne Yao
  */
 public class HashCodeStorage {
 

@@ -1,4 +1,4 @@
-package algo.helpers;
+package algo.helpers.comparators;
 
 import java.util.Comparator;
 
