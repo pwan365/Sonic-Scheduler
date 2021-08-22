@@ -55,7 +55,7 @@ We use a hash set of stacks to represent different processors, this is because h
 with constant operations. Then, we store hashcode of this hash set into another "seenState" hash set, so that whenever
 a duplicate schedule happens we can prune everything from that point.
 
-- <b>Cost Functions</b>
+#### Cost Functions
 
 - <b>Load Balancer</b>
 The class Schedule contains an idle cost field which increments everytime a task is schduled, with its associated communication cost(as well as decremented whenever we backtrack after scheduling a task.) As such we can calculate an underestimate for the time finished through ceil(Weight of all tasks + current communication cost + communication cost to schedule upcoming taks)/Number of processors. This involves a few numerical calculations, independent from the input and thus is a constant time operation.
