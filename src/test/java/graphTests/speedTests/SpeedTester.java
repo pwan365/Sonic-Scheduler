@@ -1,16 +1,11 @@
 package graphTests.speedTests;
 
-import algo.CostFunctions.CriticalPath;
 import algo.CostFunctions.LoadBalancer;
-import algo.Schedule.Task;
 import algo.Solution.*;
 import graphTests.validateTests.InputReaderHelper;
 import org.graphstream.graph.Graph;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -712,7 +707,6 @@ public class SpeedTester {
 
     @AfterEach
     public void clear() {
-        CriticalPath.clearObject();
         LoadBalancer.clearObject();
     }
 
