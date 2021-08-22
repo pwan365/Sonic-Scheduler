@@ -41,13 +41,19 @@ This is extremely helpful for the fork and join graph because once we get the FT
 the amount of task ordering and hence pruning states.
 FTO is checked every recursive call due to the reason candidate tasks are constantly changing.
 
-- <b>Duplicate states</b>
+- <b>Duplicate Nodes</b>
 
 When two nodes have the same weight, same edges and same communication cost, they are essentially can be treated as
 equivalent, therefore when we consider scheduling a node, if a duplicate node has been scheduled before at the same processor,
 we no longer interested in that state.
 
 - <b>Identical state</b>
+
+Identical state is when exactly the same tasks that are scheduled at the same time allocation but on the 
+same/different processors. Hence we can ignore them if we detect this sort of state happens.
+We use a hash set of stacks to represent different processors, this is because hash set is a non-ordered data strcture
+with constant operations. Then, we store hashcode of this hash set into another "seenState" hash set, so that whenever
+a duplicate schedule happens we can prune everything from that point.
 
 - <b>Cost Functions</b>
 
