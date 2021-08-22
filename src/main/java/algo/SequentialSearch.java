@@ -3,6 +3,7 @@ package algo;
 
 import algo.helpers.costFunctions.BottomLevel;
 import algo.helpers.costFunctions.LoadBalancer;
+import algo.helpers.hashCode.HashCodeStorage;
 import org.graphstream.graph.Graph;
 
 import java.util.*;
@@ -65,7 +66,7 @@ public class SequentialSearch extends BranchAndBound implements  GUISchedule{
 
         addTask(task, processor, cost);
 
-        boolean seen = checkSeen();
+        boolean seen = HashCodeStorage.checkIfSeen(taskInformation,taskProcessors,numProcessors,numTasks);
 
         if (seen) {
             removeTask(task,processor,cost);

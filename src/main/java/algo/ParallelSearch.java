@@ -2,6 +2,7 @@ package algo;
 
 import algo.helpers.costFunctions.BottomLevel;
 import algo.helpers.costFunctions.LoadBalancer;
+import algo.helpers.hashCode.HashCodeStorage;
 import org.graphstream.graph.Graph;
 
 import java.util.*;
@@ -146,31 +147,10 @@ public class ParallelSearch implements GUISchedule{
             }
 
 
-            Set<List<Integer>> scheduleSet = new HashSet<>(); // constant time operation so using hashSet
-            List<Integer>[] lists = new LinkedList[numProcessors];
 
-            for (int i = 0; i < lists.length; i++) {
-                lists[i] = new LinkedList<>();
-            }
             // Check whether the Current schedule has been visited before.
-            boolean seen;
-            //Add tasks ids and start times to the stack which represents the processor
-            for(int i = 0; i < numTasks; i++){
-                if(branchAndBound.taskInformation[i][0] != -1){
-                    lists[branchAndBound.taskProcessors[i]].add(i);
-                    lists[branchAndBound.taskProcessors[i]].add(branchAndBound.taskInformation[i][0]);
-                }
-            }
-            for(List<Integer> stack : lists) {
-                scheduleSet.add(stack);
-            }
-            int id = scheduleSet.hashCode();
-            if (seenStates.contains(id)) {
-                seen = true;
-            } else {
-                seenStates.add(id);
-                seen = false;
-            }
+            boolean seen = HashCodeStorage.checkIfSeen(branchAndBound.taskInformation, branchAndBound.taskProcessors,
+                    numProcessors,numTasks);
 
             if (seen) {
                 branchAndBound.removeTask(task,processor,cost);
