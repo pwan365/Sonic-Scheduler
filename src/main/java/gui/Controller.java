@@ -77,7 +77,6 @@ public class Controller {
         // Starts running the scheduling algorithm
         scheduleThread.start();
         control.start();
-        System.out.println("yoyoyoyoyoyo");
         control.setStartTime();
 
     }
@@ -103,7 +102,6 @@ public class Controller {
 //            if (scheduleThread.getStates() > 0) {
 //                bestTime.setText(scheduleThread.getBestTime() + "");
 //            }
-            System.out.println("update");
             updateBarChart();
 
             System.out.println(scheduleThread.isDone());
@@ -155,10 +153,12 @@ public class Controller {
      * processor on the y-axis.
      */
     public void updateBarChart() {
-        System.out.println("hahahahahaha");
+
 
         List<List<Task>> barList = getBestSchedule();
-
+        if (barList == null) {
+            return;
+        }
 
 
         barChartSchedule.getData().clear();
@@ -228,8 +228,10 @@ public class Controller {
      * @return a list of tasks
      */
     public List<List<Task>> getBestSchedule(){
-        System.out.println("yasdfadsfasdfasdf");
         BestSchedule b = scheduleThread.getBestSchedule();
+        if (b.getTime() == Integer.MAX_VALUE) {
+            return null;
+        }
         List<List<Task>> barList = new ArrayList<>();
 
         if (b.getTaskInformation()==null || b.getTaskProcessors()==null){
