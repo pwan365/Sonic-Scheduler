@@ -50,7 +50,7 @@ we no longer interested in that state.
 - <b>Identical state</b>
 
 - <b>Cost Functions</b>
-- 
+
 - <b>Load Balancer</b>
 The class Schedule contains an idle cost field which increments everytime a task is schduled, with its associated communication cost(as well as decremented whenever we backtrack after scheduling a task.) As such we can calculate an underestimate for the time finished through ceil(Weight of all tasks + current communication cost + communication cost to schedule upcoming taks)/Number of processors. This involves a few numerical calculations, independent from the input and thus is a constant time operation.
 
