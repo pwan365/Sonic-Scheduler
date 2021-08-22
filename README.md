@@ -48,7 +48,7 @@ Also the jar file has to be executable, which can be done using command
 ```
 chmod 777 scheduler.jar
 ```
-The jar file should work on the FlexIT IT as specified.
+The jar file should work on the FlexIT as specified.
 
 ## Members
 * Samuel Chen - [Sparye](https://github.com/Sparye)
