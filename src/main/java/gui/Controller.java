@@ -58,12 +58,12 @@ public class Controller {
      * @param inputGraphName Name of the input graph file
      * @param procNum Number of processors the schedule is required to run on based on user's input
      */
-    public void passInput(ScheduleThread scheduleThread,String inputGraphName, int procNum){
+    public void passInput(ScheduleThread scheduleThread,String inputGraphName, int procNum,int threadCount){
         this.scheduleThread = scheduleThread;
         graphName.setText(inputGraphName);
         totalTask.setText(getTaskNum(inputGraphName)+"");
         this.procNum=procNum;
-        numProcess.setText(String.valueOf(procNum));
+        numProcess.setText(String.valueOf(threadCount));
         Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
         setGUIInitial();
     }

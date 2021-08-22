@@ -22,6 +22,7 @@ public class Main {
         String fileName = args[0];
         int numberOfProcessors = Integer.parseInt(args[1]);
         int numberOfCores = 1;
+        boolean parallel = false;
         //Formatting output name
         String outputFileName = fileName.replace(".dot", "-output.dot");
 
@@ -32,16 +33,17 @@ public class Main {
         if (commands.contains("-p")){
             int index = commands.indexOf("-p");
             numberOfCores = Integer.parseInt(commands.get(index+1));
+            parallel = true;
         }
 
         /*
          * Visualization Code
          * TODO Implement Visualization by Milestone 2
          */
-        boolean parallel = false;
         ScheduleThread scheduleThread = new ScheduleThread(fileName,outputFileName,numberOfProcessors,parallel);
 
         if (commands.contains("-v")){
+            int finalNumberOfCores = numberOfCores;
             PlatformImpl.startup(() -> {
                 Visualiser v = new Visualiser();
                 try{
@@ -50,7 +52,7 @@ public class Main {
                 }catch(Exception e){
 
                 }
-                v.loadData(scheduleThread, fileName, numberOfProcessors);
+                v.loadData(scheduleThread, fileName, numberOfProcessors, finalNumberOfCores);
 
             });
 

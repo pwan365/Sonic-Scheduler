@@ -27,7 +27,7 @@ public class Visualiser extends Application {
      * @param inputName the name of the input file
      * @param numProc number of processor that the tasks are assigned to
      */
-    public void loadData(ScheduleThread scheduleThread,String inputName, int numProc){
-        c.passInput(scheduleThread, inputName,numProc);
+    public void loadData(ScheduleThread scheduleThread,String inputName, int numProc,int threadCount){
+        c.passInput(scheduleThread, inputName,numProc,threadCount);
     }
 }
