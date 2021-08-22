@@ -18,7 +18,6 @@ public class Main {
 
         List<String> commands = Arrays.asList(args);
 
-
         String fileName = args[0];
         int numberOfProcessors = Integer.parseInt(args[1]);
         int numberOfCores = 1;
@@ -38,6 +37,7 @@ public class Main {
                 outputFileName += ".dot";
             }
         }
+
         /*
          * Parallel code
          * TODO Implement Parallel Code by Milestone 2
@@ -48,7 +48,6 @@ public class Main {
             if (numberOfCores > 1) {
                 parallel = true;
             }
-
         }
 
         /*
@@ -63,23 +62,13 @@ public class Main {
                 Visualiser v = new Visualiser();
                 try{
                     v.start(new Stage());
-
                 }catch(Exception e){
-
+                    e.printStackTrace();
                 }
                 v.loadData(scheduleThread, fileName, numberOfProcessors, finalNumberOfCores);
-
             });
-
         }else{
             scheduleThread.start();
         }
-
-
-
-
-
     }
-
-
 }
