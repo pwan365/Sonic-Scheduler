@@ -19,7 +19,6 @@ import java.util.concurrent.RecursiveAction;
 public class ParallelSearch implements GUISchedule{
 
     public BestSchedule bestSchedule;
-    private final IntGraph graph;
     private final int numProcessors;
 
     // Initial BranchAndBound class for initialization.
@@ -29,10 +28,10 @@ public class ParallelSearch implements GUISchedule{
     public HashSet<Integer> seenStates = new HashSet<>();
     public LinkedList<Integer>[] equivalentList;
     int graphWeight = 0;
-    private Graph inputGraph;
+    private final Graph inputGraph;
     private int state = 0;
-    public int numOfCores = 1;
-    private int numTasks;
+    public int numOfCores;
+    private final int numTasks;
 
     /**
      *
@@ -42,7 +41,6 @@ public class ParallelSearch implements GUISchedule{
     public ParallelSearch(Graph inputGraph, IntGraph graph, int processors, int numOfCores){
         this.numOfCores = numOfCores;
         this.inputGraph = inputGraph;
-        this.graph = graph;
         this.numProcessors = processors;
         bestSchedule = new BestSchedule();
         bb = new BranchAndBound(graph, processors, true);

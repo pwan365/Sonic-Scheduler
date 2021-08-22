@@ -163,11 +163,10 @@ public class BranchAndBound {
         boolean[] validTasks = new boolean[numTasks];
 
         for (int i = 0; i < numTasks; i++) {
-            int nodeIndex = i;
 
             // if input is 0 size, find all root tasks
-            if (intGraph.inEdges[i].size() == 0 && !scheduledTasks[nodeIndex]) {
-                validTasks[nodeIndex] = true;
+            if (intGraph.inEdges[i].size() == 0 && !scheduledTasks[i]) {
+                validTasks[i] = true;
                 continue;
             }
 
@@ -176,12 +175,12 @@ public class BranchAndBound {
                 int parent = intGraph.inEdges[i].get(j)[0];
                 if (!scheduledTasks[parent]) {
                     flag = false;
-                    validTasks[nodeIndex] = false;
+                    validTasks[i] = false;
                     break;
                 }
             }
-            if (flag && !scheduledTasks[nodeIndex]) {
-                validTasks[nodeIndex] = true;
+            if (flag && !scheduledTasks[i]) {
+                validTasks[i] = true;
             }
         }
         return validTasks;
@@ -401,17 +400,13 @@ public class BranchAndBound {
         }
 
         // sort the list
-        Collections.sort(aParents, new EdgesComparator());
-        Collections.sort(bParents, new EdgesComparator());
-        Collections.sort(aChildren, new EdgesComparator());
-        Collections.sort(bChildren, new EdgesComparator());
+        aParents.sort(new EdgesComparator());
+        bParents.sort(new EdgesComparator());
+        aChildren.sort(new EdgesComparator());
+        bChildren.sort(new EdgesComparator());
 
-        if(!compareEdgeRelations(aParents, bParents)
-                || !compareEdgeRelations(aChildren, bChildren)){
-            return false;
-        }
-
-        return true;
+        return compareEdgeRelations(aParents, bParents)
+                && compareEdgeRelations(aChildren, bChildren);
     }
 
     private boolean compareEdgeRelations(List<int[]> listA, List<int[]> listB){
