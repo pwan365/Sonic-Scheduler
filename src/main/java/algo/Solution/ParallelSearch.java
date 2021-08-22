@@ -30,6 +30,7 @@ public class ParallelSearch implements GUISchedule{
     private Graph inputGraph;
     private int state = 0;
     public int numOfCores = 1;
+    private int numTasks;
 
     /**
      *
@@ -48,6 +49,7 @@ public class ParallelSearch implements GUISchedule{
             graphWeight += weight;
         }
         equivalentList = bb.getEquivalentNodes();
+        numTasks = graph.tasks.length;
     }
 
     /**
@@ -145,22 +147,22 @@ public class ParallelSearch implements GUISchedule{
             }
 
 
-            Set<Stack<Integer>> scheduleSet = new HashSet<>();
-            Stack<Integer>[] stacks = new Stack[numProcessors];
+            Set<List<Integer>> scheduleSet = new HashSet<>(); // constant time operation so using hashSet
+            List<Integer>[] lists = new LinkedList[numProcessors];
 
-            for (int i = 0; i < stacks.length; i++) {
-                stacks[i] = new Stack<>();
+            for (int i = 0; i < lists.length; i++) {
+                lists[i] = new LinkedList<>();
             }
             // Check whether the Current schedule has been visited before.
             boolean seen;
             //Add tasks ids and start times to the stack which represents the processor
-            for(int i = 0; i < branchAndBound.numTasks; i++){
+            for(int i = 0; i < numTasks; i++){
                 if(branchAndBound.taskInformation[i][0] != -1){
-                    stacks[branchAndBound.taskProcessors[i]].add(i);
-                    stacks[branchAndBound.taskProcessors[i]].add(branchAndBound.taskInformation[i][0]);
+                    lists[branchAndBound.taskProcessors[i]].add(i);
+                    lists[branchAndBound.taskProcessors[i]].add(branchAndBound.taskInformation[i][0]);
                 }
             }
-            for(Stack<Integer> stack : stacks) {
+            for(List<Integer> stack : lists) {
                 scheduleSet.add(stack);
             }
             int id = scheduleSet.hashCode();
@@ -170,6 +172,7 @@ public class ParallelSearch implements GUISchedule{
                 seenStates.add(id);
                 seen = false;
             }
+
             if (seen) {
                 branchAndBound.removeTask(task,processor,cost);
                 return;

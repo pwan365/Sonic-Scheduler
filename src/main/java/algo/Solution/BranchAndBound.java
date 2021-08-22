@@ -233,30 +233,31 @@ public class BranchAndBound {
     }
 
     public boolean checkSeen() {
-        Set<Stack<Integer>> scheduleSet = new HashSet<>();
-        Stack<Integer>[] stacks = new Stack[numProcessors];
+        Set<List<Integer>> scheduleSet = new HashSet<>(); // constant time operation so using hashSet
+        List<Integer>[] lists = new LinkedList[numProcessors];
 
-        for (int i = 0; i < stacks.length; i++) {
-            stacks[i] = new Stack<>();
+        for (int i = 0; i < lists.length; i++) {
+            lists[i] = new LinkedList<>();
         }
 
-        //Add tasks ids and start times to the stack which represents the processor
-        for (int i = 0; i < numTasks; i++) {
-            if (taskInformation[i][0] != -1) {
-                stacks[taskProcessors[i]].add(i);
-                stacks[taskProcessors[i]].add(taskInformation[i][0]);
+        //Add tasks ids and start times to the list which represents the processor
+        for(int i = 0; i < numTasks; i++){
+            if(taskInformation[i][0] != -1){
+                lists[taskProcessors[i]].add(i);
+                lists[taskProcessors[i]].add(taskInformation[i][0]);
             }
         }
 
-        // Add the stacks to a set.
-        for (Stack<Integer> stack : stacks) {
+        // Add the lists to the set.
+        for(List<Integer> stack : lists) {
             scheduleSet.add(stack);
         }
-//        int id = Arrays.deepHashCode(taskInformation);
         int id = scheduleSet.hashCode();
+
         if (seenStates.contains(id)) {
             return true;
-        } else {
+        }
+        else {
             seenStates.add(id);
         }
         return false;

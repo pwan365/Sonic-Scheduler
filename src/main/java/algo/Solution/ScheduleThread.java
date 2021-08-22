@@ -25,7 +25,7 @@ public class ScheduleThread extends Thread{
         inputGraph = reader.read();
         intGraph = new IntGraph(inputGraph);
 
-        if (!parallel) {
+        if (!parallel || numOfCores == 1) {
             search = new SequentialSearch(inputGraph,intGraph,numberOfProcessors);
         }
         else {
