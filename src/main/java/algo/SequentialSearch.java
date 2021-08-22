@@ -59,6 +59,7 @@ public class SequentialSearch extends BranchAndBound implements  GUISchedule{
         int loadBalance = LoadBalancer.calculateLoadBalance(idle,cost,numProcessors);
         int candidateTime = Math.max(time.peek(), Math.max(bWeight, loadBalance));
 
+        // If the candidate time is less than best time, then exit.
         if (bestSchedule.bestTime <= candidateTime) {
             return;
         }
@@ -66,13 +67,16 @@ public class SequentialSearch extends BranchAndBound implements  GUISchedule{
 
         addTask(task, processor, cost);
 
+        // Check whether the Current schedule has been visited before.
         boolean seen = HashCodeStorage.checkIfSeen(taskInformation,taskProcessors,numProcessors,numTasks);
 
+        // If so, exit.
         if (seen) {
             removeTask(task,processor,cost);
             return;
         }
 
+        // Update best schedule
         if (scheduled == numTasks) {
             int candidateBest = time.peek();
             if (candidateBest < bestSchedule.bestTime) {

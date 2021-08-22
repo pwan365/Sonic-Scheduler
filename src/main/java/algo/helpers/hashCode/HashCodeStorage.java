@@ -35,11 +35,14 @@ public class HashCodeStorage {
             }
             int id = scheduleSet.hashCode();
 
-            if (seenStates.contains(id)) {
-                return true;
-            }
-            else {
-                seenStates.add(id);
+            // Synchronized for multithreading.
+            synchronized (HashCodeStorage.class){
+                if (seenStates.contains(id)) {
+                    return true;
+                }
+                else {
+                    seenStates.add(id);
+                }
             }
             return false;
     }

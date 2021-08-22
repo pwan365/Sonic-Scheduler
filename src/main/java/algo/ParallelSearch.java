@@ -16,6 +16,8 @@ import java.util.concurrent.RecursiveAction;
  * The level of parallelization would dependent on how many threads can the current machine provide.
  * The algorithm makes use of BranchAndBound class which contains all the necessary information and methods to run the algorithm.
  * The principle of the algorithm is consistent with sequential search.
+ *
+ * @author Jason Wang, John Jia
  */
 public class ParallelSearch implements GUISchedule{
 
@@ -23,7 +25,7 @@ public class ParallelSearch implements GUISchedule{
     private final int numProcessors;
 
     // Initial BranchAndBound class for initialization.
-    private final BranchAndBound bb;
+    private final BranchAndBound original_state;
 
     // Seen states of a BranchAndBound.
     public HashSet<Integer> seenStates = new HashSet<>();
@@ -44,12 +46,12 @@ public class ParallelSearch implements GUISchedule{
         this.inputGraph = inputGraph;
         this.numProcessors = processors;
         bestSchedule = new BestSchedule();
-        bb = new BranchAndBound(graph, processors, true);
+        original_state = new BranchAndBound(graph, processors, true);
         int [] weights = graph.weights;
         for (int weight : weights) {
             graphWeight += weight;
         }
-        equivalentList = bb.getEquivalentNodes();
+        equivalentList = original_state.getEquivalentNodes();
         numTasks = graph.tasks.length;
     }
 
@@ -57,11 +59,11 @@ public class ParallelSearch implements GUISchedule{
      * Run the algorithm.
      */
     public void run() {
-        boolean[] startTasks = bb.getOrder();
-        LinkedList<Integer> fto = bb.toFTOList(startTasks);
+        boolean[] startTasks = original_state.getOrder();
+        LinkedList<Integer> fto = original_state.toFTOList(startTasks);
         if (fto != null){
             int first = fto.poll();
-            for (int i = 0; i < bb.numTasks; i++){
+            for (int i = 0; i < numTasks; i++){
                 if (i != first){
                     startTasks[i] = false;
                 }
@@ -70,17 +72,17 @@ public class ParallelSearch implements GUISchedule{
         int candidateTask = 0;
         int candidateProcessor = 0;
         int commCost = 0;
-        for (int i = 0; i < bb.numTasks; i++) {
+        for (int i = 0; i < numTasks; i++) {
             if (startTasks[i]) {
                 candidateTask = i;
-                commCost = bb.commCost(candidateTask, candidateProcessor);
+                commCost = original_state.commCost(candidateTask, candidateProcessor);
                 break;
             }
         }
 
         // Initialization of thread pool and invoking
         ForkJoinPool pool = new ForkJoinPool(numOfCores);
-        RecursiveSearch re = new RecursiveSearch(bb, candidateTask, candidateProcessor, commCost);
+        RecursiveSearch re = new RecursiveSearch(original_state, candidateTask, candidateProcessor, commCost);
         pool.invoke(re);
     }
 
@@ -136,10 +138,11 @@ public class ParallelSearch implements GUISchedule{
             synchronized (RecursiveSearch.class){
                 state += 1;
             }
-            int bWeight = BottomLevel.pruneBLevel(task,cost,bb.processorTimes[processor]);
-            int loadBalance = LoadBalancer.calculateLoadBalance(bb.idle,cost,numProcessors);
+            int bWeight = BottomLevel.pruneBLevel(task,cost,branchAndBound.processorTimes[processor]);
+            int loadBalance = LoadBalancer.calculateLoadBalance(branchAndBound.idle,cost,numProcessors);
             int candidateTime = Math.max(branchAndBound.time.peek(), Math.max(bWeight, loadBalance));
 
+            // If the candidate time is less than best time, then exit.
             if (bestSchedule.bestTime <= candidateTime) {
                 return;
             } else {
@@ -152,10 +155,13 @@ public class ParallelSearch implements GUISchedule{
             boolean seen = HashCodeStorage.checkIfSeen(branchAndBound.taskInformation, branchAndBound.taskProcessors,
                     numProcessors,numTasks);
 
+            // If so, exit.
             if (seen) {
                 branchAndBound.removeTask(task,processor,cost);
                 return;
             }
+
+            // Update best schedule
             if (branchAndBound.scheduled == branchAndBound.numTasks) {
                 int candidateBest = branchAndBound.time.peek();
                 if (candidateBest < bestSchedule.bestTime) {
@@ -213,6 +219,11 @@ public class ParallelSearch implements GUISchedule{
             invokeAll(list);
         }
     }
+
+    /**
+     * Write the information to the original input graph.
+     * @return BestTime of the schedule
+     */
     public int done() {
         bestSchedule.writeToGraph(inputGraph);
         return bestSchedule.bestTime;
