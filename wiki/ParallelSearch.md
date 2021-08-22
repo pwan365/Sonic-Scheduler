@@ -1,4 +1,6 @@
 The algorithm used in `ParallelSearch` for optimal schedule is similar to the one used in `SequentialSearch`, with the same pruning techniques, cost calculation, load balancing ...etc. We are using `ForkJoinPool` to enable the scheduling to be run on multiple threads, by dividing the scheduling problem into smaller subtasks.
+## Implementation
+During the research stage we have looked through several possible imple
 ## Differences
 The main difference between `ParallelSearch` and `SequentialSearch` is that, in the `SequentialSearch`, 1 schedule is used to to schedule the tasks by inserting tasks into the schedule until all tasks are inserted, then the tasks are removed according to the order they were inserted to backtrack the scheduling, then a different combination of scheduling the tasks is used to compare the completion time of schedules.
 For `SequentialSearch`, the work of scheduling is splitted between multiple threads specified by the user. 
