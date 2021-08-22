@@ -8,6 +8,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * All the initial graph information is stored in IntGraph class. It parses all the information needed
+ * from GraphStream.Graph to arrays of integers or LinkedList.
+ *
+ * @author Luxman Jeyarajah, Wayne Yao
+ */
 public class IntGraph {
 
     protected int [] tasks;
@@ -16,6 +22,10 @@ public class IntGraph {
     protected  LinkedList<int[]>[] inEdges;
     protected int [] inDegrees;
 
+    /**
+     * Constructor of IntGraph
+     * @param g GraphStream.Graph object
+     */
     public IntGraph(Graph g) {
         int numTasks = g.getNodeCount();
         tasks = new int [numTasks];
@@ -30,6 +40,10 @@ public class IntGraph {
         initEdges(g);
     }
 
+    /**
+     * Initialize the edges in the graph.
+     * @param g GraphStream.Graph object
+     */
     private void initEdges(Graph g) {
         for(int i = 0; i < tasks.length; i++) {
             tasks[i] = i;

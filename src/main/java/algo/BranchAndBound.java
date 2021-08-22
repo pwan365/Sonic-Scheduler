@@ -4,10 +4,17 @@ package algo;
 import java.util.*;
 import algo.helpers.EdgesComparator;
 import algo.helpers.pruning.BottomLevel;
-import algo.helpers.pruning.FixedTaskOrder;
 import algo.helpers.pruning.LoadBalancer;
 import algo.helpers.hashCode.HashCodeStorage;
 
+/**
+ * BranchAndBound class contains all the task information and methods to help the algorithm
+ * in both SequentialSearch and ParallelSearch to run. It records the information during
+ * the search and call helper methods for pruning or checking. It will also deep copy itself
+ * in multithreading.
+ *
+ * @author Luxman Jeyarajah, Wayne Yao
+ */
 public class BranchAndBound {
     //Graph
     IntGraph intGraph;
@@ -28,14 +35,6 @@ public class BranchAndBound {
     public int[] taskProcessors;
     //Index 0 is StartTime, Index 1 is Weight, Index 2 is Finish Time, Index 3 is communication cost.
     public int[][] taskInformation;
-
-    //Cost Functions
-    //Bottom Level
-//    public int[] bottomLevel;
-
-
-    //Set of seen schedules.
-    public HashSet<Integer> seenStates = new HashSet<>();
 
     public LinkedList<Integer>[] equivalentList;
 
