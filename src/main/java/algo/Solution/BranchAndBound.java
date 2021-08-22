@@ -262,194 +262,214 @@ public class BranchAndBound {
         return false;
     }
 
-
+    /**
+     * Generates a list of integers representing a Fixed Task Ordered list of tasks
+     * @param candidateTasks a boolean array indicating which task is valid to be scheduled
+     * @return a list of integers, which is the FTO list
+     */
     protected LinkedList<Integer> toFTOList(boolean[] candidateTasks) {
-        int child = -1;
-        int parentProcessor = -1;
         LinkedList<Integer> result = new LinkedList<>();
 
-        for (int i = 0; i < candidateTasks.length; i++) {
-            if (candidateTasks[i]) {
+        // construct a list of candidate tasks
+        for(int i = 0; i < candidateTasks.length; i++){
+            if(candidateTasks[i]){
                 result.add(i);
             }
         }
 
+        // if no candidate task return null
         if (result.size() == 0) {
             return null;
         }
 
+        int child = -1;
+        int parentProcessor = -1;
 
-        for (int i = 0; i < candidateTasks.length; i++) {
-            // To be an FTO, every node must have at most one parent and at most one child
-            if (candidateTasks[i]) {
-                int childrenSize = intGraph.outEdges[i].size();
+        for (int i: result) {
+            // Check if the candidate task has maximum one child and one parent
+            LinkedList<int[]> childrenList = intGraph.outEdges[i];
+            LinkedList<int[]> parentList = intGraph.inEdges[i];
 
-                if (intGraph.inEdges[i].size() > 1 || childrenSize > 1) {
+            if (parentList.size() > 1 || childrenList.size() > 1) {
+                return null;
+            } else if (childrenList.size() > 0){
+                // candidate tasks either have no child, or all tasks have the same child
+                int taskChild = intGraph.outEdges[i].get(0)[0];
+                if (child == -1) {
+                    child = taskChild;
+                }
+                if (child != taskChild){
                     return null;
                 }
-
-                // Every node must have the same child IF they have a child
-                if (childrenSize > 0) {
-                    int taskChild = intGraph.outEdges[i].get(0)[0];
-                    if (child == -1) {
-                        child = taskChild;
-                    } else if (child != taskChild) {
-                        return null;
-                    }
+            } else if (parentList.size() > 0){
+                // nodes either have the same parent or all parents are scheduled on the same processor
+                int parent = intGraph.inEdges[i].get(0)[0];
+                int parentTaskProcessor = taskProcessors[parent];
+                if (parentProcessor == -1) {
+                    parentProcessor = parentTaskProcessor;
                 }
-
-                // every node must have their parents on the same processor IF they have a parent.
-                if (intGraph.inEdges[i].size() > 0) {
-                    int taskParent = intGraph.inEdges[i].get(0)[0];
-                    int taskParentProcessor = taskProcessors[taskParent];
-                    if (parentProcessor == -1) {
-                        parentProcessor = taskParentProcessor;
-                    } else if (parentProcessor != taskParentProcessor) {
-                        return null;
-                    }
+                if (parentProcessor != parentTaskProcessor) {
+                    return null;
                 }
             }
         }
 
-        // sort by non-decreasing data ready time, i.e. finish time of parent + weight of edge
-        sortByDataReadyTime(result);
-        // verify if the candidate tasks are ordered by out edge cost in non-increasing order,
-        // if not we do not have a FTO.
-        int prevOutEdgeCost = Integer.MAX_VALUE;
+        // sort by data ready time in a non-decreasing order
+        result.sort((task1, task2) -> compareDRT(task1, task2));
+
+        // if the out edge cost is not ordered in non-increasing order, it is not a fto list
+        int prevOEC = Integer.MAX_VALUE;
         for (int j : result) {
-            int edgeCost;
-            if (intGraph.outEdges[j].size() == 0) {
+            List<int[]> taskChildren = intGraph.outEdges[j];
+            int commCost;
+            if (taskChildren.size() == 0) {
                 // there is no out edge, cost is 0
-                edgeCost = 0;
-            } else {
-                int taskChild = intGraph.outEdges[j].get(0)[0];
-                edgeCost = intGraph.outEdges[j].get(0)[1];
+                commCost = 0;
+            }
+            else {
+                commCost = taskChildren.get(0)[1];
             }
 
             // if our current edge is larger than the previous edge, we don't have a FTO.
-            if (edgeCost > prevOutEdgeCost) {
+            if (commCost > prevOEC) {
                 return null;
             } else {
-                prevOutEdgeCost = edgeCost;
+                prevOEC = commCost;
             }
-
-
         }
 
-
-        // we have a FTO!
         return result;
     }
 
-    private void sortByDataReadyTime(LinkedList<Integer> candidateTasks) {
-        candidateTasks.sort((task1, task2) -> {
-            int task1DataReadyTime = 0;
-            int task2DataReadyTime = 0;
+    /**
+     * Compare data ready time for two tasks. If they are equal, we then compare out-communication-cost
+     * @param task1
+     * @param task2
+     * @return if return value is negative, it puts task1 after task2. Otherwise it puts task2 after task1
+     */
+    private int compareDRT(int task1, int task2){
+        int drt1 = 0; // data ready time for task1
+        int drt2 = 0; // data ready time for task2
 
-            if (intGraph.inEdges[task1].size() != 0) {
-                int parent = intGraph.inEdges[task1].get(0)[0];
-                int commCost = intGraph.inEdges[task1].get(0)[1];
-                task1DataReadyTime = taskInformation[parent][2] + commCost;
-            }
+        List<int[]> task1Parents = intGraph.inEdges[task1];
+        List<int[]> task2Parents = intGraph.inEdges[task2];
 
-            if (intGraph.inEdges[task2].size() != 0) {
-                int parent = intGraph.inEdges[task2].get(0)[0];
-                int commCost = intGraph.inEdges[task2].get(0)[1];
-                task2DataReadyTime = taskInformation[parent][2] + commCost;
-            }
+        if (task1Parents.size() > 0) {
+            int parent = task1Parents.get(0)[0];
+            int commCost = task1Parents.get(0)[1];
+            drt1 = taskInformation[parent][2] + commCost;
+        }
 
-            if (task1DataReadyTime < task2DataReadyTime) {
-                return -1;
-            }
-            if (task1DataReadyTime > task2DataReadyTime) {
-                return 1;
-            }
+        if (task2Parents.size() > 0) {
+            int parent = task2Parents.get(0)[0];
+            int commCost = task2Parents.get(0)[1];
+            drt2 = taskInformation[parent][2] + commCost;
+        }
 
-            // Data ready times are equal, break the tie using the out-edge cost
-            int task1OutEdgeCost = 0;
-            int task2OutEdgeCost = 0;
-            if (intGraph.outEdges[task1].size() != 0) {
-                task1OutEdgeCost = intGraph.outEdges[task1].get(0)[1];
-            }
-            if (intGraph.outEdges[task2].size() != 0) {
-                task2OutEdgeCost = intGraph.outEdges[task2].get(0)[1];
-            }
+        // comparison for drt
+        if (drt1 < drt2) {
+            return -1;
+        } else if (drt1 > drt2) {
+            return 1;
+        } else{
+            List<int[]> task1Children = intGraph.outEdges[task1];
+            List<int[]> task2Children = intGraph.outEdges[task2];
 
-            return Integer.compare(task2OutEdgeCost, task1OutEdgeCost);
-        });
+            // Data ready times are equal, now we compare communication cost
+            int outCommCost1 = 0;
+            int outCommCost2 = 0;
+            if (task1Children.size() > 0) {
+                outCommCost1 = task1Children.get(0)[1];
+            }
+            if (task2Children.size() > 0) {
+                outCommCost2 = task2Children.get(0)[1];
+            }
+            return outCommCost2 - outCommCost1;
+        }
     }
 
-    protected LinkedList<Integer>[] getEquivalentNodes() {
+    /**
+     * Get equivalent nodes list for all nodes
+     * @return an array of integer list, each array index represent a node,
+     * the corresponding list contains all the equivalent nodes for that node
+     */
+    protected LinkedList<Integer>[] getEquivalentNodes(){
         HashSet<Integer> memo = new HashSet<>();
+        // since we already know the number of tasks, we can use array
         LinkedList<Integer>[] equivalentNodesList = new LinkedList[numTasks];
 
-        for (int i = 0; i < numTasks; i++) {
-            if (!memo.contains(i)) {
+        for(int i = 0; i < numTasks; i++){
+            if(!memo.contains(i)){
+                // if we haven't seen this node before, we search for its equivalent nodes
                 LinkedList<Integer> equivalentNodes = new LinkedList<>();
                 equivalentNodes.add(i);
-                for (int j = 0; j < numTasks; j++) {
-                    if (i == j) {
-                        continue;
-                    }
-                    if (!memo.contains(j)) {
-                        if (this.equivalentCheck(i, j)) {
+                for(int j = 0; j < numTasks; j++){
+                    if(!memo.contains(j) && i != j){
+                        if(equivalentCheck(i, j)){
                             equivalentNodes.add(j);
                         }
                     }
                 }
 
-                for (int j = 0; j < equivalentNodes.size(); j++) {
-                    equivalentNodesList[equivalentNodes.get(j)] = equivalentNodes;
-                    memo.add(equivalentNodes.get(j));
+                // add the nodeList into the equivalent nodes list
+                for(int node : equivalentNodes){
+                    equivalentNodesList[node] = equivalentNodes;
+                    memo.add(node); // if a node is equivalent to each other, they will have the same list
                 }
             }
         }
         return equivalentNodesList;
     }
 
-    private boolean equivalentCheck(int taskA, int taskB) {
-        if (intGraph.weights[taskA] != intGraph.weights[taskB]) {
+    /**
+     * A helper method to help check if two tasks are equivalent
+     * @param taskA
+     * @param taskB
+     * @return true indicating that taskA == taskB, otherwise taskA != taskB
+     */
+    private boolean equivalentCheck(int taskA, int taskB){
+        List<int[]> aParents = intGraph.inEdges[taskA];
+        List<int[]> bParents = intGraph.inEdges[taskB];
+        List<int[]> aChildren = intGraph.outEdges[taskA];
+        List<int[]> bChildren = intGraph.outEdges[taskB];
+        int aWeight = intGraph.weights[taskA];
+        int bWeight = intGraph.weights[taskB];
+
+        if(aWeight != bWeight){
             return false;
         }
 
-        if ((intGraph.inEdges[taskA].size() != intGraph.inEdges[taskB].size()) ||
-                (intGraph.outEdges[taskA].size() != intGraph.outEdges[taskB].size())) {
+        if((aParents.size() != bParents.size()) ||
+                (aChildren.size() != bChildren.size())){
             return false;
         }
 
-        List<int[]> AParents = intGraph.inEdges[taskA];
-        List<int[]> BParents = intGraph.inEdges[taskB];
-        List<int[]> AChildren = intGraph.outEdges[taskA];
-        List<int[]> BChildren = intGraph.outEdges[taskB];
+        // sort the list
+        Collections.sort(aParents, new EdgesComparator());
+        Collections.sort(bParents, new EdgesComparator());
+        Collections.sort(aChildren, new EdgesComparator());
+        Collections.sort(bChildren, new EdgesComparator());
 
-        Collections.sort(AParents, new EdgesComparator());
-        Collections.sort(BParents, new EdgesComparator());
-        Collections.sort(AChildren, new EdgesComparator());
-        Collections.sort(BChildren, new EdgesComparator());
-
-        for (int i = 0; i < AParents.size(); i++) {
-            int parentA = AParents.get(i)[0];
-            int parentACost = AParents.get(i)[1];
-            int parentB = BParents.get(i)[0];
-            int parentBCost = BParents.get(i)[1];
-            if (parentA != parentB || parentACost != parentBCost) {
-                return false;
-            }
-        }
-
-        for (int i = 0; i < AChildren.size(); i++) {
-            int childA = AChildren.get(i)[0];
-            int childACost = AChildren.get(i)[1];
-            int childB = BChildren.get(i)[0];
-            int childBCost = BChildren.get(i)[1];
-            if (childA != childB || childACost != childBCost) {
-                return false;
-            }
+        if(!compareEdgeRelations(aParents, bParents)
+                || !compareEdgeRelations(aChildren, bChildren)){
+            return false;
         }
 
         return true;
     }
 
+    private boolean compareEdgeRelations(List<int[]> listA, List<int[]> listB){
+        for(int i = 0; i < listA.size(); i++){
+            int childA = listA.get(i)[0];
+            int childACost = listA.get(i)[1];
+            int childB = listB.get(i)[0];
+            int childBCost = listB.get(i)[1];
+            if(childA != childB || childACost != childBCost){
+                return false;
+            }
+        }
+        return true;
+    }
 
     /**
      * DeepCopy a current BranchAndBound object.
