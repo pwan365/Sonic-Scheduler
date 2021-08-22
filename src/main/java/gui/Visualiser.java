@@ -8,6 +8,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * The Visualiser class responsible for displaying GUI for the application
+ * It passes input arguments into the Controller class to set up the GUI
+ */
 public class Visualiser extends Application {
 
      private Controller c;
@@ -22,7 +26,8 @@ public class Visualiser extends Application {
     }
 
     /**
-     * Pass input into the controller class
+     * Pass input into the controller class, the scheduleThread is passed into controller for the GUI to control
+     * the start of the scheduling
      * @param scheduleThread the thread that runs the scheduling algorithm
      * @param inputName the name of the input file
      * @param numProc number of processor that the tasks are assigned to
