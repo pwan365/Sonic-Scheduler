@@ -1,7 +1,6 @@
-package helpers;
+package algo.Solution.helpers;
 
 import java.util.Comparator;
-import java.util.LinkedList;
 
 public class EdgesComparator implements Comparator<int[]> {
     @Override

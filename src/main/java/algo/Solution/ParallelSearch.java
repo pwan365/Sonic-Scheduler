@@ -194,7 +194,7 @@ public class ParallelSearch implements GUISchedule{
                     }
                 }
             }
-            PriorityQueue<DSL> lowestCost = new PriorityQueue<>();
+            PriorityQueue<DLS> lowestCost = new PriorityQueue<>();
 
             HashSet<Integer> seenTasks = new HashSet<>();
             for (int i = 0; i < branchAndBound.numTasks; i++) {
@@ -215,15 +215,15 @@ public class ParallelSearch implements GUISchedule{
                             }
                         }
                         int commCost = branchAndBound.commCost(i,j);
-                        DSL dsl = new DSL(branchAndBound.bottomLevel[i],commCost,branchAndBound.processorTimes[j],i,j);
-                        lowestCost.add(dsl);
+                        DLS DLS = new DLS(branchAndBound.bottomLevel[i],commCost,branchAndBound.processorTimes[j],i,j);
+                        lowestCost.add(DLS);
                     }
                 }
             }
 
             List<RecursiveSearch> list = new ArrayList<>();
             while (!lowestCost.isEmpty()) {
-                DSL candidate = lowestCost.poll();
+                DLS candidate = lowestCost.poll();
                 int candidateTask = candidate.task;
                 int processorID = candidate.processor;
                 int candidateCost = candidate.cost;

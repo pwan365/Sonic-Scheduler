@@ -92,9 +92,11 @@ public class SequentialSearch extends BranchAndBound implements  GUISchedule{
                 }
             }
         }
-        PriorityQueue<DSL> lowestCost = new PriorityQueue<>();
+        PriorityQueue<DLS> lowestCost = new PriorityQueue<>();
 
         HashSet<Integer> seenTasks = new HashSet<>();
+
+
 
         for (int i = 0; i < numTasks; i++) {
             if (candidateTasks[i]) {
@@ -114,14 +116,14 @@ public class SequentialSearch extends BranchAndBound implements  GUISchedule{
                       }
                     }
                     int commCost = commCost(i,j);
-                    DSL dsl = new DSL(bottomLevel[i],commCost,processorTimes[j],i,j);
-                    lowestCost.add(dsl);
+                    DLS DLS = new DLS(bottomLevel[i],commCost,processorTimes[j],i,j);
+                    lowestCost.add(DLS);
                 }
             }
         }
 
             while (!lowestCost.isEmpty()) {
-                DSL candidate = lowestCost.poll();
+                DLS candidate = lowestCost.poll();
                 int candidateTask = candidate.task;
                 int processorID = candidate.processor;
                 int candidateCost = candidate.cost;
