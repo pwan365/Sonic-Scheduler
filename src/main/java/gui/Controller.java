@@ -98,11 +98,12 @@ public class Controller {
                 lastUpdate = now;
             }
 
-//            formatStatesExamined(scheduleThread.getStates());
-//            if (scheduleThread.getStates() > 0) {
-//                bestTime.setText(scheduleThread.getBestTime() + "");
-//            }
-            bestTime.setText(String.valueOf(scheduleThread.getBestTime()));
+            if(scheduleThread.getStates() != Integer.MAX_VALUE){
+                formatStatesExamined(scheduleThread.getStates());
+            }
+            if (scheduleThread.getStates() > 0) {
+                bestTime.setText(scheduleThread.getBestTime() + "");
+            }
 
             updateBarChart();
 
