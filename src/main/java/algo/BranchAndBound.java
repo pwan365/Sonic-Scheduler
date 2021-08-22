@@ -63,24 +63,43 @@ public class BranchAndBound {
         }
     }
 
+    /**
+     * An Initialization method.
+     * Add unscheduled tasks
+     */
     private void addUnscheduledTasks() {
         for (int i = 0; i < numTasks; i++) {
             unscheduledTasks[i] = true;
         }
     }
 
+    /**
+     * An Initialization method.
+     * Set default task information
+     */
     private void setDefaultTaskInfo() {
         for (int i = 0; i < numTasks; i++) {
             taskInformation[i] = new int[]{-1, -1, -1, -1};
         }
     }
 
+    /**
+     * An Initialization method.
+     * Set default processor for a task to be allocated to.
+     */
     private void setDefaultTaskProcessor() {
         for (int i = 0; i < numTasks; i++) {
             taskProcessors[i] = -1;
         }
     }
 
+    /**
+     * Add a task to a processor and update related info
+     *
+     * @param task Task to be added
+     * @param processor Processor to be added on
+     * @param cost Communication Cost
+     */
     protected void addTask(int task, int processor, int cost) {
 
         //Set Task information
@@ -114,6 +133,13 @@ public class BranchAndBound {
 
     }
 
+    /**
+     * Remove a task from a processor and update related info
+     *
+     * @param task Task to be removed
+     * @param processor Processor for a task to be removed from
+     * @param cost Communication Cost
+     */
     protected void removeTask(int task, int processor, int cost) {
         //Reset Schedule info
         time.pop();
@@ -142,6 +168,13 @@ public class BranchAndBound {
 
     }
 
+    /**
+     * Calculate the communication cost to schedule a task on a processor.
+     *
+     * @param task Task to be scheduled.
+     * @param processor Processor to be scheduled on
+     * @return Communication Cost
+     */
     protected int commCost(int task, int processor) {
         LinkedList<int[]> parents = intGraph.inEdges[task];
         int calcCost = 0;
@@ -162,6 +195,10 @@ public class BranchAndBound {
         return calcCost;
     }
 
+    /**
+     * Get a boolean array which represents which task is ready to be scheduled.
+     * @return A Boolean array. If array[i] = true, then tasks[i] is ready to be scheduled.
+     */
     public boolean[] getOrder() {
         boolean[] validTasks = new boolean[numTasks];
 
@@ -274,13 +311,12 @@ public class BranchAndBound {
      * DeepCopy a current BranchAndBound object.
      * @return a deep copied current BranchAndBound object.
      *
-     * */
+     */
     public BranchAndBound deepCopy() {
         BranchAndBound c_branchandbound = new BranchAndBound(intGraph, numProcessors, false);
         int numTasks = this.numTasks;
         for (int i = 0; i < numTasks; i++) {
             c_branchandbound.taskProcessors[i] = taskProcessors[i];
-//            c_branchandbound.bottomLevel[i] = bottomLevel[i];
             for (int j = 0; j < 4; j++) {
                 c_branchandbound.taskInformation[i][j] = taskInformation[i][j];
             }
