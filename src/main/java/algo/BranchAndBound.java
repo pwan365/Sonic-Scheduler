@@ -47,7 +47,6 @@ public class BranchAndBound {
         processorTimes = new int[numberOfProcessors];
         taskProcessors = new int[numTasks];
         taskInformation = new int[numTasks][4];
-//        bottomLevel = BottomLevel.initBottomLevel(numTasks,intGraph.weights, intGraph.outEdges);
         equivalentList = getEquivalentNodes();
 
         if (init) {
@@ -58,8 +57,6 @@ public class BranchAndBound {
             setDefaultTaskProcessor();
             BottomLevel.initBottomLevel(numTasks, intGraph.weights, intGraph.outEdges);
             LoadBalancer.initLoadBalancer(intGraph.weights);
-//            initB();
-//            initLB();
         }
     }
 
@@ -189,52 +186,6 @@ public class BranchAndBound {
         }
         return validTasks;
     }
-
-//    private void initB() {
-//        for (int i = 0; i < numTasks; i++) {
-//            bottomLevel[i] = -1;
-//        }
-//        for (int i = 0; i < numTasks; i++) {
-//            int weight = intGraph.weights[i];
-//            bottomLevel(i, weight);
-//        }
-//    }
-//
-//    private int bottomLevel(int task, int total) {
-//        if (bottomLevel[task] != -1) {
-//            return bottomLevel[task];
-//        }
-//        LinkedList<int[]> outEdges = intGraph.outEdges[task];
-//        if (outEdges.size() == 0) {
-//            bottomLevel[task] = total;
-//            return total;
-//        }
-//
-//        int max = 0;
-//        // Traverse through edges and pick the subtree with the maximum weight to form the critical path for this node.
-//        for (int i = 0; i < outEdges.size(); i++) {
-//            int child = outEdges.get(i)[0];
-//            int weight = intGraph.weights[child];
-//            int temp = total + bottomLevel(child, weight);
-//
-//            max = Math.max(max, temp);
-//        }
-//
-//        bottomLevel[task] = max;
-//        return max;
-//    }
-
-//    private void initLB() {
-//        int[] weights = intGraph.weights;
-//        for (int i = 0; i < weights.length; i++) {
-//            graphWeight += weights[i];
-//        }
-//    }
-
-//    protected int loadBalance(int currentCost) {
-//        return LoadBalancer.calculateLoadBalance(idle,currentCost,numProcessors);
-////        return (int) Math.ceil((graphWeight + idle + currentCost) / numProcessors);
-//    }
 
     public boolean checkSeen() {
         Set<List<Integer>> scheduleSet = new HashSet<>(); // constant time operation so using hashSet
