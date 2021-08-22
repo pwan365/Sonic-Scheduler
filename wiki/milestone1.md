@@ -47,7 +47,7 @@ To achieve these goals, we used GraphStream to read from and write to a dot file
 4. All nodes have their processor, starting time, duration time and finishing time and so we can iterate through the nodes to output the results.
 
 ### Future Tasks
-- Whilst alot of the code used for a valid schedule is going to remain, i.e. Communication costs, using a Topological Order and a Queue for this order will not be sufficient to obtain an optimal solution. We must iterate over all possible orders that tasks can be scheduled.
+- Whilst a lot of the code used for a valid schedule is going to remain, i.e. Communication costs, using a Topological Order and a Queue for this order will not be sufficient to obtain an optimal solution. We must iterate over all possible orders that tasks can be scheduled.
 - The parallelization of the code has yet to be implemented, as the current scheduling is non-iterative, the same goes for the visualization of the interative searching.
 
 ---
