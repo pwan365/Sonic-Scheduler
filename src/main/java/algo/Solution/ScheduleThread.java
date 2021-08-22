@@ -9,11 +9,12 @@ public class ScheduleThread extends Thread{
     private String outputFileName;
     private int numberOfProcessors;
     private SequentialSearch search;
+    private ParallelSearch searchParallel;
     private boolean done = false;
     private Graph inputGraph;
     private IntGraph intGraph;
 
-    public ScheduleThread(String inputName, String outputName, int numOfProcessors){
+    public ScheduleThread(String inputName, String outputName, int numOfProcessors,boolean parallel){
         inputFileName = inputName;
         outputFileName = outputName;
         numberOfProcessors = numOfProcessors;
@@ -25,8 +26,15 @@ public class ScheduleThread extends Thread{
 
 //        ValidScheduler v = new ValidScheduler(1);
 //        v.topologicalorder(inputGraph);
-
-        search = new SequentialSearch(inputGraph,intGraph,numberOfProcessors);
+        if (!parallel) {
+            search = new SequentialSearch(inputGraph,intGraph,numberOfProcessors);
+            search.run();
+        }
+        else {
+            searchParallel = new ParallelSearch(inputGraph,intGraph,numberOfProcessors);
+            searchParallel.run();
+        }
+        done = true;
     }
 
     public void run(){
@@ -54,7 +62,6 @@ public class ScheduleThread extends Thread{
     public boolean isDone() {
         return done;
     }
-
 //    public boolean getBestChanged() {
 //        boolean isNewBest = search.newBest;
 //        search.newBest = false;
