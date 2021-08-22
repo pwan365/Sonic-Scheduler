@@ -2,10 +2,10 @@ package algo;
 
 
 import algo.helpers.comparators.DLS;
-import algo.helpers.pruning.*;
+import algo.helpers.pruning.FixedTaskOrder;
 import org.graphstream.graph.Graph;
 
-import java.util.*;
+import java.util.PriorityQueue;
 
 /**
  * Class to run a sequential search using DFS branch and bound.

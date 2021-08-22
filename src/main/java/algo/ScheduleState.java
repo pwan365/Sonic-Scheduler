@@ -1,8 +1,8 @@
 package algo;
 
 
-import java.util.*;
-
+import java.util.Stack;
+import java.util.LinkedList;
 import algo.helpers.pruning.BottomLevel;
 import algo.helpers.pruning.DuplicateStates;
 import algo.helpers.pruning.LoadBalancer;

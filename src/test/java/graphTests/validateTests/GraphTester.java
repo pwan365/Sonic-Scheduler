@@ -210,7 +210,7 @@ public class GraphTester {
      */
     @Test
     public void test11N_2P() {
-        String inputFileName ="input.dot";
+        String inputFileName ="Nodes_11_OutTree-output.dot";
         int numProc = 2;
         String inputGraphPath = pathGetter(inputFileName);
         InputReaderHelper reader = new InputReaderHelper(inputGraphPath);
@@ -231,7 +231,7 @@ public class GraphTester {
      */
     @Test
     public void test11N_4P() {
-        String inputFileName ="input.dot";
+        String inputFileName ="Nodes_11_OutTree-output.dot";
         int numProc = 4;
         String inputGraphPath = pathGetter(inputFileName);
         InputReaderHelper reader = new InputReaderHelper(inputGraphPath);

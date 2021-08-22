@@ -1,10 +1,11 @@
 package algo;
 
 import algo.helpers.comparators.DLS;
-import algo.helpers.pruning.*;
+import algo.helpers.pruning.FixedTaskOrder;
 import org.graphstream.graph.Graph;
 
-import java.util.*;
+import java.util.PriorityQueue;
+import java.util.ArrayList;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
 
@@ -136,7 +137,7 @@ public class ParallelSearch extends RecursiveSearch implements VisualiseSearch {
             //Get a list of candidate tasks to be called, sorted by their DLS
             PriorityQueue<DLS> lowestCost = getCandidateTasks(scheduleState);
 
-            List<ParallelRecursiveSearch> list = new ArrayList<>();
+            ArrayList<ParallelRecursiveSearch> list = new ArrayList<>();
             while (!lowestCost.isEmpty()) {
                 DLS candidate = lowestCost.poll();
                 int candidateTask = candidate.getTask();
