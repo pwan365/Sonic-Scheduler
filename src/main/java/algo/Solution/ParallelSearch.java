@@ -28,6 +28,7 @@ public class ParallelSearch implements GUISchedule{
     public LinkedList<Integer>[] equivalentList;
     int graphWeight = 0;
     private Graph inputGraph;
+    private int state = 0;
 
     /**
      *
@@ -78,6 +79,21 @@ public class ParallelSearch implements GUISchedule{
         pool.invoke(re);
     }
 
+    @Override
+    public int getBestTime() {
+        return bestSchedule.bestTime;
+    }
+
+    @Override
+    public BestSchedule getBestSchedule() {
+        return bestSchedule;
+    }
+
+    @Override
+    public int getStates() {
+        return state;
+    }
+
     /**
      * Inner RecursiveSearch class. Each object of the class would contain the sub-task of the total scheduling.
      * The class extends RecursiveAction class which provides compute method for ForkJoinPool to invoke.
@@ -112,6 +128,9 @@ public class ParallelSearch implements GUISchedule{
          */
         @Override
         protected void compute() {
+            synchronized (RecursiveSearch.class){
+                state += 1;
+            }
             int bWeight = branchAndBound.bottomLevel[task] + cost + branchAndBound.processorTimes[processor];
             int loadBalance = (int) Math.ceil((graphWeight + branchAndBound.idle + cost) / numProcessors);
             int processort = branchAndBound.processorTimes[processor] + cost + graph.weights[task];
