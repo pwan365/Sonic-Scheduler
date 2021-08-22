@@ -56,13 +56,16 @@ public class SequentialSearch extends RecursiveSearch implements VisualiseSearch
         //Update State count.
         states += 1;
 
+        //Check whether this state can be pruned.
         boolean pruned = prune(schedule,task,cost,processor,bestSchedule);
         if (pruned) {
             return;
         }
 
+        //Add the task to the current schedule state.
         schedule.addTask(task, processor, cost);
 
+        //Check if this is a duplicate state and prune accordingly.
         boolean seen = checkSeen(schedule,task,processor,cost);
         if (seen) {
             return;
@@ -71,8 +74,10 @@ public class SequentialSearch extends RecursiveSearch implements VisualiseSearch
         //Check whether we can update the bestSchedule
         updateBestSchedule(bestSchedule, schedule);
 
+        // Get a list of the candidate tasks, sorted to be recursively called.
         PriorityQueue<DLS> lowestCost = getCandidateTasks(schedule);
 
+        // Recursively call the child tasks.
         recursiveCall(lowestCost,task,processor,cost);
 
     }
