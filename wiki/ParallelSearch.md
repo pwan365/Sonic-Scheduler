@@ -1,7 +1,7 @@
-The algorithm used in `ParallelSearch` for optimal schedule is similar to the one used in `SequentialSearch`, with the same pruning techniques, cost calculation, load balancing ...etc.
+The algorithm used in `ParallelSearch` for optimal schedule is similar to the one used in `SequentialSearch`, with the same pruning techniques, cost calculation, load balancing ...etc. We are using `ForkJoinPool` to enable the scheduling to be run on multiple threads, by dividing the scheduling problem into smaller subtasks.
 ## Differences
 The main difference between `ParallelSearch` and `SequentialSearch` is that, in the `SequentialSearch`, 1 schedule is used to to schedule the tasks by inserting tasks into the schedule until all tasks are inserted, then the tasks are removed according to the order they were inserted to backtrack the scheduling, then a different combination of scheduling the tasks is used to compare the completion time of schedules.
-For `SequentialSearch`, the work of scheduling is splitted between multiple threads specified by the user. We are using `ForkJoinPool` to enable the scheduling to be run on multiple threads, by dividing the scheduling problem into smaller subtasks.
+For `SequentialSearch`, the work of scheduling is splitted between multiple threads specified by the user. 
 ### RecursiveSearch
 The `RecursiveSearch` class is a nested class within the `ParallelSearch` class. The `RecursiveSearch` class extends `java.util.concurrent.RecursiveAction` class, enabling the objects created by this class to be seen as "jobs" that can be invoked by the `ForkJoinPool`. The jobs will then be executed by the available threads in `ForkJoinPool` to achieve concurrent scheduling. In order to split the work of scheduling into smaller subtasks, the following logic is used.
 ### Task Splitting Logic
