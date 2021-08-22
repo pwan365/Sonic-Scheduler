@@ -40,7 +40,7 @@ public class Main {
          * Visualization Code
          * TODO Implement Visualization by Milestone 2
          */
-        ScheduleThread scheduleThread = new ScheduleThread(fileName,outputFileName,numberOfProcessors,parallel);
+        ScheduleThread scheduleThread = new ScheduleThread(fileName,outputFileName,numberOfProcessors,parallel,numberOfCores);
 
         if (commands.contains("-v")){
             int finalNumberOfCores = numberOfCores;

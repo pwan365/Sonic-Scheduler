@@ -13,8 +13,10 @@ public class ScheduleThread extends Thread{
     private boolean done = false;
     private Graph inputGraph;
     private IntGraph intGraph;
+    private int numOfCores = 1;
 
-    public ScheduleThread(String inputName, String outputName, int numOfProcessors,boolean parallel){
+    public ScheduleThread(String inputName, String outputName, int numOfProcessors,boolean parallel, int numOfCores){
+        numOfCores = numOfCores;
         inputFileName = inputName;
         outputFileName = outputName;
         numberOfProcessors = numOfProcessors;
@@ -27,7 +29,7 @@ public class ScheduleThread extends Thread{
             search = new SequentialSearch(inputGraph,intGraph,numberOfProcessors);
         }
         else {
-            search = new ParallelSearch(inputGraph,intGraph,numberOfProcessors);
+            search = new ParallelSearch(inputGraph,intGraph,numberOfProcessors,numOfCores);
         }
 
     }
