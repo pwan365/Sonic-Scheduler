@@ -155,10 +155,7 @@ public class Controller {
      * processor on the y-axis.
      */
     public void updateBarChart() {
-
-        if (taskInfo == null){
-            return;
-        }
+        System.out.println("hahahahahaha");
 
         List<List<Task>> barList = getBestSchedule();
 
@@ -231,6 +228,7 @@ public class Controller {
      * @return a list of tasks
      */
     public List<List<Task>> getBestSchedule(){
+        System.out.println("yasdfadsfasdfasdf");
         BestSchedule b = scheduleThread.getBestSchedule();
         List<List<Task>> barList = new ArrayList<>();
 
