@@ -154,12 +154,11 @@ public class Controller {
      */
     public void updateBarChart() {
 
-        if (taskInfo == null){
-            return;
-        }
 
         List<List<Task>> barList = getBestSchedule();
-
+        if (barList == null) {
+            return;
+        }
 
 
         barChartSchedule.getData().clear();
@@ -230,6 +229,9 @@ public class Controller {
      */
     public List<List<Task>> getBestSchedule(){
         BestSchedule b = scheduleThread.getBestSchedule();
+        if (b.getTime() == Integer.MAX_VALUE) {
+            return null;
+        }
         List<List<Task>> barList = new ArrayList<>();
 
         if (b.getTaskInformation()==null || b.getTaskProcessors()==null){

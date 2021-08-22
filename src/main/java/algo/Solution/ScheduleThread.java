@@ -57,17 +57,17 @@ public class ScheduleThread extends Thread{
         return search.bestSchedule;
     }
 
-//    public int getStates() {
-//        return search.getStates();
-//    }
+    public int getStates() {
+        return search.getStates();
+    }
+
+    public int getTime() {
+        return getBestTime();
+    }
 
     public boolean isDone() {
         return done;
     }
-//    public boolean getBestChanged() {
-//        boolean isNewBest = search.newBest;
-//        search.newBest = false;
-//
-//        return isNewBest;
-//    }
+
+
 }

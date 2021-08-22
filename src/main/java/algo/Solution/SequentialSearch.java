@@ -151,7 +151,13 @@ public class SequentialSearch extends BranchAndBound{
             removeTask(task,processor,cost);
     }
 
+    public int getStates() {
+        return states;
+    }
 
+    public int getBestTime() {
+        return bestSchedule.bestTime;
+    }
 
     public int done() {
 //        bestSchedule.printTasks();
