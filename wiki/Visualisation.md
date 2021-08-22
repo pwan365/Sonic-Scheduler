@@ -1,4 +1,4 @@
-# Visualisation
+#Visualisation
 
 ## Goal
 For this project, we were required to provide a graphical user interface that gives live visual feedback of the task 
@@ -38,3 +38,6 @@ there was no javafx dependency added. When we tried to add javafx to for milesto
 incompatibility issues.
 
 Another issue that arose, was translating live data fetched from the `BestSchedule` instance.
+
+## References
+All illustrations are by <a href="https://storyset.com/">Storyset</a> and are free of use provided that they are attributed.
