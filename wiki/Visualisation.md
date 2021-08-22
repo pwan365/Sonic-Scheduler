@@ -35,6 +35,6 @@ The final user interface developed is shown below:
 ## Issues
 An issue we encountered was attempting to add javafx dependency to the project. When the project was first initialised, 
 there was no javafx dependency added. When we tried to add javafx to for milestone 2, we encountered a lot of 
-incompatibility issues. However, we overcame this by...
+incompatibility issues.
 
-One other issue would be translating live data fetched from...
+Another issue that arose, was translating live data fetched from the `BestSchedule` instance.
