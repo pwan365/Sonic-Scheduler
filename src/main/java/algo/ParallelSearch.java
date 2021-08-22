@@ -13,7 +13,7 @@ import java.util.concurrent.RecursiveAction;
  * given an input graph and number of processors.
  *
  * The level of parallelization would dependent on how many threads can the current machine provide.
- * The algorithm makes use of BranchAndBound class which contains all the necessary information and methods to run the algorithm.
+ * The algorithm makes use of ScheduleState class which contains all the necessary information and methods to run the algorithm.
  * The principle of the algorithm is consistent with sequential search.
  *
  * @author Jason Wang, John Jia
@@ -23,11 +23,9 @@ public class ParallelSearch extends RecursiveSearch implements VisualiseSearch {
     public BestSchedule bestSchedule;
     private final int numProcessors;
 
-    // Initial BranchAndBound class for initialization.
+    // Initial SearchState class for initialization.
     private final ScheduleState original_state;
 
-    // Seen states of a BranchAndBound.
-//    public LinkedList<Integer>[] equivalentList;
     int graphWeight = 0;
     private final Graph inputGraph;
     private int state = 0;
@@ -76,15 +74,15 @@ public class ParallelSearch extends RecursiveSearch implements VisualiseSearch {
 
         // Initialization of thread pool and invoking
         ForkJoinPool pool = new ForkJoinPool(numOfCores);
-        RecursiveSearch re = new RecursiveSearch(original_state, candidateTask, candidateProcessor, commCost);
+        ParallelRecursiveSearch re = new ParallelRecursiveSearch(original_state, candidateTask, candidateProcessor, commCost);
         pool.invoke(re);
     }
 
     /**
-     * Inner RecursiveSearch class. Each object of the class would contain the sub-task of the total scheduling.
+     * Inner ParallelRecursiveSearch class. Each object of the class would contain the sub-task of the total scheduling.
      * The class extends RecursiveAction class which provides compute method for ForkJoinPool to invoke.
      */
-    private class RecursiveSearch extends RecursiveAction{
+    private class ParallelRecursiveSearch extends RecursiveAction{
 
         private final ScheduleState scheduleState;
         private final int task;
@@ -93,13 +91,13 @@ public class ParallelSearch extends RecursiveSearch implements VisualiseSearch {
 
         /**
          *
-         * @param scheduleState Deepcopy of last BranchAndBound class for each thread to access their
+         * @param scheduleState Deepcopy of last SearchState class for each thread to access their
          *                       individual information
          * @param task Candidate task for algorithm to run on.
          * @param processor Candidate processor for algorithm to run on the processor.
          * @param cost The cost of the task.
          */
-        public RecursiveSearch(ScheduleState scheduleState, int task, int processor, int cost){
+        public ParallelRecursiveSearch(ScheduleState scheduleState, int task, int processor, int cost){
             this.scheduleState = scheduleState;
             this.task = task;
             this.processor = processor;
@@ -109,8 +107,8 @@ public class ParallelSearch extends RecursiveSearch implements VisualiseSearch {
         /**
          * The compute method is the overridden method from RecursiveAction class for ForkJoinPool to invoke.
          * This method contains the core algorithm from the sequential search. It searches through all the information
-         * from the allocated BranchAndBound class and recursively creates more thread to search for a deep copied
-         * BranchAndBound class to search on multiple threads.
+         * from the allocated SearchState class and recursively creates more thread to search for a deep copied
+         * SearchState class to search on multiple threads.
          */
         @Override
         protected void compute() {
@@ -135,13 +133,13 @@ public class ParallelSearch extends RecursiveSearch implements VisualiseSearch {
 
             PriorityQueue<DLS> lowestCost = getCandidateTasks(scheduleState);
 
-            List<RecursiveSearch> list = new ArrayList<>();
+            List<ParallelRecursiveSearch> list = new ArrayList<>();
             while (!lowestCost.isEmpty()) {
                 DLS candidate = lowestCost.poll();
                 int candidateTask = candidate.getTask();
                 int processorID = candidate.getProcessor();
                 int candidateCost = candidate.getCost();
-                RecursiveSearch re = new RecursiveSearch(scheduleState.deepCopy(), candidateTask, processorID, candidateCost);
+                ParallelRecursiveSearch re = new ParallelRecursiveSearch(scheduleState.deepCopy(), candidateTask, processorID, candidateCost);
                 list.add(re);
             }
             invokeAll(list);
