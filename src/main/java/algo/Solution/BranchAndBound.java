@@ -2,7 +2,8 @@ package algo.Solution;
 
 
 import java.util.*;
-import helpers.EdgesComparator;
+import algo.Solution.helpers.EdgesComparator;
+import algo.Solution.helpers.costFunctions.BottomLevel;
 
 public class BranchAndBound {
     //Graph
@@ -46,7 +47,7 @@ public class BranchAndBound {
         processorTimes = new int[numberOfProcessors];
         taskProcessors = new int[numTasks];
         taskInformation = new int[numTasks][4];
-        bottomLevel = new int[numTasks];
+        bottomLevel = BottomLevel.initBottomLevel(numTasks,intGraph.weights, intGraph.outEdges);
         equivalentList = getEquivalentNodes();
 
         if (init) {
@@ -55,7 +56,7 @@ public class BranchAndBound {
             addUnscheduledTasks();
             setDefaultTaskInfo();
             setDefaultTaskProcessor();
-            initB();
+//            initB();
             initLB();
         }
     }
@@ -187,39 +188,39 @@ public class BranchAndBound {
         return validTasks;
     }
 
-    private void initB() {
-        for (int i = 0; i < numTasks; i++) {
-            bottomLevel[i] = -1;
-        }
-        for (int i = 0; i < numTasks; i++) {
-            int weight = intGraph.weights[i];
-            bottomLevel(i, weight);
-        }
-    }
-
-    private int bottomLevel(int task, int total) {
-        if (bottomLevel[task] != -1) {
-            return bottomLevel[task];
-        }
-        LinkedList<int[]> outEdges = intGraph.outEdges[task];
-        if (outEdges.size() == 0) {
-            bottomLevel[task] = total;
-            return total;
-        }
-
-        int max = 0;
-        // Traverse through edges and pick the subtree with the maximum weight to form the critical path for this node.
-        for (int i = 0; i < outEdges.size(); i++) {
-            int child = outEdges.get(i)[0];
-            int weight = intGraph.weights[child];
-            int temp = total + bottomLevel(child, weight);
-
-            max = Math.max(max, temp);
-        }
-
-        bottomLevel[task] = max;
-        return max;
-    }
+//    private void initB() {
+//        for (int i = 0; i < numTasks; i++) {
+//            bottomLevel[i] = -1;
+//        }
+//        for (int i = 0; i < numTasks; i++) {
+//            int weight = intGraph.weights[i];
+//            bottomLevel(i, weight);
+//        }
+//    }
+//
+//    private int bottomLevel(int task, int total) {
+//        if (bottomLevel[task] != -1) {
+//            return bottomLevel[task];
+//        }
+//        LinkedList<int[]> outEdges = intGraph.outEdges[task];
+//        if (outEdges.size() == 0) {
+//            bottomLevel[task] = total;
+//            return total;
+//        }
+//
+//        int max = 0;
+//        // Traverse through edges and pick the subtree with the maximum weight to form the critical path for this node.
+//        for (int i = 0; i < outEdges.size(); i++) {
+//            int child = outEdges.get(i)[0];
+//            int weight = intGraph.weights[child];
+//            int temp = total + bottomLevel(child, weight);
+//
+//            max = Math.max(max, temp);
+//        }
+//
+//        bottomLevel[task] = max;
+//        return max;
+//    }
 
     private void initLB() {
         int[] weights = intGraph.weights;
@@ -508,5 +509,4 @@ public class BranchAndBound {
         return c_branchandbound;
 
     }
-
 }
