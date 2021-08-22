@@ -13,7 +13,7 @@ The class `Schedule` contains an idle cost field which increments everytime a ta
 after scheduling a task.) As such we can calculate an underestimate for the time finished through ceil(Weight of all tasks + current communication cost + communication cost to schedule upcoming taks)/Number of processors. This involves a few numerical calculations, independent from the input and thus is a constant time operation.
 
 #### Bottom Level
-The Bottom level for each node(longest path) is calculated before scheduling. Thus when we are in the process of scheduling a task in the processor we add the communication cost + the bottom level for the task, as well as the latest time on the processor already. This is a guaranteed underestimate of the cost, thus we can prune a state if this calculation is larger than the time of the best schedule. 
+The Bottom level for each node(the longest path) is calculated before scheduling. Thus when we are in the process of scheduling a task in the processor we add the communication cost + the bottom level for the task, as well as the latest time on the processor already. This is a guaranteed underestimate of the cost, thus we can prune a state if this calculation is larger than the time of the best schedule. 
 ## Heuristic
 ### Dynamic List Scheduling
 
