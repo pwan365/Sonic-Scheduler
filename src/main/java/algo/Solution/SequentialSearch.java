@@ -12,18 +12,7 @@ import java.util.*;
  */
 public class SequentialSearch extends BranchAndBound implements  GUISchedule{
 
-//    private PartialSchedule partialSchedule;
-//    private BestSchedule bestSchedule;
-//    private LoadBalancer loadBalancer;
-//    private CriticalPath criticalPath;
-//    private AllOrders allOrders;
-//    private DuplicateStart duplicateStart;
-//    //Optional, may remove.
     private long prune = 0;
-//    private Graph input;
-//    private int numProcessors;
-//    private Processor[] processorList;
-//    private HashSet<Integer> duplicateDetector;
     private int states = 0;
     public BestSchedule bestSchedule;
     private Graph inputGraph;
@@ -32,16 +21,6 @@ public class SequentialSearch extends BranchAndBound implements  GUISchedule{
         super(graph,processors, true);
         bestSchedule = new BestSchedule();
         inputGraph = input;
-//        input = inputGraph;
-//        partialSchedule = new PartialSchedule(processors,inputGraph);
-//        bestSchedule = new BestSchedule();
-//        criticalPath = CriticalPath.init(inputGraph);
-//        loadBalancer = LoadBalancer.init(inputGraph,processors);
-//        allOrders = AllOrders.init(inputGraph);
-//        duplicateStart = DuplicateStart.init();
-//        processorList = partialSchedule.getProcessors();
-//        numProcessors = processors;
-//        duplicateDetector = new HashSet<>();
     }
 
     public void run() {
@@ -166,11 +145,7 @@ public class SequentialSearch extends BranchAndBound implements  GUISchedule{
     }
 
     public int done() {
-//        bestSchedule.printTasks();
-//        System.out.println(bestSchedule.bestTime);
-        //System.out.println(states);
         bestSchedule.writeToGraph(inputGraph);
-//        System.out.println(prune);
         return bestSchedule.bestTime;
     }
 }

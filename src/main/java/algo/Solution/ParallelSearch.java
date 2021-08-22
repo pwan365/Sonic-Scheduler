@@ -234,7 +234,6 @@ public class ParallelSearch implements GUISchedule{
         }
     }
     public int done() {
-        System.out.println(bestSchedule.bestTime);
         bestSchedule.writeToGraph(inputGraph);
         return bestSchedule.bestTime;
     }
