@@ -10,13 +10,14 @@ import java.util.stream.Collectors;
 /**
  * This class is used to record a Node from the graph and its relative information.
  *
- * @author John Jia, Wayne Yao, Luxman Jeyarajah
+ * @author John Jia, Wayne Yao, Luxman Jeyarajah,Samuel Chen
  */
 public class Task {
     private int finishingTime = -1;
     private int startingTime = -1;
     private int durationTime;
     private int communicationCost;
+    private boolean isIdle = false;
     //This is the list of edges that connects to the parent of the node of this task.
     private ArrayList<Edge> parentEdgeList = new ArrayList<Edge>();
     //The node that represents this task in a graph.
@@ -35,6 +36,22 @@ public class Task {
         for(Edge e : edges){
             parentEdgeList.add(e);
         }
+    }
+
+    /**
+     * Constructor for idle task in GUI
+     * @param startingTime
+     * @param durationTime
+     * @param isIdle
+     */
+    public Task(int startingTime, int durationTime, boolean isIdle){
+        this.startingTime = startingTime;
+        this.durationTime = durationTime;
+        this.isIdle = isIdle;
+    }
+
+    public boolean isIdle(){
+        return isIdle;
     }
 
     /**

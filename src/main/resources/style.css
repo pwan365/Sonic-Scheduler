@@ -1,0 +1,38 @@
+* {
+    -fx-font-family: "Microsoft Sans Serif";
+}
+
+.statsBG {
+    -fx-background-radius: 20px;
+    /*-fx-background-color: #336699;*/
+    -fx-background-color: #dfefff;
+    /*-fx-background-color: #5c85ad;*/
+
+}
+
+.miniStatsBG {
+    -fx-background-radius: 15px;
+    -fx-background-color: #f5f9fd;
+    /*-fx-background-color: #5c85ad;*/
+
+}
+
+#startBtn {
+    -fx-background-radius: 10px;
+    -fx-background-color: #56b661;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+#startBtn:hover {
+    -fx-background-color: #489a52;
+    -fx-cursor: hand;
+}
+
+#statusText{
+    -fx-font-size: 20px;
+}
+
+#chartTitle{
+    -fx-font-size: 30px;
+}

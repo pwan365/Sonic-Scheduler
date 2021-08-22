@@ -1,16 +1,23 @@
-import algo.Solution.ParallelSearch;
-import algo.Solution.SequentialSearch;
-import io.InputReader;
-import algo.Solution.IntGraph;
-import io.OutputWriter;
-import org.graphstream.graph.Graph;
+
+import algo.Solution.ScheduleThread;
+import com.sun.javafx.application.PlatformImpl;
+import gui.Visualiser;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 import java.util.*;
 
-public class Main  {
+
+
+public class Main {
+    private static Scene scene;
+
+
+
     public static void main(String[] args) throws CloneNotSupportedException {
 
         List<String> commands = Arrays.asList(args);
+
 
         String fileName = args[0];
         int numberOfProcessors = Integer.parseInt(args[1]);
@@ -31,8 +38,23 @@ public class Main  {
          * Visualization Code
          * TODO Implement Visualization by Milestone 2
          */
+        ScheduleThread scheduleThread = new ScheduleThread(fileName,outputFileName,numberOfProcessors);
+
         if (commands.contains("-v")){
-            //Visualize option
+            PlatformImpl.startup(() -> {
+                Visualiser v = new Visualiser();
+                try{
+                    v.start(new Stage());
+
+                }catch(Exception e){
+
+                }
+                v.loadData(scheduleThread, fileName, numberOfProcessors);
+
+            });
+
+        }else{
+            scheduleThread.start();
         }
 
         /*
@@ -48,50 +70,9 @@ public class Main  {
             }
         }
 
-        // Read and perform valid sorting of graph.
 
-        InputReader reader = new InputReader(fileName);
-        Graph inputGraph = reader.read();
-
-        IntGraph graph = new IntGraph(inputGraph);
-//        graph.testEdge();
-
-        /*
-        SequentialSearch s = new SequentialSearch(inputGraph, graph,numberOfProcessors);
-        s.run();
-        s.done();
-
-         */
-        ParallelSearch s = new ParallelSearch(inputGraph, graph, numberOfProcessors);
-        s.run();
-        s.done();
-
-        OutputWriter writer = new OutputWriter();
-        writer.write(inputGraph, outputFileName);
-
-
-//
-//        ValidScheduler v = new ValidScheduler(1);
-//        v.topologicalorder(inputGraph);
-//
-//        SequentialSearch d = new SequentialSearch(numberOfProcessors,inputGraph);
-//        AllOrders a = AllOrders.init(inputGraph);
-//
-//
-//        HashSet<Task> empty = new HashSet<>();
-//        ArrayList<Task> tasks = a.getOrder(empty);
-//        for (Task task : tasks) {
-//            for(int i=0; i<numberOfProcessors;i++) {
-//                d.branchBound(task,i,0);
-//            }
-//
-//        }
-//
-//        int best = d.getBestSchedule();
-//        // Write the scheduled graph to a file.
-//        OutputWriter writer = new OutputWriter();
-//        writer.write(inputGraph, outputFileName);
-//        // 27 seconds
 
     }
+
+
 }
