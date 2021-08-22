@@ -95,6 +95,7 @@ public class Controller {
     private class StatusRefresh extends AnimationTimer {
         long startTime;
         long lastUpdate = 0;
+
         @Override
         public void handle(long now) {
 
@@ -105,11 +106,11 @@ public class Controller {
             }
 
             // Updates the number of states inspected already
-            if(scheduleThread.getBestTime() != Integer.MAX_VALUE){
+            if(scheduleThread.getStates() > 0){
                 formatStatesExamined(scheduleThread.getStates());
             }
             // Updates the best time found so far if it has inspected more than one state
-            if (scheduleThread.getStates() > 0) {
+            if (scheduleThread.getBestTime() != Integer.MAX_VALUE) {
                 bestTime.setText(scheduleThread.getBestTime() + "");
             }
             // Updates the bar chart with the best schedule found so far
