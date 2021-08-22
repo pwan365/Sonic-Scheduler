@@ -96,19 +96,30 @@ public class DuplicateStates {
                 && compareEdgeRelations(aChildren, bChildren);
     }
 
+    /**
+     * Compare if two task has the same parent/child and the same communication cost for each edges
+     * @param listA
+     * @param listB
+     * @return true if they are equivalent, false if they are not.
+     */
     private static boolean compareEdgeRelations(List<int[]> listA, List<int[]> listB){
         for(int i = 0; i < listA.size(); i++){
-            int childA = listA.get(i)[0];
-            int childACost = listA.get(i)[1];
-            int childB = listB.get(i)[0];
-            int childBCost = listB.get(i)[1];
-            if(childA != childB || childACost != childBCost){
+            int taskA = listA.get(i)[0];
+            int taskACost = listA.get(i)[1];
+            int taskB = listB.get(i)[0];
+            int taskBCost = listB.get(i)[1];
+            if(taskA != taskB || taskACost != taskBCost){
                 return false;
             }
         }
         return true;
     }
 
+    /**
+     * Getter for duplicate nodes.
+     * @param task task index
+     * @returna list of duplicate tasks for a task.
+     */
     public static LinkedList<Integer> getDuplicateNodes(int task) {
         return duplicateList[task];
     }
