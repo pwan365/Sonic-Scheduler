@@ -1,4 +1,4 @@
-package algo.Solution.helpers.costFunctions;
+package algo.helpers.costFunctions;
 
 
 import java.util.LinkedList;
@@ -6,7 +6,7 @@ import java.util.LinkedList;
 public class BottomLevel {
     static int [] bottomLevel;
 
-    public static int[] initBottomLevel(int numTasks, int[] weights, LinkedList<int[]>[] outEdges) {
+    public static void initBottomLevel(int numTasks, int[] weights, LinkedList<int[]>[] outEdges) {
         bottomLevel = new int[numTasks];
         for (int i = 0; i < numTasks; i++) {
             bottomLevel[i] = -1;
@@ -15,7 +15,6 @@ public class BottomLevel {
             int weight = weights[i];
             calculateBottomLevel(i, weight,outEdges,weights);
         }
-        return bottomLevel;
     }
 
     private static int calculateBottomLevel(int task, int total,LinkedList<int[]>[] outEdge,int [] weights) {
@@ -40,5 +39,13 @@ public class BottomLevel {
 
         bottomLevel[task] = max;
         return max;
+    }
+
+    public static int pruneBLevel(int task, int cost, int processorStart) {
+        return (bottomLevel[task] + cost + processorStart);
+    }
+
+    public static int returnBLevel(int task) {
+        return bottomLevel[task];
     }
 }

@@ -1,10 +1,10 @@
 package graphTests.speedTests;
 
-import algo.CostFunctions.LoadBalancer;
-import algo.Solution.*;
+import algo.IntGraph;
+import algo.ParallelSearch;
+import algo.SequentialSearch;
 import graphTests.validateTests.InputReaderHelper;
 import org.graphstream.graph.Graph;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -703,13 +703,6 @@ public class SpeedTester {
 
         assertEquals(best, 1001);
     }
-
-
-    @AfterEach
-    public void clear() {
-        LoadBalancer.clearObject();
-    }
-
 
     //----------------------------------helper--------------------------------------------
 

@@ -1,6 +1,8 @@
-package algo.Solution;
+package algo;
 
 
+import algo.helpers.costFunctions.BottomLevel;
+import algo.helpers.costFunctions.LoadBalancer;
 import org.graphstream.graph.Graph;
 
 import java.util.*;
@@ -12,7 +14,6 @@ import java.util.*;
  */
 public class SequentialSearch extends BranchAndBound implements  GUISchedule{
 
-    private long prune = 0;
     private int states = 0;
     public BestSchedule bestSchedule;
     private Graph inputGraph;
@@ -53,14 +54,11 @@ public class SequentialSearch extends BranchAndBound implements  GUISchedule{
      */
     public void branchBound(int task, int processor,int cost) {
         states += 1;
-        int bWeight = bottomLevel[task] + cost + processorTimes[processor];
-        int loadBalance = loadBalance(cost);
-        int processort = processorTimes[processor] + cost + intGraph.weights[task];
+        int bWeight = BottomLevel.pruneBLevel(task,cost,processorTimes[processor]);
+        int loadBalance = LoadBalancer.calculateLoadBalance(idle,cost,numProcessors);
         int candidateTime = Math.max(time.peek(), Math.max(bWeight, loadBalance));
-        candidateTime = Math.max(candidateTime,processort);
 
         if (bestSchedule.bestTime <= candidateTime) {
-            prune += 1;
             return;
         }
 
@@ -71,7 +69,6 @@ public class SequentialSearch extends BranchAndBound implements  GUISchedule{
 
         if (seen) {
             removeTask(task,processor,cost);
-            prune+= 1;
             return;
         }
 
@@ -116,7 +113,8 @@ public class SequentialSearch extends BranchAndBound implements  GUISchedule{
                       }
                     }
                     int commCost = commCost(i,j);
-                    DLS DLS = new DLS(bottomLevel[i],commCost,processorTimes[j],i,j);
+                    int bottomLevel = BottomLevel.returnBLevel(task);
+                    DLS DLS = new DLS(bottomLevel,commCost,processorTimes[j],i,j);
                     lowestCost.add(DLS);
                 }
             }

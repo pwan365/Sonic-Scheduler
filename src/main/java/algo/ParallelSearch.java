@@ -1,5 +1,7 @@
-package algo.Solution;
+package algo;
 
+import algo.helpers.costFunctions.BottomLevel;
+import algo.helpers.costFunctions.LoadBalancer;
 import org.graphstream.graph.Graph;
 
 import java.util.*;
@@ -135,9 +137,8 @@ public class ParallelSearch implements GUISchedule{
             synchronized (RecursiveSearch.class){
                 state += 1;
             }
-            int bWeight = branchAndBound.bottomLevel[task] + cost + branchAndBound.processorTimes[processor];
-            int loadBalance = (int) Math.ceil((graphWeight + branchAndBound.idle + cost) / numProcessors);
-            int processort = branchAndBound.processorTimes[processor] + cost + graph.weights[task];
+            int bWeight = BottomLevel.pruneBLevel(task,cost,bb.processorTimes[processor]);
+            int loadBalance = LoadBalancer.calculateLoadBalance(bb.idle,cost,numProcessors);
             int candidateTime = Math.max(branchAndBound.time.peek(), Math.max(bWeight, loadBalance));
 
             if (bestSchedule.bestTime <= candidateTime) {
@@ -215,7 +216,8 @@ public class ParallelSearch implements GUISchedule{
                             }
                         }
                         int commCost = branchAndBound.commCost(i,j);
-                        DLS DLS = new DLS(branchAndBound.bottomLevel[i],commCost,branchAndBound.processorTimes[j],i,j);
+                        int bottomLevel = BottomLevel.returnBLevel(task);
+                        DLS DLS = new DLS(bottomLevel,commCost,branchAndBound.processorTimes[j],i,j);
                         lowestCost.add(DLS);
                     }
                 }
