@@ -77,6 +77,7 @@ public class Controller {
         // Starts running the scheduling algorithm
         scheduleThread.start();
         control.start();
+        System.out.println("yoyoyoyoyoyo");
         control.setStartTime();
 
     }
@@ -102,6 +103,7 @@ public class Controller {
 //            if (scheduleThread.getStates() > 0) {
 //                bestTime.setText(scheduleThread.getBestTime() + "");
 //            }
+            System.out.println("update");
             updateBarChart();
 
             System.out.println(scheduleThread.isDone());
