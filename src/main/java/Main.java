@@ -33,7 +33,10 @@ public class Main {
         if (commands.contains("-p")){
             int index = commands.indexOf("-p");
             numberOfCores = Integer.parseInt(commands.get(index+1));
-            parallel = true;
+            if (numberOfCores > 1) {
+                parallel = true;
+            }
+
         }
 
         /*

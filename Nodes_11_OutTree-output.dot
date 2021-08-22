@@ -5,11 +5,11 @@ digraph "outputOutTree-Balanced-MaxBf-3_Nodes_11_CCR_0.1_WeightType_Random"{
 	3 [Start=54,Weight=100,Processor=3];
 	4 [Start=140,Weight=40,Processor=1];
 	5 [Start=120,Weight=20,Processor=1];
-	6 [Start=154,Weight=100,Processor=3];
+	6 [Start=125,Weight=100,Processor=4];
 	7 [Start=147,Weight=80,Processor=2];
-	8 [Start=180,Weight=50,Processor=1];
-	9 [Start=227,Weight=20,Processor=2];
-	10 [Start=230,Weight=20,Processor=1];
+	8 [Start=154,Weight=50,Processor=3];
+	9 [Start=180,Weight=20,Processor=1];
+	10 [Start=200,Weight=20,Processor=1];
 	0 -> 1 [Weight=9];
 	0 -> 2 [Weight=7];
 	0 -> 3 [Weight=4];

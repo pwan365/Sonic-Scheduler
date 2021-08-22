@@ -105,7 +105,7 @@ public class Controller {
 
             updateBarChart();
 
-            System.out.println(scheduleThread.isDone());
+//            System.out.println(scheduleThread.isDone());
             if(scheduleThread.isDone()){
                 setGUICompleted();
                 this.stop();
@@ -174,11 +174,11 @@ public class Controller {
                 if (c1[0] < c2[0]) return -1;
                 return 0;
             });
-            System.out.println(procNum+"P--------");
-
-            for(int[] task : eachBar){
-                System.out.println(("StartTime:"+task[0])+" DurationTime:"+task[1]+" Total:" + (task[0] + task[1]));
-            }
+//            System.out.println(procNum+"P--------");
+//
+//            for(int[] task : eachBar){
+//                System.out.println(("StartTime:"+task[0])+" DurationTime:"+task[1]+" Total:" + (task[0] + task[1]));
+//            }
 
             //add idle task as the beginning of each processor that doesn't have starting time of 0
             if(eachBar.size() != 0 && eachBar.get(0)[0] != 0){
