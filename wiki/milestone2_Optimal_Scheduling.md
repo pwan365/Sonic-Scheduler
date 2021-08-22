@@ -18,7 +18,7 @@ all the complete scheduling are examined in a DFS style.
 ## Optimisation
 
 
-###Pruning
+### Pruning
 
 - <b>Fixed Task Order</b>
 
