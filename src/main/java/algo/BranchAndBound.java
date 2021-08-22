@@ -2,9 +2,9 @@ package algo;
 
 
 import java.util.*;
-import algo.helpers.EdgesComparator;
+
 import algo.helpers.pruning.BottomLevel;
-import algo.helpers.pruning.EquivalentStates;
+import algo.helpers.pruning.DuplicateStates;
 import algo.helpers.pruning.LoadBalancer;
 import algo.helpers.pruning.HashCodeStorage;
 
@@ -59,7 +59,7 @@ public class BranchAndBound {
             BottomLevel.initBottomLevel(numTasks, intGraph.weights, intGraph.outEdges);
             LoadBalancer.initLoadBalancer(intGraph.weights);
             HashCodeStorage.initHashCodeStorage();
-            EquivalentStates.initEquivalentStates(numTasks,intGraph.inEdges,intGraph.outEdges, intGraph.weights);
+            DuplicateStates.initDuplicateStates(numTasks,intGraph.inEdges,intGraph.outEdges, intGraph.weights);
         }
     }
 

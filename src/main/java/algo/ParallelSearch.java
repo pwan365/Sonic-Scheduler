@@ -190,7 +190,7 @@ public class ParallelSearch implements GUISchedule{
                     }
 
                     else {
-                        LinkedList<Integer> sameStates = EquivalentStates.getEquivalentNodes(i);
+                        LinkedList<Integer> sameStates = DuplicateStates.getDuplicateNodes(i);
                         seenTasks.addAll(sameStates);
                     }
                     for (int j = 0; j < numProcessors; j++) {

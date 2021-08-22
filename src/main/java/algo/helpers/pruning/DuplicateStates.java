@@ -6,53 +6,58 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-public class EquivalentStates {
+/**
+ * When two nodes have identical information, they are likely can be treated the same
+ *
+ * This class indicates helper functions to retrieve the duplicate nodes
+ */
+public class DuplicateStates {
 
-    private static LinkedList<Integer>[] equivalentList;
+    private static LinkedList<Integer>[] duplicateList;
 
     /**
      * Private constructor to prevent instantiation of an object of this class.
      */
-    private EquivalentStates() {
+    private DuplicateStates() {
     }
 
-    public static void initEquivalentStates(int numTasks, LinkedList<int[]>[] inEdges,LinkedList<int[]>[] outEdges,
+    public static void initDuplicateStates(int numTasks, LinkedList<int[]>[] inEdges,LinkedList<int[]>[] outEdges,
                                             int[] weights) {
-        equivalentList = EquivalentNodes(numTasks, inEdges,outEdges,weights);
+        duplicateList = DuplicateNodes(numTasks, inEdges,outEdges,weights);
     }
     /**
-     * Get equivalent nodes list for all nodes
+     * Get duplicate nodes list for all nodes
      * @return an array of integer list, each array index represent a node,
-     * the corresponding list contains all the equivalent nodes for that node
+     * the corresponding list contains all the duplicate nodes for that node
      */
-    private static LinkedList<Integer>[] EquivalentNodes(int numTasks, LinkedList<int[]>[] inEdges,
+    private static LinkedList<Integer>[] DuplicateNodes(int numTasks, LinkedList<int[]>[] inEdges,
                                                             LinkedList<int[]>[] outEdges,
                                                             int[] weights){
         HashSet<Integer> memo = new HashSet<>();
         // since we already know the number of tasks, we can use array
-        LinkedList<Integer>[] equivalentNodesList = new LinkedList[numTasks];
+        LinkedList<Integer>[] duplicateNodeList = new LinkedList[numTasks];
 
         for(int i = 0; i < numTasks; i++){
             if(!memo.contains(i)){
-                // if we haven't seen this node before, we search for its equivalent nodes
-                LinkedList<Integer> equivalentNodes = new LinkedList<>();
-                equivalentNodes.add(i);
+                // if we haven't seen this node before, we search for its duplicated nodes
+                LinkedList<Integer> duplicateNodes = new LinkedList<>();
+                duplicateNodes.add(i);
                 for(int j = 0; j < numTasks; j++){
                     if(!memo.contains(j) && i != j){
-                        if(equivalentCheck(i, j,inEdges,outEdges,weights)){
-                            equivalentNodes.add(j);
+                        if(duplicateCheck(i, j,inEdges,outEdges,weights)){
+                            duplicateNodes.add(j);
                         }
                     }
                 }
 
-                // add the nodeList into the equivalent nodes list
-                for(int node : equivalentNodes){
-                    equivalentNodesList[node] = equivalentNodes;
-                    memo.add(node); // if a node is equivalent to each other, they will have the same list
+                // add the nodeList into the duplicated nodes list
+                for(int node : duplicateNodes){
+                    duplicateNodeList[node] = duplicateNodes;
+                    memo.add(node); // if a node is duplicated to each other, they will have the same list
                 }
             }
         }
-        return equivalentNodesList;
+        return duplicateNodeList;
     }
 
     /**
@@ -61,7 +66,7 @@ public class EquivalentStates {
      * @param taskB
      * @return true indicating that taskA == taskB, otherwise taskA != taskB
      */
-    private static boolean equivalentCheck(int taskA, int taskB,LinkedList<int[]>[] inEdges,LinkedList<int[]>[] outEdges,
+    private static boolean duplicateCheck(int taskA, int taskB,LinkedList<int[]>[] inEdges,LinkedList<int[]>[] outEdges,
                                            int[] weights){
         List<int[]> aParents = inEdges[taskA];
         List<int[]> bParents = inEdges[taskB];
@@ -102,8 +107,8 @@ public class EquivalentStates {
         return true;
     }
 
-    public static LinkedList<Integer> getEquivalentNodes(int task) {
-        return equivalentList[task];
+    public static LinkedList<Integer> getDuplicateNodes(int task) {
+        return duplicateList[task];
     }
 
 }

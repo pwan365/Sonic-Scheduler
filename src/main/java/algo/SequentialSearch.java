@@ -110,7 +110,7 @@ public class SequentialSearch extends BranchAndBound implements  GUISchedule{
                 }
                 else
                     {
-                    LinkedList<Integer> sameStates = EquivalentStates.getEquivalentNodes(i);
+                    LinkedList<Integer> sameStates = DuplicateStates.getDuplicateNodes(i);
                     seenTasks.addAll(sameStates);
                 }
 

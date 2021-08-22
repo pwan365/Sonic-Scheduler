@@ -3,6 +3,20 @@ package algo.helpers.pruning;
 import java.util.LinkedList;
 import java.util.List;
 
+
+/**
+ * Idea reference: https://www.sciencedirect.com/science/article/abs/pii/S0305054813002542
+ *
+ * According to the report, to solve fork or join graphs the best way is to use a Fixed Task Order,
+ * where candidate tasks satisfying the following requirement:
+ *  1. all the tasks have either no child or has exactly one same child
+ *  2. all the tasks have either no parent or the exactly one parent are scheduled on the same processor
+ *  3. The tasks are sorted in non-decreasing data ready time (finish time + communication cost of parent)
+ *  4. The tasks are also sorted in non-increasing child edge communication cost.
+ *
+ * This class contains helper functions to generate the FTO.
+ * @author Luxman Jeyarajah, Wayne Yao
+ */
 public class FixedTaskOrder {
 
     /**
