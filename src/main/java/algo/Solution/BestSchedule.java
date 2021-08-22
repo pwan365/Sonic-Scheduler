@@ -10,6 +10,8 @@ import org.graphstream.graph.Node;
  * @author Wayne Yao, Luxman Jeyarajah
  */
 public class BestSchedule {
+
+
     private int[][] taskInformation;
     private int[] taskProcessors;
     protected int bestTime;
@@ -34,17 +36,16 @@ public class BestSchedule {
         }
         this.bestTime = candidateBest;
     }
-    public void printTasks() {
-        for (int i = 0; i < taskInformation.length; i++) {
-            System.out.println("Tasks");
-            System.out.println(i);
-            System.out.println("Processor");
-            System.out.println(taskProcessors[i]);
-            System.out.println("Start");
-            System.out.println(taskInformation[i][0]);
-        }
+
+    public int[][] getTaskInformation() {
+        return taskInformation;
     }
 
+
+
+    public int[] getTaskProcessors() {
+        return taskProcessors;
+    }
     public int getTime() {
         return bestTime;
     }

@@ -25,7 +25,7 @@ public class SequentialSearch extends BranchAndBound{
 //    private Processor[] processorList;
 //    private HashSet<Integer> duplicateDetector;
     private int states = 0;
-    private BestSchedule bestSchedule;
+    public BestSchedule bestSchedule;
     private Graph inputGraph;
 
     public SequentialSearch(Graph input, IntGraph graph, int processors) {

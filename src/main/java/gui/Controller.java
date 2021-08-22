@@ -1,8 +1,8 @@
 package gui;
 
-import algo.Schedule.BestSchedule;
 import algo.Schedule.Processor;
 import algo.Schedule.Task;
+import algo.Solution.BestSchedule;
 import algo.Solution.ScheduleThread;
 import io.InputReader;
 import javafx.animation.AnimationTimer;
@@ -24,6 +24,8 @@ public class Controller {
     private StatusRefresh control = new StatusRefresh();
     private ScheduleThread scheduleThread;
     private int procNum;
+    private int[][] taskInfo;
+    private int[] taskProc;
 
     @FXML
     private Text graphName;
@@ -96,10 +98,10 @@ public class Controller {
                 lastUpdate = now;
             }
 
-            formatStatesExamined(scheduleThread.getStates());
-            if (scheduleThread.getStates() > 0) {
-                bestTime.setText(scheduleThread.getBestTime() + "");
-            }
+//            formatStatesExamined(scheduleThread.getStates());
+//            if (scheduleThread.getStates() > 0) {
+//                bestTime.setText(scheduleThread.getBestTime() + "");
+//            }
             updateBarChart();
 
             System.out.println(scheduleThread.isDone());
@@ -152,10 +154,14 @@ public class Controller {
      */
     public void updateBarChart() {
 
-        List<List<Task>> barList = getBestSchedule();
-        if(barList == null){
+        if (taskInfo == null){
             return;
         }
+
+        List<List<Task>> barList = getBestSchedule();
+
+
+
         barChartSchedule.getData().clear();
 
         XYChart.Series<Number, String> dataSeries1 = new XYChart.Series<Number, String>();
@@ -176,7 +182,7 @@ public class Controller {
 
             //add idle task as the beginning of each processor that doesn't have starting time of 0
             if(eachBar.size() != 0 && eachBar.get(0).getStartingTime() != 0){
-                Task idlePart = new Task(0,eachBar.get(0).getStartingTime(),true);
+                Task idlePart = new Task(0,eachBar.get(0).getStartingTime(),true,eachBar.get(0).getProcNum());
                 eachBar.add(0,idlePart);
             }
 
@@ -188,7 +194,7 @@ public class Controller {
                 if(currPart.getStartingTime() != prevPart.getStartingTime() + prevPart.getDurationTime()){
                     int idleStartTime = prevPart.getStartingTime() + prevPart.getDurationTime();
                     int idleDuration = currPart.getStartingTime() -idleStartTime;
-                    Task idlePart = new Task(idleStartTime,idleDuration,true);
+                    Task idlePart = new Task(idleStartTime,idleDuration,true,eachBar.get(i).getProcNum());
                     eachBar.add(i,idlePart);
                     i++;
                 }
@@ -226,27 +232,58 @@ public class Controller {
         BestSchedule b = scheduleThread.getBestSchedule();
         List<List<Task>> barList = new ArrayList<>();
 
-        if (b.getProcessors()==null){
+        if (b.getTaskInformation()==null || b.getTaskProcessors()==null){
             return null;
         }
-        Processor[] processors = b.getProcessors();
-        HashSet<Task> tasks;
-        System.out.println("-------------");
-        for(int i=0 ; i<processors.length;i++){
-            System.out.println("P"+i);
 
-            List<Task> eachBar = new ArrayList<>();
-//            int j=0;
+        taskInfo = b.getTaskInformation();
+        taskProc = b.getTaskProcessors();
 
-                tasks=processors[i].getTasks();
-                for(Task task:tasks){
-//                    System.out.println("StartTime:"+task.getStartingTime()+" DurationTime:"+task.getDurationTime()+" Total:"+(task.getStartingTime()+task.getDurationTime()));
-                    eachBar.add(task);
-//                    j++;
-                }
-                barList.add(eachBar);
 
+        //int taskInfo
+        //int[][0]:startTime
+        //int[][1]:Weight/Duration
+        //int[][2]:EndTime
+        //int[0][3]:Cost
+//        int[0] taskproc
+        List<Task> nodeList = new ArrayList<>();
+        for(int i=0;i<taskProc.length;i++){
+            Task eachTask = new Task(taskInfo[i][0],taskInfo[i][1],false,taskProc[i]);
+            nodeList.add(eachTask);
         }
+
+        for(int i=0;i<procNum;i++){
+            List<Task> eachBar = new ArrayList<>();
+            for(Task node : nodeList){
+                if(node.getProcNum() == i){
+                    eachBar.add(node);
+                }
+            }
+            barList.add(eachBar);
+        }
+
+
+
+
+
+
+//        HashSet<Task> tasks;
+//        System.out.println("-------------");
+//        for(int i=0 ; i<processors.length;i++){
+//            System.out.println("P"+i);
+//
+//            List<Task> eachBar = new ArrayList<>();
+////            int j=0;
+//
+//                tasks=processors[i].getTasks();
+//                for(Task task:tasks){
+////                    System.out.println("StartTime:"+task.getStartingTime()+" DurationTime:"+task.getDurationTime()+" Total:"+(task.getStartingTime()+task.getDurationTime()));
+//                    eachBar.add(task);
+////                    j++;
+//                }
+//                barList.add(eachBar);
+//
+//        }
         return barList;
     }
 

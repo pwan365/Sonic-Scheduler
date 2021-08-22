@@ -17,6 +17,7 @@ public class Task {
     private int startingTime = -1;
     private int durationTime;
     private int communicationCost;
+    private int procNum;
     private boolean isIdle = false;
     //This is the list of edges that connects to the parent of the node of this task.
     private ArrayList<Edge> parentEdgeList = new ArrayList<Edge>();
@@ -24,6 +25,8 @@ public class Task {
     private Node node;
     //The processor this task is allocated to.
     private Processor allocatedProcessor;
+
+
 
     /**
      * The constructor of Task.
@@ -44,10 +47,11 @@ public class Task {
      * @param durationTime
      * @param isIdle
      */
-    public Task(int startingTime, int durationTime, boolean isIdle){
+    public Task(int startingTime, int durationTime, boolean isIdle,int procNum){
         this.startingTime = startingTime;
         this.durationTime = durationTime;
         this.isIdle = isIdle;
+        this.procNum = procNum;
     }
 
     public boolean isIdle(){
@@ -112,6 +116,10 @@ public class Task {
      */
     public int getStartingTime() {
         return startingTime;
+    }
+
+    public int getProcNum() {
+        return procNum;
     }
 
     /**

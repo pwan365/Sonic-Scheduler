@@ -1,13 +1,8 @@
 package algo.Solution;
 
-import algo.Schedule.BestSchedule;
-import algo.Schedule.Task;
 import io.InputReader;
 import io.OutputWriter;
 import org.graphstream.graph.Graph;
-
-import java.util.ArrayList;
-import java.util.HashSet;
 
 public class ScheduleThread extends Thread{
     private String inputFileName;
@@ -16,6 +11,7 @@ public class ScheduleThread extends Thread{
     private SequentialSearch search;
     private boolean done = false;
     private Graph inputGraph;
+    private IntGraph intGraph;
 
     public ScheduleThread(String inputName, String outputName, int numOfProcessors){
         inputFileName = inputName;
@@ -24,18 +20,19 @@ public class ScheduleThread extends Thread{
         // Read and perform valid sorting of graph.
         InputReader reader = new InputReader(inputFileName);
         inputGraph = reader.read();
+        intGraph = new IntGraph(inputGraph);
 
-        ValidScheduler v = new ValidScheduler(1);
-        v.topologicalorder(inputGraph);
 
-        search = new SequentialSearch(numberOfProcessors,inputGraph);
+//        ValidScheduler v = new ValidScheduler(1);
+//        v.topologicalorder(inputGraph);
+
+        search = new SequentialSearch(inputGraph,intGraph,numberOfProcessors);
     }
 
     public void run(){
 
-        search.schedule();
-        done = true;
-        search.writeToGraph();
+        search.run();
+        search.done();
         // Write the scheduled graph to a file.
         OutputWriter writer = new OutputWriter();
         writer.write(inputGraph, outputFileName);
@@ -43,25 +40,25 @@ public class ScheduleThread extends Thread{
     }
 
     public int getBestTime() {
-        return search.getBestSchedule().getTime();
+        return search.bestSchedule.getTime();
     }
 
     public BestSchedule getBestSchedule() {
-        return search.getBestSchedule();
+        return search.bestSchedule;
     }
 
-    public int getStates() {
-        return search.getStates();
-    }
+//    public int getStates() {
+//        return search.getStates();
+//    }
 
     public boolean isDone() {
         return done;
     }
 
-    public boolean getBestChanged() {
-        boolean isNewBest = search.newBest;
-        search.newBest = false;
-
-        return isNewBest;
-    }
+//    public boolean getBestChanged() {
+//        boolean isNewBest = search.newBest;
+//        search.newBest = false;
+//
+//        return isNewBest;
+//    }
 }
