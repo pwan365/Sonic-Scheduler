@@ -667,7 +667,7 @@ public class SpeedTester {
         assertEquals(best, 1102);
     }
 
-    @Test
+//    @Test
     public void test21_6() {
         String inputFileName = "Random_Nodes_21_Density_1.76_CCR_0.10_WeightType_Random_Homogeneous-6.gxl.dot";
         int numProc = 6;
@@ -736,7 +736,7 @@ public class SpeedTester {
 
     private int scheduling(Graph input, int numberOfProcessors) {
         IntGraph graph = new IntGraph(input);
-        SequentialSearch s = new SequentialSearch(input, graph,numberOfProcessors);
+        ParallelSearch s = new ParallelSearch(input, graph,numberOfProcessors,2);
         s.run();
         return s.done();
     }

@@ -18,50 +18,12 @@ public class Main {
 
         List<String> commands = Arrays.asList(args);
 
-
         String fileName = args[0];
         int numberOfProcessors = Integer.parseInt(args[1]);
         int numberOfCores = 1;
         boolean parallel = false;
         //Formatting output name
         String outputFileName = fileName.replace(".dot", "-output.dot");
-
-        /*
-         * Parallel code
-         * TODO Implement Parallel Code by Milestone 2
-         */
-        if (commands.contains("-p")){
-            int index = commands.indexOf("-p");
-            numberOfCores = Integer.parseInt(commands.get(index+1));
-            if (numberOfCores > 1) {
-                parallel = true;
-            }
-
-        }
-
-        /*
-         * Visualization Code
-         * TODO Implement Visualization by Milestone 2
-         */
-        ScheduleThread scheduleThread = new ScheduleThread(fileName,outputFileName,numberOfProcessors,parallel,numberOfCores);
-
-        if (commands.contains("-v")){
-            int finalNumberOfCores = numberOfCores;
-            PlatformImpl.startup(() -> {
-                Visualiser v = new Visualiser();
-                try{
-                    v.start(new Stage());
-
-                }catch(Exception e){
-
-                }
-                v.loadData(scheduleThread, fileName, numberOfProcessors, finalNumberOfCores);
-
-            });
-
-        }else{
-            scheduleThread.start();
-        }
 
         /*
          * Output Code
@@ -76,9 +38,37 @@ public class Main {
             }
         }
 
+        /*
+         * Parallel code
+         * TODO Implement Parallel Code by Milestone 2
+         */
+        if (commands.contains("-p")){
+            int index = commands.indexOf("-p");
+            numberOfCores = Integer.parseInt(commands.get(index+1));
+            if (numberOfCores > 1) {
+                parallel = true;
+            }
+        }
 
+        /*
+         * Visualization Code
+         * TODO Implement Visualization by Milestone 2
+         */
+        ScheduleThread scheduleThread = new ScheduleThread(fileName,outputFileName,numberOfProcessors,parallel,numberOfCores);
 
+        if (commands.contains("-v")){
+            int finalNumberOfCores = numberOfCores;
+            PlatformImpl.startup(() -> {
+                Visualiser v = new Visualiser();
+                try{
+                    v.start(new Stage());
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+                v.loadData(scheduleThread, fileName, numberOfProcessors, finalNumberOfCores);
+            });
+        }else{
+            scheduleThread.start();
+        }
     }
-
-
 }
