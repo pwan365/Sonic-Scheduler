@@ -197,7 +197,7 @@ public class Controller {
                 if(currPart[0] != prevPart[0] + prevPart[1]){
                     int idleStartTime = prevPart[0] + prevPart[2];
                     int idleDuration = currPart[0] -idleStartTime;
-                    int[] idlePart = new int[]{idleStartTime,idleDuration,eachBar.get(i)[1],eachBar.get(i)[2]};
+                    int[] idlePart = new int[]{idleStartTime,idleDuration,1,eachBar.get(i)[2]};
                     eachBar.add(i,idlePart);
                     i++;
                 }
