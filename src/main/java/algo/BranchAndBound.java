@@ -2,7 +2,7 @@ package algo;
 
 
 import java.util.*;
-import algo.helpers.EdgesComparator;
+
 import algo.helpers.pruning.BottomLevel;
 import algo.helpers.pruning.EquivalentStates;
 import algo.helpers.pruning.LoadBalancer;

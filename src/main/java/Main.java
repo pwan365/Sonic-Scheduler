@@ -2,7 +2,6 @@
 import algo.ScheduleThread;
 import com.sun.javafx.application.PlatformImpl;
 import gui.Visualiser;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.util.*;
@@ -10,9 +9,6 @@ import java.util.*;
 
 
 public class Main {
-    private static Scene scene;
-
-
 
     public static void main(String[] args) throws CloneNotSupportedException {
 

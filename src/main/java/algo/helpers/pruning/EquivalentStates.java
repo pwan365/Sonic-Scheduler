@@ -1,6 +1,6 @@
 package algo.helpers.pruning;
 
-import algo.helpers.EdgesComparator;
+import algo.helpers.comparators.EdgesComparator;
 
 import java.util.HashSet;
 import java.util.LinkedList;
