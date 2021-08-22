@@ -1,13 +1,12 @@
 package algo;
 
-import com.rits.cloning.Cloner;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 
 /**
  * Represents the Best Schedule currently found, contains the processors with their tasks and the time of the schedule.
  *
- * @author Wayne Yao, Luxman Jeyarajah
+ * @author Wayne Yao
  */
 public class BestSchedule {
     private int[][] taskInformation; // copy of task information
@@ -71,7 +70,7 @@ public class BestSchedule {
      * Start time and allocated processor will be added to the graph nodes
      * @param graph the input graph object
      */
-    public void writeToGraph(Graph graph){
+    public void setGraphAttributes(Graph graph){
         int nodeCount = graph.getNodeCount();
         for (int i = 0; i < nodeCount; i++){
             Node node = graph.getNode(i);

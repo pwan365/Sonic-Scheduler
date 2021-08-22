@@ -1,5 +1,6 @@
 package algo;
 
+import algo.helpers.comparators.DLS;
 import algo.helpers.pruning.*;
 import org.graphstream.graph.Graph;
 
@@ -17,13 +18,13 @@ import java.util.concurrent.RecursiveAction;
  *
  * @author Jason Wang, John Jia
  */
-public class ParallelSearch implements GUISchedule{
+public class ParallelSearch extends RecursiveSearch implements VisualiseSearch {
 
     public BestSchedule bestSchedule;
     private final int numProcessors;
 
     // Initial BranchAndBound class for initialization.
-    private final BranchAndBound original_state;
+    private final ScheduleState original_state;
 
     // Seen states of a BranchAndBound.
 //    public LinkedList<Integer>[] equivalentList;
@@ -43,7 +44,7 @@ public class ParallelSearch implements GUISchedule{
         this.inputGraph = inputGraph;
         this.numProcessors = processors;
         bestSchedule = new BestSchedule();
-        original_state = new BranchAndBound(graph, processors, true);
+        original_state = new ScheduleState(graph, processors, true);
         int [] weights = graph.weights;
         for (int weight : weights) {
             graphWeight += weight;
@@ -57,16 +58,11 @@ public class ParallelSearch implements GUISchedule{
      */
     public void run() {
         boolean[] startTasks = original_state.getOrder();
-        LinkedList<Integer> fto = FixedTaskOrder.getFTO(startTasks,original_state.taskProcessors,
-                original_state.taskInformation, original_state.intGraph.outEdges, original_state.intGraph.inEdges);
-        if (fto != null){
-            int first = fto.poll();
-            for (int i = 0; i < numTasks; i++){
-                if (i != first){
-                    startTasks[i] = false;
-                }
-            }
-        }
+
+        startTasks = FixedTaskOrder.checkFTO(startTasks,original_state.taskProcessors,
+                original_state.taskInformation, original_state.intGraph.outEdges,
+                original_state.intGraph.inEdges,numTasks);
+
         int candidateTask = 0;
         int candidateProcessor = 0;
         int commCost = 0;
@@ -82,6 +78,74 @@ public class ParallelSearch implements GUISchedule{
         ForkJoinPool pool = new ForkJoinPool(numOfCores);
         RecursiveSearch re = new RecursiveSearch(original_state, candidateTask, candidateProcessor, commCost);
         pool.invoke(re);
+    }
+
+    /**
+     * Inner RecursiveSearch class. Each object of the class would contain the sub-task of the total scheduling.
+     * The class extends RecursiveAction class which provides compute method for ForkJoinPool to invoke.
+     */
+    private class RecursiveSearch extends RecursiveAction{
+
+        private final ScheduleState scheduleState;
+        private final int task;
+        private final int processor;
+        private final int cost;
+
+        /**
+         *
+         * @param scheduleState Deepcopy of last BranchAndBound class for each thread to access their
+         *                       individual information
+         * @param task Candidate task for algorithm to run on.
+         * @param processor Candidate processor for algorithm to run on the processor.
+         * @param cost The cost of the task.
+         */
+        public RecursiveSearch(ScheduleState scheduleState, int task, int processor, int cost){
+            this.scheduleState = scheduleState;
+            this.task = task;
+            this.processor = processor;
+            this.cost = cost;
+        }
+
+        /**
+         * The compute method is the overridden method from RecursiveAction class for ForkJoinPool to invoke.
+         * This method contains the core algorithm from the sequential search. It searches through all the information
+         * from the allocated BranchAndBound class and recursively creates more thread to search for a deep copied
+         * BranchAndBound class to search on multiple threads.
+         */
+        @Override
+        protected void compute() {
+            synchronized (RecursiveSearch.class){
+                state += 1;
+            }
+
+            boolean pruned = prune(scheduleState,task,cost,processor,bestSchedule);
+            if (pruned) {
+                return;
+            }
+
+            scheduleState.addTask(task, processor, cost);
+
+            boolean seen = checkSeen(scheduleState,task,processor,cost);
+            if (seen) {
+                return;
+            }
+
+            // Update best schedule
+            updateBestSchedule(bestSchedule, scheduleState);
+
+            PriorityQueue<DLS> lowestCost = getCandidateTasks(scheduleState);
+
+            List<RecursiveSearch> list = new ArrayList<>();
+            while (!lowestCost.isEmpty()) {
+                DLS candidate = lowestCost.poll();
+                int candidateTask = candidate.getTask();
+                int processorID = candidate.getProcessor();
+                int candidateCost = candidate.getCost();
+                RecursiveSearch re = new RecursiveSearch(scheduleState.deepCopy(), candidateTask, processorID, candidateCost);
+                list.add(re);
+            }
+            invokeAll(list);
+        }
     }
 
     @Override
@@ -100,135 +164,11 @@ public class ParallelSearch implements GUISchedule{
     }
 
     /**
-     * Inner RecursiveSearch class. Each object of the class would contain the sub-task of the total scheduling.
-     * The class extends RecursiveAction class which provides compute method for ForkJoinPool to invoke.
-     */
-    private class RecursiveSearch extends RecursiveAction{
-
-        private final BranchAndBound branchAndBound;
-        private final int task;
-        private final int processor;
-        private final int cost;
-
-        /**
-         *
-         * @param branchAndBound Deepcopy of last BranchAndBound class for each thread to access their
-         *                       individual information
-         * @param task Candidate task for algorithm to run on.
-         * @param processor Candidate processor for algorithm to run on the processor.
-         * @param cost The cost of the task.
-         */
-        public RecursiveSearch(BranchAndBound branchAndBound, int task, int processor, int cost){
-            this.branchAndBound = branchAndBound;
-            this.task = task;
-            this.processor = processor;
-            this.cost = cost;
-        }
-
-        /**
-         * The compute method is the overridden method from RecursiveAction class for ForkJoinPool to invoke.
-         * This method contains the core algorithm from the sequential search. It searches through all the information
-         * from the allocated BranchAndBound class and recursively creates more thread to search for a deep copied
-         * BranchAndBound class to search on multiple threads.
-         */
-        @Override
-        protected void compute() {
-            synchronized (RecursiveSearch.class){
-                state += 1;
-            }
-            int bWeight = BottomLevel.pruneBLevel(task,cost,branchAndBound.processorTimes[processor]);
-            int loadBalance = LoadBalancer.calculateLoadBalance(branchAndBound.idle,cost,numProcessors);
-            int candidateTime = Math.max(branchAndBound.time.peek(), Math.max(bWeight, loadBalance));
-
-            // If the candidate time is less than best time, then exit.
-            if (bestSchedule.bestTime <= candidateTime) {
-                return;
-            } else {
-                branchAndBound.addTask(task, processor, cost);
-            }
-
-
-
-            // Check whether the Current schedule has been visited before.
-            boolean seen = HashCodeStorage.checkIfSeen(branchAndBound.taskInformation, branchAndBound.taskProcessors,
-                    numProcessors,numTasks);
-
-            // If so, exit.
-            if (seen) {
-                branchAndBound.removeTask(task,processor,cost);
-                return;
-            }
-
-            // Update best schedule
-            if (branchAndBound.scheduled == branchAndBound.numTasks) {
-                int candidateBest = branchAndBound.time.peek();
-                if (candidateBest < bestSchedule.bestTime) {
-                    bestSchedule.makeCopy(candidateBest,branchAndBound.taskProcessors,branchAndBound.taskInformation);
-                }
-            }
-
-            boolean[] candidateTasks = branchAndBound.getOrder();
-            LinkedList<Integer> fto = FixedTaskOrder.getFTO(candidateTasks,branchAndBound.taskProcessors,
-                    branchAndBound.taskInformation, branchAndBound.intGraph.outEdges, branchAndBound.intGraph.inEdges);
-
-            if (fto != null) {
-                int first = fto.poll();
-                for (int i =0;i < branchAndBound.numTasks;i++) {
-                    if (i != first) {
-                        candidateTasks[i] = false;
-                    }
-                }
-            }
-            PriorityQueue<DLS> lowestCost = new PriorityQueue<>();
-
-            HashSet<Integer> seenTasks = new HashSet<>();
-            for (int i = 0; i < branchAndBound.numTasks; i++) {
-                if (candidateTasks[i]) {
-                    boolean zero = false;
-                    if(seenTasks.contains(i)) {
-                        continue;
-                    }
-
-                    else {
-                        LinkedList<Integer> sameStates = DuplicateStates.getDuplicateNodes(i);
-                        seenTasks.addAll(sameStates);
-                    }
-                    for (int j = 0; j < numProcessors; j++) {
-                        if (branchAndBound.processorTimes[j] == 0) {
-                            if (zero) {
-                                continue;
-                            }
-                            else {
-                                zero = true;
-                            }
-                        }
-                        int commCost = branchAndBound.commCost(i,j);
-                        int bottomLevel = BottomLevel.returnBLevel(task);
-                        DLS DLS = new DLS(bottomLevel,commCost,branchAndBound.processorTimes[j],i,j);
-                        lowestCost.add(DLS);
-                    }
-                }
-            }
-
-            List<RecursiveSearch> list = new ArrayList<>();
-            while (!lowestCost.isEmpty()) {
-                DLS candidate = lowestCost.poll();
-                int candidateTask = candidate.task;
-                int processorID = candidate.processor;
-                int candidateCost = candidate.cost;
-                RecursiveSearch re = new RecursiveSearch(branchAndBound.deepCopy(), candidateTask, processorID, candidateCost);
-                list.add(re);
-            }
-            invokeAll(list);
-        }
-    }
-
-    /**
      * Write the information to the original input graph.
      * @return BestTime of the schedule
      */
     public int done() {
-        bestSchedule.writeToGraph(inputGraph);
+        bestSchedule.setGraphAttributes(inputGraph);
         return bestSchedule.bestTime;
     }
 

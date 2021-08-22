@@ -10,6 +10,8 @@ import java.util.List;
  * When two nodes have identical information, they are likely can be treated the same
  *
  * This class indicates helper functions to retrieve the duplicate nodes
+ *
+ * @author Wayne Yao
  */
 public class DuplicateStates {
 

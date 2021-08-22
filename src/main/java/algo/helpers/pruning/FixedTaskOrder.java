@@ -15,6 +15,7 @@ import java.util.List;
  *  4. The tasks are also sorted in non-increasing child edge communication cost.
  *
  * This class contains helper functions to generate the FTO.
+ *
  * @author Luxman Jeyarajah, Wayne Yao
  */
 public class FixedTaskOrder {
@@ -25,12 +26,29 @@ public class FixedTaskOrder {
     private FixedTaskOrder() {
     }
 
+    public static boolean[] checkFTO(boolean[] candidateTasks,int[] taskProcessors,int [][] taskInformation,
+                              LinkedList<int[]>[] outEdges, LinkedList<int[]>[] inEdges,int numTasks) {
+
+        LinkedList<Integer> fto = FixedTaskOrder.getFTO(candidateTasks,taskProcessors,taskInformation,
+                outEdges, inEdges);
+
+        if (fto != null) {
+            int first = fto.poll();
+            for (int i =0;i < numTasks;i++) {
+                if (i != first) {
+                    candidateTasks[i] = false;
+                }
+            }
+        }
+        return candidateTasks;
+    }
+
     /**
      * Generates a list of integers representing a Fixed Task Ordered list of tasks
      * @param candidateTasks a boolean array indicating which task is valid to be scheduled
      * @return a list of integers, which is the FTO list
      */
-    public static LinkedList<Integer> getFTO(boolean[] candidateTasks,int[] taskProcessors,int [][] taskInformation,
+    private static LinkedList<Integer> getFTO(boolean[] candidateTasks,int[] taskProcessors,int [][] taskInformation,
                                             LinkedList<int[]>[] outEdges, LinkedList<int[]>[] inEdges) {
         LinkedList<Integer> result = new LinkedList<>();
 
@@ -152,4 +170,6 @@ public class FixedTaskOrder {
             return outCommCost2 - outCommCost1;
         }
     }
+
+
 }

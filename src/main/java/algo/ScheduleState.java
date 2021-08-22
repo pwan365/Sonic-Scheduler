@@ -9,14 +9,13 @@ import algo.helpers.pruning.LoadBalancer;
 import algo.helpers.pruning.HashCodeStorage;
 
 /**
- * BranchAndBound class contains all the task information and methods to help the algorithm
+ * SceduleState class contains all the schedule information and methods to help the algorithm
  * in both SequentialSearch and ParallelSearch to run. It records the information during
- * the search and call helper methods for pruning or checking. It will also deep copy itself
- * in multithreading.
+ * the search. It will also deep copy itself in multithreading.
  *
  * @author Luxman Jeyarajah, Wayne Yao
  */
-public class BranchAndBound {
+public class ScheduleState {
     //Graph
     IntGraph intGraph;
     int numProcessors;
@@ -24,6 +23,7 @@ public class BranchAndBound {
     int scheduled = 0;
     //Schedule information
     public Stack<Integer> time;
+    //Idle time of the schedule
     public int idle;
     public boolean[] scheduledTasks;
     public boolean[] unscheduledTasks;
@@ -37,9 +37,7 @@ public class BranchAndBound {
     //Index 0 is StartTime, Index 1 is Weight, Index 2 is Finish Time, Index 3 is communication cost.
     public int[][] taskInformation;
 
-//    public LinkedList<Integer>[] equivalentList;
-
-    public BranchAndBound(IntGraph graph, int numberOfProcessors, boolean init) {
+    public ScheduleState(IntGraph graph, int numberOfProcessors, boolean init) {
         intGraph = graph;
         numProcessors = numberOfProcessors;
         numTasks = graph.tasks.length;
@@ -226,94 +224,13 @@ public class BranchAndBound {
         return validTasks;
     }
 
-
-
-//    /**
-//     * Get equivalent nodes list for all nodes
-//     * @return an array of integer list, each array index represent a node,
-//     * the corresponding list contains all the equivalent nodes for that node
-//     */
-//    protected LinkedList<Integer>[] getEquivalentNodes(){
-//        HashSet<Integer> memo = new HashSet<>();
-//        // since we already know the number of tasks, we can use array
-//        LinkedList<Integer>[] equivalentNodesList = new LinkedList[numTasks];
-//
-//        for(int i = 0; i < numTasks; i++){
-//            if(!memo.contains(i)){
-//                // if we haven't seen this node before, we search for its equivalent nodes
-//                LinkedList<Integer> equivalentNodes = new LinkedList<>();
-//                equivalentNodes.add(i);
-//                for(int j = 0; j < numTasks; j++){
-//                    if(!memo.contains(j) && i != j){
-//                        if(equivalentCheck(i, j)){
-//                            equivalentNodes.add(j);
-//                        }
-//                    }
-//                }
-//
-//                // add the nodeList into the equivalent nodes list
-//                for(int node : equivalentNodes){
-//                    equivalentNodesList[node] = equivalentNodes;
-//                    memo.add(node); // if a node is equivalent to each other, they will have the same list
-//                }
-//            }
-//        }
-//        return equivalentNodesList;
-//    }
-//
-//    /**
-//     * A helper method to help check if two tasks are equivalent
-//     * @param taskA
-//     * @param taskB
-//     * @return true indicating that taskA == taskB, otherwise taskA != taskB
-//     */
-//    private boolean equivalentCheck(int taskA, int taskB){
-//        List<int[]> aParents = intGraph.inEdges[taskA];
-//        List<int[]> bParents = intGraph.inEdges[taskB];
-//        List<int[]> aChildren = intGraph.outEdges[taskA];
-//        List<int[]> bChildren = intGraph.outEdges[taskB];
-//        int aWeight = intGraph.weights[taskA];
-//        int bWeight = intGraph.weights[taskB];
-//
-//        if(aWeight != bWeight){
-//            return false;
-//        }
-//
-//        if((aParents.size() != bParents.size()) ||
-//                (aChildren.size() != bChildren.size())){
-//            return false;
-//        }
-//
-//        // sort the list
-//        aParents.sort(new EdgesComparator());
-//        bParents.sort(new EdgesComparator());
-//        aChildren.sort(new EdgesComparator());
-//        bChildren.sort(new EdgesComparator());
-//
-//        return compareEdgeRelations(aParents, bParents)
-//                && compareEdgeRelations(aChildren, bChildren);
-//    }
-//
-//    private boolean compareEdgeRelations(List<int[]> listA, List<int[]> listB){
-//        for(int i = 0; i < listA.size(); i++){
-//            int childA = listA.get(i)[0];
-//            int childACost = listA.get(i)[1];
-//            int childB = listB.get(i)[0];
-//            int childBCost = listB.get(i)[1];
-//            if(childA != childB || childACost != childBCost){
-//                return false;
-//            }
-//        }
-//        return true;
-//    }
-
     /**
      * DeepCopy a current BranchAndBound object.
      * @return a deep copied current BranchAndBound object.
      *
      */
-    public BranchAndBound deepCopy() {
-        BranchAndBound c_branchandbound = new BranchAndBound(intGraph, numProcessors, false);
+    public ScheduleState deepCopy() {
+        ScheduleState c_branchandbound = new ScheduleState(intGraph, numProcessors, false);
         int numTasks = this.numTasks;
         for (int i = 0; i < numTasks; i++) {
             c_branchandbound.taskProcessors[i] = taskProcessors[i];
