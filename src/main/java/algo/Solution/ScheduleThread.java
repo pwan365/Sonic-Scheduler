@@ -28,11 +28,11 @@ public class ScheduleThread extends Thread{
 //        v.topologicalorder(inputGraph);
         if (!parallel) {
             search = new SequentialSearch(inputGraph,intGraph,numberOfProcessors);
-            search.run();
+//            search.run();
         }
         else {
             searchParallel = new ParallelSearch(inputGraph,intGraph,numberOfProcessors);
-            searchParallel.run();
+//            searchParallel.run();
         }
         done = true;
     }
