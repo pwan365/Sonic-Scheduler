@@ -19,6 +19,16 @@ OPTIONS:
 * `-p N` run the application with N number of cores in parallel (replace the N with an integer)
 * `-o [OUTPUT]` return the output graph file in a specific name (default:[INPUT-output.dot])
 
+Example:
+
+The following would read the input graph named "Nodes_11_OutTree.dot",allocate each
+node across 4 processors, with the GUI turn on, run the application with 6 cores in parallel
+with an output file named "custom-name.dot"
+
+```
+java -jar scheduler.jar Nodes_11_OutTree.dot 4 -v -p 6 -o custom-name
+```
+
 
 ## Requirement
 
