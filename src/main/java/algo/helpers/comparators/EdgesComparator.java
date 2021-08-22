@@ -4,6 +4,7 @@ import java.util.Comparator;
 
 /**
  * A helper class implementing Comparator interface so that it can be used to sort the edges list
+ *
  * @author Wayne Yao
  */
 public class EdgesComparator implements Comparator<int[]> {

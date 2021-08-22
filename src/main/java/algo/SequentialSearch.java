@@ -1,6 +1,7 @@
 package algo;
 
 
+import algo.helpers.comparators.DLS;
 import algo.helpers.pruning.*;
 import org.graphstream.graph.Graph;
 
@@ -9,43 +10,41 @@ import java.util.*;
 /**
  * Class to run a sequential search using DFS branch and bound.
  *
- * @author Luxman Jeyarajah
+ * @author Luxman Jeyarajah, Wayne Yao
  */
-public class SequentialSearch extends BranchAndBound implements  GUISchedule{
+public class SequentialSearch extends RecursiveSearch implements VisualiseSearch{
 
+    //Number of states examined.
     private int states = 0;
     public BestSchedule bestSchedule;
     private Graph inputGraph;
+    private ScheduleState schedule;
 
     public SequentialSearch(Graph input, IntGraph graph, int processors) {
-        super(graph,processors, true);
+        schedule = new ScheduleState(graph,processors,true);
         bestSchedule = new BestSchedule();
         inputGraph = input;
     }
 
+    /**
+     * Initialize the recursive search.
+     */
     public void run() {
-        boolean[] candidateTasks = getOrder();
-        LinkedList<Integer> fto = FixedTaskOrder.getFTO(candidateTasks,taskProcessors,taskInformation,
-                intGraph.outEdges, intGraph.inEdges);
+        boolean[] candidateTasks = schedule.getOrder();
+        // Check if there is a fixed task order.
+        candidateTasks = FixedTaskOrder.checkFTO(candidateTasks,schedule.taskProcessors,
+                schedule.taskInformation, schedule.intGraph.outEdges,
+                schedule.intGraph.inEdges, schedule.numTasks);
 
-        if (fto != null) {
-            int first = fto.poll();
-            for (int i =0;i < numTasks;i++) {
-                if (i != first) {
-                    candidateTasks[i] = false;
-                }
-            }
-        }
-
-        for (int i = 0; i < numTasks; i++) {
+        // Run all candidate tasks on first processor(other processors are duplicate states.)
+        for (int i = 0; i < schedule.numTasks; i++) {
             if (candidateTasks[i]) {
-                int candidateTask = i;
-                int candidateProcessor = 0;
-                int commCost = commCost(candidateTask, candidateProcessor);
-                branchBound(candidateTask, candidateProcessor, commCost);
+                int commCost = schedule.commCost(i,0);
+                branchBound(i, 0, commCost);
             }
         }
     }
+
 
     /**
      * Recursive function that goes through all possible schedules and finds the one with the earliest schedule time.
@@ -54,110 +53,84 @@ public class SequentialSearch extends BranchAndBound implements  GUISchedule{
      * @param cost Cost to schedule the task on the processor.
      */
     public void branchBound(int task, int processor,int cost) {
+        //Update State count.
         states += 1;
-        int bWeight = BottomLevel.pruneBLevel(task,cost,processorTimes[processor]);
-        int loadBalance = LoadBalancer.calculateLoadBalance(idle,cost,numProcessors);
-        int candidateTime = Math.max(time.peek(), Math.max(bWeight, loadBalance));
 
-        // If the candidate time is less than best time, then exit.
-        if (bestSchedule.bestTime <= candidateTime) {
+        boolean pruned = prune(schedule,task,cost,processor,bestSchedule);
+        if (pruned) {
             return;
         }
 
+        schedule.addTask(task, processor, cost);
 
-        addTask(task, processor, cost);
-
-        // Check whether the Current schedule has been visited before.
-        boolean seen = HashCodeStorage.checkIfSeen(taskInformation,taskProcessors,numProcessors,numTasks);
-
-        // If so, exit.
+        boolean seen = checkSeen(schedule,task,processor,cost);
         if (seen) {
-            removeTask(task,processor,cost);
             return;
         }
 
-        // Update best schedule
-        if (scheduled == numTasks) {
-            int candidateBest = time.peek();
-            if (candidateBest < bestSchedule.bestTime) {
-                bestSchedule.makeCopy(candidateBest,taskProcessors,taskInformation);
-            }
-        }
+        //Check whether we can update the bestSchedule
+        updateBestSchedule(bestSchedule, schedule);
 
-        boolean[] candidateTasks = getOrder();
-        LinkedList<Integer> fto = FixedTaskOrder.getFTO(candidateTasks,taskProcessors,taskInformation,
-                intGraph.outEdges, intGraph.inEdges);
+        PriorityQueue<DLS> lowestCost = getCandidateTasks(schedule);
 
-        if (fto != null) {
-            int first = fto.poll();
-            for (int i =0;i < numTasks;i++) {
-                if (i != first) {
-                    candidateTasks[i] = false;
-                }
-            }
-        }
-        PriorityQueue<DLS> lowestCost = new PriorityQueue<>();
+        recursiveCall(lowestCost,task,processor,cost);
 
-        HashSet<Integer> seenTasks = new HashSet<>();
-
-
-
-        for (int i = 0; i < numTasks; i++) {
-            if (candidateTasks[i]) {
-                if(seenTasks.contains(i)){
-                    continue;
-
-                }
-                else
-                    {
-                    LinkedList<Integer> sameStates = DuplicateStates.getDuplicateNodes(i);
-                    seenTasks.addAll(sameStates);
-                }
-
-                boolean zero = false;
-                for (int j = 0; j < numProcessors; j++) {
-                    if (processorTimes[j] == 0) {
-                        if (zero) {
-                         continue;
-                      }
-                       else {
-                           zero = true;
-                      }
-                    }
-                    int commCost = commCost(i,j);
-                    int bottomLevel = BottomLevel.returnBLevel(task);
-                    DLS DLS = new DLS(bottomLevel,commCost,processorTimes[j],i,j);
-                    lowestCost.add(DLS);
-                }
-            }
-        }
-
-            while (!lowestCost.isEmpty()) {
-                DLS candidate = lowestCost.poll();
-                int candidateTask = candidate.task;
-                int processorID = candidate.processor;
-                int candidateCost = candidate.cost;
-                branchBound(candidateTask, processorID, candidateCost);
-            }
-            removeTask(task,processor,cost);
     }
 
+    /**
+     * Method to recursively call the BranchBound method.
+     * @param lowestCost The priority Queue containing the tasks to be recursively called.
+     * @param task The current task that was scheduled.
+     * @param processor The current processor that the task was scheduled.
+     * @param cost The cost to schedule the task.
+     */
+    protected void recursiveCall(PriorityQueue<DLS> lowestCost,int task, int processor,int cost) {
+        while (!lowestCost.isEmpty()) {
+            DLS candidate = lowestCost.poll();
+            int candidateTask = candidate.getTask();
+            int processorID = candidate.getProcessor();
+            int candidateCost = candidate.getCost();
+            branchBound(candidateTask, processorID, candidateCost);
+        }
+        //Backtrack
+        schedule.removeTask(task,processor,cost);
+    }
+
+    /**
+     * Return the states explored.
+     * @return Number of states explored.
+     */
     @Override
     public int getStates() {
         return states;
     }
+
+    /**
+     * Return the best time of the schedule.
+     * @return Current best time seen.
+     */
     @Override
     public int getBestTime() {
         return bestSchedule.bestTime;
     }
 
+    /**
+     * Return the best schedule.
+     * @return Current best schedule of the search.
+     */
     @Override
     public BestSchedule getBestSchedule() {
         return bestSchedule;
     }
 
+    /**
+     * Write attributes to the graph for output and return best time.
+     * @return Best time.
+     */
     public int done() {
-        bestSchedule.writeToGraph(inputGraph);
+        bestSchedule.setGraphAttributes(inputGraph);
         return bestSchedule.bestTime;
     }
+
+
 }

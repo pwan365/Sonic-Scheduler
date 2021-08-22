@@ -10,7 +10,8 @@ import java.util.stream.Collectors;
 
 /**
  * All the initial graph information is stored in IntGraph class. It parses all the information needed
- * from GraphStream.Graph to arrays of integers or LinkedList.
+ * from GraphStream.Graph to arrays of integers or LinkedList. Used for increased performance and to seperate the
+ * Graphstream library from the running of the algorithm.
  *
  * @author Luxman Jeyarajah, Wayne Yao
  */
@@ -62,37 +63,5 @@ public class IntGraph {
                 inDegrees[childNode] += 1;
             }
         }
-    }
-
-    public void test() {
-        for (int i=0; i < tasks.length; i++) {
-            System.out.println("Task");
-            System.out.println(tasks[i]);
-            System.out.println("Weight");
-            System.out.println(weights[i]);
-        }
-    }
-
-    public void testEdge() {
-//        for (int i =0;i < inEdges.length; i++) {
-//            for (int j =0; j < inEdges[i].size(); j++) {
-//                System.out.println("Task");
-//                System.out.println(inEdges[i].get(j)[0]);
-//                System.out.println(i);
-//                System.out.println("Weight");
-//                System.out.println(inEdges[i].get(j)[1]);
-//            }
-
-//            for (int j =0;j < inDegrees.length; j++) {
-//                System.out.println("Task");
-//                System.out.println(j);
-//                System.out.println(inDegrees[j]);
-//            }
-//        }
-//
-//        for (int i=0; i< weights.length; i++) {
-//            System.out.println(weights[i]);
-//            System.out.println(i);
-//        }
     }
 }

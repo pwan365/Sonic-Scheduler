@@ -7,11 +7,11 @@ import org.graphstream.graph.Graph;
 /**
  * Schedule Thread extends Thread class which represents the thread that the GUI will be running on.
  *
- * @author
+ * @author Luxman Jeyarajah, Samuel Chen
  */
 public class ScheduleThread extends Thread{
     private final String outputFileName;
-    private final GUISchedule search;
+    private final VisualiseSearch search;
     private boolean done = false;
     private final Graph inputGraph;
 
