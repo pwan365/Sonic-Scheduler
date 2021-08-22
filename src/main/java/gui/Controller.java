@@ -102,6 +102,8 @@ public class Controller {
 //            if (scheduleThread.getStates() > 0) {
 //                bestTime.setText(scheduleThread.getBestTime() + "");
 //            }
+            bestTime.setText(String.valueOf(scheduleThread.getBestTime()));
+
             updateBarChart();
 
             System.out.println(scheduleThread.isDone());
