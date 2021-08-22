@@ -1,4 +1,4 @@
-package algo.Solution;
+package algo;
 
 import io.InputReader;
 import io.OutputWriter;
@@ -9,14 +9,12 @@ public class ScheduleThread extends Thread{
     private String outputFileName;
     private int numberOfProcessors;
     private GUISchedule search;
-    private ParallelSearch searchParallel;
     private boolean done = false;
     private Graph inputGraph;
     private IntGraph intGraph;
     private int numOfCores = 1;
 
     public ScheduleThread(String inputName, String outputName, int numOfProcessors,boolean parallel, int numOfCores){
-        numOfCores = numOfCores;
         inputFileName = inputName;
         outputFileName = outputName;
         numberOfProcessors = numOfProcessors;

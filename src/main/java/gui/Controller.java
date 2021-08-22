@@ -1,7 +1,7 @@
 package gui;
 
-import algo.Solution.BestSchedule;
-import algo.Solution.ScheduleThread;
+import algo.BestSchedule;
+import algo.ScheduleThread;
 import io.InputReader;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;

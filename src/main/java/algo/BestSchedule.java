@@ -1,4 +1,4 @@
-package algo.Solution;
+package algo;
 
 import com.rits.cloning.Cloner;
 import org.graphstream.graph.Graph;

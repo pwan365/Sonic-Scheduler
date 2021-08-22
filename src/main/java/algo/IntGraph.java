@@ -1,4 +1,4 @@
-package algo.Solution;
+package algo;
 
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;

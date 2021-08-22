@@ -1,4 +1,4 @@
-package algo.Solution.helpers;
+package algo.helpers;
 
 import java.util.Comparator;
 

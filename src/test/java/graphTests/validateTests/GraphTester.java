@@ -1,7 +1,7 @@
 package graphTests.validateTests;
 
-import algo.Solution.IntGraph;
-import algo.Solution.SequentialSearch;
+import algo.IntGraph;
+import algo.SequentialSearch;
 import io.OutputWriter;
 import org.graphstream.graph.Graph;
 

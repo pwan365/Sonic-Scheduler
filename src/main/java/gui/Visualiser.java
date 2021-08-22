@@ -1,6 +1,6 @@
 package gui;
 
-import algo.Solution.ScheduleThread;
+import algo.ScheduleThread;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 

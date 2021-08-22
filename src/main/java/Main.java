@@ -1,5 +1,5 @@
 
-import algo.Solution.ScheduleThread;
+import algo.ScheduleThread;
 import com.sun.javafx.application.PlatformImpl;
 import gui.Visualiser;
 import javafx.scene.Scene;

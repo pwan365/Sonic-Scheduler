@@ -1,4 +1,4 @@
-package algo.Solution;
+package algo;
 
 public class DLS implements Comparable<DLS> {
 
