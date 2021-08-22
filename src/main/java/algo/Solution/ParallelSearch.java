@@ -29,13 +29,15 @@ public class ParallelSearch implements GUISchedule{
     int graphWeight = 0;
     private Graph inputGraph;
     private int state = 0;
+    public int numOfCores = 1;
 
     /**
      *
      * @param graph Input graph with all information stored in Integer
      * @param processors Number of processors.
      */
-    public ParallelSearch(Graph inputGraph, IntGraph graph, int processors){
+    public ParallelSearch(Graph inputGraph, IntGraph graph, int processors, int numOfCores){
+        this.numOfCores = numOfCores;
         this.inputGraph = inputGraph;
         this.graph = graph;
         this.numProcessors = processors;
@@ -74,7 +76,7 @@ public class ParallelSearch implements GUISchedule{
         }
 
         // Initialization of thread pool and invoking
-        ForkJoinPool pool = new ForkJoinPool();
+        ForkJoinPool pool = new ForkJoinPool(numOfCores);
         RecursiveSearch re = new RecursiveSearch(bb, candidateTask, candidateProcessor, commCost);
         pool.invoke(re);
     }
