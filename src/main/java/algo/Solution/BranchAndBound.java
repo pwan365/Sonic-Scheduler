@@ -509,5 +509,4 @@ public class BranchAndBound {
         return c_branchandbound;
 
     }
-
 }
