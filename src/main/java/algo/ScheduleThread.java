@@ -38,10 +38,11 @@ public class ScheduleThread extends Thread{
         done = true;
         search.done();
         // Write the scheduled graph to a file.
-
         OutputWriter writer = new OutputWriter();
         writer.write(inputGraph, outputFileName);
-        // 27 seconds
+
+        //notified user the output has been produced
+        System.out.println("Optimal schedule has been produced in "+ outputFileName);
     }
 
     public int getBestTime() {
