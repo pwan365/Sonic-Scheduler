@@ -16,3 +16,6 @@ Then we add that list of nodes into a queue. Then we will keep recursively call 
 all the complete scheduling are examined in a DFS style.
 
 ## Optimisation
+
+## Parallelization
+The parallaized version of DFS has the same underlying algorithm for searching and pruning, the difference being that now each thread has its own copy of the schedule, and hence no backtracking is needed.
