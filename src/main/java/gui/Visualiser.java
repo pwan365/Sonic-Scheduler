@@ -11,6 +11,8 @@ import javafx.stage.Stage;
 /**
  * The Visualiser class responsible for displaying GUI for the application
  * It passes input arguments into the Controller class to set up the GUI
+ *
+ * @author Samuel Chen, Kayla Kautai
  */
 public class Visualiser extends Application {
 
