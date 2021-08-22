@@ -155,7 +155,7 @@ public class SequentialSearch extends BranchAndBound{
 
     public int done() {
 //        bestSchedule.printTasks();
-        System.out.println(bestSchedule.bestTime);
+//        System.out.println(bestSchedule.bestTime);
         //System.out.println(states);
         bestSchedule.writeToGraph(inputGraph);
 //        System.out.println(prune);
