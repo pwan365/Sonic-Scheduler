@@ -1,8 +1,9 @@
 package algo;
 
 
-import algo.helpers.costFunctions.BottomLevel;
-import algo.helpers.costFunctions.LoadBalancer;
+import algo.helpers.pruning.BottomLevel;
+import algo.helpers.pruning.FixedTaskOrder;
+import algo.helpers.pruning.LoadBalancer;
 import algo.helpers.hashCode.HashCodeStorage;
 import org.graphstream.graph.Graph;
 
@@ -27,7 +28,9 @@ public class SequentialSearch extends BranchAndBound implements  GUISchedule{
 
     public void run() {
         boolean[] candidateTasks = getOrder();
-        LinkedList<Integer> fto = toFTOList(candidateTasks);
+        LinkedList<Integer> fto = FixedTaskOrder.getFTO(candidateTasks,taskProcessors,taskInformation,
+                intGraph.outEdges, intGraph.inEdges);
+
         if (fto != null) {
             int first = fto.poll();
             for (int i =0;i < numTasks;i++) {
@@ -85,7 +88,9 @@ public class SequentialSearch extends BranchAndBound implements  GUISchedule{
         }
 
         boolean[] candidateTasks = getOrder();
-        LinkedList<Integer> fto = toFTOList(candidateTasks);
+        LinkedList<Integer> fto = FixedTaskOrder.getFTO(candidateTasks,taskProcessors,taskInformation,
+                intGraph.outEdges, intGraph.inEdges);
+
         if (fto != null) {
             int first = fto.poll();
             for (int i =0;i < numTasks;i++) {

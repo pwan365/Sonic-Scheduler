@@ -1,4 +1,4 @@
-package algo.helpers.costFunctions;
+package algo.helpers.pruning;
 
 
 import java.util.LinkedList;
@@ -10,6 +10,14 @@ import java.util.LinkedList;
  */
 public class BottomLevel {
     static int [] bottomLevel;
+
+
+    /**
+     * Prevent instantiation of the class.
+     */
+    private BottomLevel() {
+
+    }
 
     /**
      * Initiates the calculation of the bottom level, loops through all tasks, if its bottom level has not been

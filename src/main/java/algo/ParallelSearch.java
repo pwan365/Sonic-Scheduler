@@ -1,8 +1,9 @@
 package algo;
 
-import algo.helpers.costFunctions.BottomLevel;
-import algo.helpers.costFunctions.LoadBalancer;
+import algo.helpers.pruning.BottomLevel;
+import algo.helpers.pruning.LoadBalancer;
 import algo.helpers.hashCode.HashCodeStorage;
+import algo.helpers.pruning.FixedTaskOrder;
 import org.graphstream.graph.Graph;
 
 import java.util.*;
@@ -60,7 +61,8 @@ public class ParallelSearch implements GUISchedule{
      */
     public void run() {
         boolean[] startTasks = original_state.getOrder();
-        LinkedList<Integer> fto = original_state.toFTOList(startTasks);
+        LinkedList<Integer> fto = FixedTaskOrder.getFTO(startTasks,original_state.taskProcessors,
+                original_state.taskInformation, original_state.intGraph.outEdges, original_state.intGraph.inEdges);
         if (fto != null){
             int first = fto.poll();
             for (int i = 0; i < numTasks; i++){
@@ -170,7 +172,9 @@ public class ParallelSearch implements GUISchedule{
             }
 
             boolean[] candidateTasks = branchAndBound.getOrder();
-            LinkedList<Integer> fto = branchAndBound.toFTOList(candidateTasks);
+            LinkedList<Integer> fto = FixedTaskOrder.getFTO(candidateTasks,branchAndBound.taskProcessors,
+                    branchAndBound.taskInformation, branchAndBound.intGraph.outEdges, branchAndBound.intGraph.inEdges);
+
             if (fto != null) {
                 int first = fto.poll();
                 for (int i =0;i < branchAndBound.numTasks;i++) {

@@ -1,4 +1,4 @@
-package algo.helpers.costFunctions;
+package algo.helpers.pruning;
 
 /**
  * Class that calculates the Load Balance given the current idle time of a schedule and the cost to place the next task
@@ -10,6 +10,14 @@ public class LoadBalancer {
 
     //Total weight of all nodes.
     static int graphWeight ;
+
+
+    /**
+     * Prevent instantiation of the class.
+     */
+    private LoadBalancer() {
+
+    }
 
     /**
      * Initializes the Load Balancer by creating a field that holds the weight of all the nodes in the graph.
