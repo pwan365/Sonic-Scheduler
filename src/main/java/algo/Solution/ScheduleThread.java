@@ -34,14 +34,16 @@ public class ScheduleThread extends Thread{
             searchParallel = new ParallelSearch(inputGraph,intGraph,numberOfProcessors);
 //            searchParallel.run();
         }
-        done = true;
+
     }
 
     public void run(){
 
         search.run();
+        done = true;
         search.done();
         // Write the scheduled graph to a file.
+
         OutputWriter writer = new OutputWriter();
         writer.write(inputGraph, outputFileName);
         // 27 seconds
