@@ -1,6 +1,5 @@
 package gui;
 
-import algo.Schedule.Task;
 import algo.Solution.BestSchedule;
 import algo.Solution.ScheduleThread;
 import io.InputReader;
@@ -157,7 +156,7 @@ public class Controller {
     public void updateBarChart() {
 
 
-        List<List<Task>> barList = getBestSchedule();
+        List<List<int[]>> barList = getBestSchedule();
         if (barList == null) {
             return;
         }
@@ -169,33 +168,33 @@ public class Controller {
         int procNum = 1;
 
         //sort the task in each processors by starting time
-        for (List<Task> eachBar : barList ){
+        for (List<int[]> eachBar : barList ){
             Collections.sort(eachBar, (c1, c2) -> {
-                if (c1.getStartingTime() > c2.getStartingTime()) return 1;
-                if (c1.getStartingTime() < c2.getStartingTime()) return -1;
+                if (c1[0] > c2[0]) return 1;
+                if (c1[0] < c2[0]) return -1;
                 return 0;
             });
             System.out.println(procNum+"P--------");
 
-            for(Task task : eachBar){
-                System.out.println("StartTime:"+task.getStartingTime()+" DurationTime:"+task.getDurationTime()+" Total:"+(task.getStartingTime()+task.getDurationTime()));
+            for(int[] task : eachBar){
+                System.out.println(("StartTime:"+task[0])+" DurationTime:"+task[1]+" Total:" + (task[0] + task[1]));
             }
 
             //add idle task as the beginning of each processor that doesn't have starting time of 0
-            if(eachBar.size() != 0 && eachBar.get(0).getStartingTime() != 0){
-                Task idlePart = new Task(0,eachBar.get(0).getStartingTime(),true,eachBar.get(0).getProcNum());
+            if(eachBar.size() != 0 && eachBar.get(0)[0] != 0){
+                int[] idlePart = new int[]{0,eachBar.get(0)[0],1,eachBar.get(0)[3]};
                 eachBar.add(0,idlePart);
             }
 
             //add idle task between tasks that has gap between them
             int i = 1;
             while(eachBar.size() > i){
-                Task currPart = eachBar.get(i);
-                Task prevPart = eachBar.get(i-1);
-                if(currPart.getStartingTime() != prevPart.getStartingTime() + prevPart.getDurationTime()){
-                    int idleStartTime = prevPart.getStartingTime() + prevPart.getDurationTime();
-                    int idleDuration = currPart.getStartingTime() -idleStartTime;
-                    Task idlePart = new Task(idleStartTime,idleDuration,true,eachBar.get(i).getProcNum());
+                int[] currPart = eachBar.get(i);
+                int[] prevPart = eachBar.get(i-1);
+                if(currPart[0] != prevPart[0] + prevPart[1]){
+                    int idleStartTime = prevPart[0] + prevPart[2];
+                    int idleDuration = currPart[0] -idleStartTime;
+                    int[] idlePart = new int[]{idleStartTime,idleDuration,eachBar.get(i)[1],eachBar.get(i)[2]};
                     eachBar.add(i,idlePart);
                     i++;
                 }
@@ -203,13 +202,13 @@ public class Controller {
             }
 
             //add bar to the series
-            for(Task eachPart : eachBar){
-                int length = eachPart.getDurationTime();
+            for(int[] eachPart : eachBar){
+                int length = eachPart[1];
                 final XYChart.Data<Number, String> bar = new XYChart.Data<Number,String>(length, "P" + procNum);
                 bar.nodeProperty().addListener((ov, oldNode, node) -> {
                     //set color of each type of bar, transparent for idle section, blue for task bar section
                     if (node != null) {
-                        if(eachPart.isIdle()){
+                        if(eachPart[2] == 1){
                             node.setStyle("-fx-bar-fill: transparent");
                         }else{
                             node.setStyle("-fx-bar-fill: #79b4de;-fx-border-color: #336699;");
@@ -229,16 +228,18 @@ public class Controller {
      * stored as global variable.
      * @return a list of tasks
      */
-    public List<List<Task>> getBestSchedule(){
+    public List<List<int []>> getBestSchedule(){
         BestSchedule b = scheduleThread.getBestSchedule();
+
+        //If best schedule has not been found return null as we have nothing to show.
         if (b.getTime() == Integer.MAX_VALUE) {
             return null;
         }
-        List<List<Task>> barList = new ArrayList<>();
+        List<List<int[]>> barList = new ArrayList<>();
 
-        if (b.getTaskInformation()==null || b.getTaskProcessors()==null){
-            return null;
-        }
+//        if (b.getTaskInformation()==null || b.getTaskProcessors()==null){
+//            return null;
+//        }
 
         taskInfo = b.getTaskInformation();
         taskProc = b.getTaskProcessors();
@@ -250,16 +251,16 @@ public class Controller {
         //int[][2]:EndTime
         //int[0][3]:Cost
 //        int[0] taskproc
-        List<Task> nodeList = new ArrayList<>();
+        List<int[]> nodeList = new ArrayList<>();
         for(int i=0;i<taskProc.length;i++){
-            Task eachTask = new Task(taskInfo[i][0],taskInfo[i][1],false,taskProc[i]);
+            int[] eachTask = new int[]{taskInfo[i][0],taskInfo[i][1],0,taskProc[i]};
             nodeList.add(eachTask);
         }
 
         for(int i=0;i<procNum;i++){
-            List<Task> eachBar = new ArrayList<>();
-            for(Task node : nodeList){
-                if(node.getProcNum() == i){
+            List<int[]> eachBar = new ArrayList<>();
+            for(int[] node : nodeList){
+                if(node[3] == i){
                     eachBar.add(node);
                 }
             }
