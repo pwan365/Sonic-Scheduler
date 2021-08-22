@@ -81,7 +81,11 @@ public class GraphWriter extends FileSinkDOT {
         //Loop through every attribute of an element.
         Object value0 = e.getAttribute("Weight");
         int weightValue = ((Number) value0).intValue();
-        buffer.append(String.format("%s%s=%s", first.get() ? "" : ",", "Weight", weightValue)+ ",");
+        if (e.getAttribute("Start") != null){
+            buffer.append(String.format("%s%s=%s", first.get() ? "" : ",", "Weight", weightValue)+ ",");
+        }else{
+            buffer.append(String.format("%s%s=%s", first.get() ? "" : ",", "Weight", weightValue));
+        }
         Object value1 = e.getAttribute("Start");
         int startTime, allocatedProcessor;
         try {
