@@ -4,7 +4,7 @@ import algo.IntGraph;
 import algo.SequentialSearch;
 import io.InputReader;
 import org.graphstream.graph.Graph;
-import org.testng.annotations.Test;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -14,7 +14,11 @@ import java.util.LinkedList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(Parallelized.class)
+/**
+ * A automatic tester for custom graphs
+ * @author Wayne Yao
+ */
+@RunWith(Parameterized.class)
 public class AutomaticSpeedTester {
 
     Graph _inputGraph;
@@ -23,6 +27,13 @@ public class AutomaticSpeedTester {
     int _numOfProcessors;
     int _expected;
 
+    public AutomaticSpeedTester(Graph input, IntGraph intGraph, String file, int processors, int expected){
+        _inputGraph = input;
+        _intGraph = intGraph;
+        _file = file;
+        _numOfProcessors = processors;
+        _expected = expected;
+    }
 
     @Parameterized.Parameters
     public static Collection<Object[]> getParameters(){
@@ -33,35 +44,28 @@ public class AutomaticSpeedTester {
 
         for (final File file: folder.listFiles()){
             String fileName = file.getName();
-            if(!fileName.contains(".gxl")){
+            if(!fileName.contains("Custom")){
                 continue;
             }
             InputReader inputReader = new InputReader(file.getPath());
             Graph inputGraph = inputReader.read();
             IntGraph intGraph = new IntGraph(inputGraph);
-
-            int processors = fileName.charAt(fileName.length()-9);
-
+            int stringSlicer = fileName.length()-1-4;
+            StringBuilder sb=new StringBuilder();
+            while(('0' <= fileName.charAt(stringSlicer)) &&  ('9' >= fileName.charAt(stringSlicer))){
+                sb.append("" + fileName.charAt(stringSlicer));
+                stringSlicer--;
+            }
+            int processors = Integer.parseInt(sb.reverse().toString());
             int result = ((Double)inputGraph.getAttribute("Total schedule length")).intValue();
-
-
             parameters.add(new Object[]{inputGraph, intGraph, file.getAbsolutePath(), processors, result});
 
         }
         return parameters;
     }
 
-    public AutomaticSpeedTester(Graph input, IntGraph intGraph, String file, int processors, int expected){
-        _inputGraph = input;
-        _intGraph = intGraph;
-        _file = file;
-        _numOfProcessors = processors;
-        _expected = expected;
-    }
-
-    @Test
+    @Test(timeout = 1000)
     public void testing(){
-        System.out.println(_file);
         SequentialSearch s = new SequentialSearch(_inputGraph, _intGraph,_numOfProcessors);
         s.run();
         int result = s.done();
