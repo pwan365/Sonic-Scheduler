@@ -1,7 +1,7 @@
 package graphTests.speedTests;
 
-import algo.Solution.IntGraph;
-import algo.Solution.SequentialSearch;
+import algo.IntGraph;
+import algo.SequentialSearch;
 import io.InputReader;
 import org.graphstream.graph.Graph;
 import org.testng.annotations.Test;

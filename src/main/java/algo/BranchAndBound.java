@@ -1,9 +1,10 @@
-package algo.Solution;
+package algo;
 
 
 import java.util.*;
-import algo.Solution.helpers.EdgesComparator;
-import algo.Solution.helpers.costFunctions.BottomLevel;
+import algo.helpers.EdgesComparator;
+import algo.helpers.costFunctions.BottomLevel;
+import algo.helpers.costFunctions.LoadBalancer;
 
 public class BranchAndBound {
     //Graph
@@ -28,9 +29,8 @@ public class BranchAndBound {
 
     //Cost Functions
     //Bottom Level
-    public int[] bottomLevel;
-    //Load Balancer
-    public int graphWeight = 0;
+//    public int[] bottomLevel;
+
 
     //Set of seen schedules.
     public HashSet<Integer> seenStates = new HashSet<>();
@@ -47,7 +47,7 @@ public class BranchAndBound {
         processorTimes = new int[numberOfProcessors];
         taskProcessors = new int[numTasks];
         taskInformation = new int[numTasks][4];
-        bottomLevel = BottomLevel.initBottomLevel(numTasks,intGraph.weights, intGraph.outEdges);
+//        bottomLevel = BottomLevel.initBottomLevel(numTasks,intGraph.weights, intGraph.outEdges);
         equivalentList = getEquivalentNodes();
 
         if (init) {
@@ -56,8 +56,10 @@ public class BranchAndBound {
             addUnscheduledTasks();
             setDefaultTaskInfo();
             setDefaultTaskProcessor();
+            BottomLevel.initBottomLevel(numTasks, intGraph.weights, intGraph.outEdges);
+            LoadBalancer.initLoadBalancer(intGraph.weights);
 //            initB();
-            initLB();
+//            initLB();
         }
     }
 
@@ -222,16 +224,17 @@ public class BranchAndBound {
 //        return max;
 //    }
 
-    private void initLB() {
-        int[] weights = intGraph.weights;
-        for (int i = 0; i < weights.length; i++) {
-            graphWeight += weights[i];
-        }
-    }
+//    private void initLB() {
+//        int[] weights = intGraph.weights;
+//        for (int i = 0; i < weights.length; i++) {
+//            graphWeight += weights[i];
+//        }
+//    }
 
-    protected int loadBalance(int currentCost) {
-        return (int) Math.ceil((graphWeight + idle + currentCost) / numProcessors);
-    }
+//    protected int loadBalance(int currentCost) {
+//        return LoadBalancer.calculateLoadBalance(idle,currentCost,numProcessors);
+////        return (int) Math.ceil((graphWeight + idle + currentCost) / numProcessors);
+//    }
 
     public boolean checkSeen() {
         Set<List<Integer>> scheduleSet = new HashSet<>(); // constant time operation so using hashSet
@@ -480,10 +483,10 @@ public class BranchAndBound {
      * */
     public BranchAndBound deepCopy() {
         BranchAndBound c_branchandbound = new BranchAndBound(intGraph, numProcessors, false);
-        int numTasks = intGraph.tasks.length;
+        int numTasks = this.numTasks;
         for (int i = 0; i < numTasks; i++) {
             c_branchandbound.taskProcessors[i] = taskProcessors[i];
-            c_branchandbound.bottomLevel[i] = bottomLevel[i];
+//            c_branchandbound.bottomLevel[i] = bottomLevel[i];
             for (int j = 0; j < 4; j++) {
                 c_branchandbound.taskInformation[i][j] = taskInformation[i][j];
             }
