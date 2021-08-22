@@ -17,6 +17,7 @@ all the complete scheduling are examined in a DFS style.
 
 ## Optimisation
 
+
 ###Pruning
 
 - <b>Fixed Task Order</b>
@@ -42,3 +43,5 @@ we no longer interested in that state.
 
 - <b>Identical state</b>
 
+## Parallelization
+The parallaized version of DFS has the same underlying algorithm for searching and pruning, the difference being that now each thread has its own copy of the schedule, and hence no backtracking is needed.
