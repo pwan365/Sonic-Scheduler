@@ -14,7 +14,7 @@ import java.util.concurrent.RecursiveAction;
  * The algorithm makes use of BranchAndBound class which contains all the necessary information and methods to run the algorithm.
  * The principle of the algorithm is consistent with sequential search.
  */
-public class ParallelSearch{
+public class ParallelSearch implements GUISchedule{
 
     public BestSchedule bestSchedule;
     private final IntGraph graph;

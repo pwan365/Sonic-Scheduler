@@ -8,7 +8,7 @@ public class ScheduleThread extends Thread{
     private String inputFileName;
     private String outputFileName;
     private int numberOfProcessors;
-    private SequentialSearch search;
+    private GUISchedule search;
     private ParallelSearch searchParallel;
     private boolean done = false;
     private Graph inputGraph;
@@ -23,16 +23,11 @@ public class ScheduleThread extends Thread{
         inputGraph = reader.read();
         intGraph = new IntGraph(inputGraph);
 
-
-//        ValidScheduler v = new ValidScheduler(1);
-//        v.topologicalorder(inputGraph);
         if (!parallel) {
             search = new SequentialSearch(inputGraph,intGraph,numberOfProcessors);
-//            search.run();
         }
         else {
-            searchParallel = new ParallelSearch(inputGraph,intGraph,numberOfProcessors);
-//            searchParallel.run();
+            search = new ParallelSearch(inputGraph,intGraph,numberOfProcessors);
         }
 
     }
@@ -50,19 +45,15 @@ public class ScheduleThread extends Thread{
     }
 
     public int getBestTime() {
-        return search.bestSchedule.getTime();
+        return search.getBestTime();
     }
 
     public BestSchedule getBestSchedule() {
-        return search.bestSchedule;
+        return search.getBestSchedule();
     }
 
     public int getStates() {
         return search.getStates();
-    }
-
-    public int getTime() {
-        return getBestTime();
     }
 
     public boolean isDone() {

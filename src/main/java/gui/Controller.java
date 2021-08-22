@@ -1,6 +1,5 @@
 package gui;
 
-import algo.Schedule.Processor;
 import algo.Schedule.Task;
 import algo.Solution.BestSchedule;
 import algo.Solution.ScheduleThread;

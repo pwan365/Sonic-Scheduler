@@ -10,7 +10,7 @@ import java.util.*;
  *
  * @author Luxman Jeyarajah
  */
-public class SequentialSearch extends BranchAndBound{
+public class SequentialSearch extends BranchAndBound implements  GUISchedule{
 
 //    private PartialSchedule partialSchedule;
 //    private BestSchedule bestSchedule;
@@ -151,12 +151,18 @@ public class SequentialSearch extends BranchAndBound{
             removeTask(task,processor,cost);
     }
 
+    @Override
     public int getStates() {
         return states;
     }
-
+    @Override
     public int getBestTime() {
         return bestSchedule.bestTime;
+    }
+
+    @Override
+    public BestSchedule getBestSchedule() {
+        return bestSchedule;
     }
 
     public int done() {
