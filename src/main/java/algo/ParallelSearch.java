@@ -1,9 +1,6 @@
 package algo;
 
-import algo.helpers.pruning.BottomLevel;
-import algo.helpers.pruning.LoadBalancer;
-import algo.helpers.hashCode.HashCodeStorage;
-import algo.helpers.pruning.FixedTaskOrder;
+import algo.helpers.pruning.*;
 import org.graphstream.graph.Graph;
 
 import java.util.*;
@@ -29,8 +26,7 @@ public class ParallelSearch implements GUISchedule{
     private final BranchAndBound original_state;
 
     // Seen states of a BranchAndBound.
-    public HashSet<Integer> seenStates = new HashSet<>();
-    public LinkedList<Integer>[] equivalentList;
+//    public LinkedList<Integer>[] equivalentList;
     int graphWeight = 0;
     private final Graph inputGraph;
     private int state = 0;
@@ -52,7 +48,7 @@ public class ParallelSearch implements GUISchedule{
         for (int weight : weights) {
             graphWeight += weight;
         }
-        equivalentList = original_state.getEquivalentNodes();
+//        equivalentList = original_state.getEquivalentNodes();
         numTasks = graph.tasks.length;
     }
 
@@ -189,10 +185,13 @@ public class ParallelSearch implements GUISchedule{
             for (int i = 0; i < branchAndBound.numTasks; i++) {
                 if (candidateTasks[i]) {
                     boolean zero = false;
-                    if(seenTasks.contains(i)){
+                    if(seenTasks.contains(i)) {
                         continue;
-                    }else{
-                        seenTasks.addAll(equivalentList[i]);
+                    }
+
+                    else {
+                        LinkedList<Integer> sameStates = EquivalentStates.getEquivalentNodes(i);
+                        seenTasks.addAll(sameStates);
                     }
                     for (int j = 0; j < numProcessors; j++) {
                         if (branchAndBound.processorTimes[j] == 0) {

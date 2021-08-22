@@ -1,4 +1,4 @@
-package algo.helpers.hashCode;
+package algo.helpers.pruning;
 
 import java.util.HashSet;
 import java.util.LinkedList;

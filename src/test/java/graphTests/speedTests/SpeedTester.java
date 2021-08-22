@@ -723,7 +723,7 @@ public class SpeedTester {
 
     private int scheduling(Graph input, int numberOfProcessors) {
         IntGraph graph = new IntGraph(input);
-        ParallelSearch s = new ParallelSearch(input, graph,numberOfProcessors,2);
+        SequentialSearch s = new SequentialSearch(input, graph,numberOfProcessors);
         s.run();
         return s.done();
     }

@@ -1,10 +1,7 @@
 package algo;
 
 
-import algo.helpers.pruning.BottomLevel;
-import algo.helpers.pruning.FixedTaskOrder;
-import algo.helpers.pruning.LoadBalancer;
-import algo.helpers.hashCode.HashCodeStorage;
+import algo.helpers.pruning.*;
 import org.graphstream.graph.Graph;
 
 import java.util.*;
@@ -109,9 +106,14 @@ public class SequentialSearch extends BranchAndBound implements  GUISchedule{
             if (candidateTasks[i]) {
                 if(seenTasks.contains(i)){
                     continue;
-                }else{
-                    seenTasks.addAll(equivalentList[i]);
+
                 }
+                else
+                    {
+                    LinkedList<Integer> sameStates = EquivalentStates.getEquivalentNodes(i);
+                    seenTasks.addAll(sameStates);
+                }
+
                 boolean zero = false;
                 for (int j = 0; j < numProcessors; j++) {
                     if (processorTimes[j] == 0) {
