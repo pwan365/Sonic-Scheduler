@@ -105,7 +105,7 @@ public class Controller {
             }
 
             // Updates the number of states inspected already
-            if(scheduleThread.getStates() != Integer.MAX_VALUE){
+            if(scheduleThread.getBestTime() != Integer.MAX_VALUE){
                 formatStatesExamined(scheduleThread.getStates());
             }
             // Updates the best time found so far if it has inspected more than one state
