@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 /**
  * This class modifies some methods of FileSinkDOT class in GraphStream and make a custom format for the output .dot
@@ -78,25 +79,23 @@ public class GraphWriter extends FileSinkDOT {
         AtomicBoolean first = new AtomicBoolean(true);
 
         //Loop through every attribute of an element.
-        e.attributeKeys().forEach(key -> {
-            Object value = e.getAttribute(key);
-
-            if (value instanceof Number) {
-                //Formatting for the "Weight" of the element.
-                int weightValue = ((Number) value).intValue();
-                buffer.append(String.format("%s%s=%s", first.get() ? "" : ",", key, weightValue));
-            }else if (key.equals("Processor")){
-                //Formatting if the element contains its start time and processor information.
-                int allocatedProcessor = ((Double) e.getAttribute("Processor")).intValue();
-                buffer.append(String.format("%s%s=%s", first.get() ? "" : ",", "Processor", allocatedProcessor));
-            }else if (key.equals("Start")){
-                int startTime = ((Double) e.getAttribute("Start")).intValue();
-                buffer.append(String.format("%s%s=%s", first.get() ? "" : ",", "Start", startTime));
-            }
-
+        Object value0 = e.getAttribute("Weight");
+        int weightValue = ((Number) value0).intValue();
+        buffer.append(String.format("%s%s=%s", first.get() ? "" : ",", "Weight", weightValue)+ ",");
+        Object value1 = e.getAttribute("Start");
+        int startTime, allocatedProcessor;
+        try {
+            startTime = ((Integer) value1);
+            buffer.append(String.format("%s%s=%s", first.get() ? "" : ",", "Start", startTime) + ",");
+        }catch (Exception ex){
+        }
+        Object value2 = e.getAttribute("Processor");
+        try{
+            allocatedProcessor = ((Integer) value2);
+            buffer.append(String.format("%s%s=%s", first.get() ? "" : ",", "Processor", allocatedProcessor));
+        }catch (Exception exx){
+        }
             first.set(false);
-        });
-
         return buffer.append(']').toString();
     }
 
