@@ -4,34 +4,44 @@ import io.InputReader;
 import io.OutputWriter;
 import org.graphstream.graph.Graph;
 
+/**
+ * Schedule Thread extends Thread class which represents the thread that the GUI will be running on.
+ *
+ * @author
+ */
 public class ScheduleThread extends Thread{
-    private String inputFileName;
-    private String outputFileName;
-    private int numberOfProcessors;
-    private GUISchedule search;
+    private final String outputFileName;
+    private final GUISchedule search;
     private boolean done = false;
-    private Graph inputGraph;
-    private IntGraph intGraph;
-    private int numOfCores = 1;
+    private final Graph inputGraph;
 
+    /**
+     *
+     * @param inputName input file name
+     * @param outputName output file name
+     * @param numOfProcessors number of processors
+     * @param parallel Whether the algorithm is running in parallel or sequential
+     * @param numOfCores number of cores. Default to be 1
+     */
     public ScheduleThread(String inputName, String outputName, int numOfProcessors,boolean parallel, int numOfCores){
-        inputFileName = inputName;
         outputFileName = outputName;
-        numberOfProcessors = numOfProcessors;
         // Read and perform valid sorting of graph.
-        InputReader reader = new InputReader(inputFileName);
+        InputReader reader = new InputReader(inputName);
         inputGraph = reader.read();
-        intGraph = new IntGraph(inputGraph);
+        IntGraph intGraph = new IntGraph(inputGraph);
 
         if (!parallel || numOfCores == 1) {
-            search = new SequentialSearch(inputGraph,intGraph,numberOfProcessors);
+            search = new SequentialSearch(inputGraph, intGraph, numOfProcessors);
         }
         else {
-            search = new ParallelSearch(inputGraph,intGraph,numberOfProcessors,numOfCores);
+            search = new ParallelSearch(inputGraph, intGraph, numOfProcessors,numOfCores);
         }
 
     }
 
+    /**
+     * Run the algorithm.
+     */
     public void run(){
 
         search.run();
@@ -45,18 +55,30 @@ public class ScheduleThread extends Thread{
         System.out.println("Optimal schedule has been produced in "+ outputFileName);
     }
 
+    /**
+     * Get best time of search
+     */
     public int getBestTime() {
         return search.getBestTime();
     }
 
+    /**
+     * Get best schedule of generated
+     */
     public BestSchedule getBestSchedule() {
         return search.getBestSchedule();
     }
 
+    /**
+     * Get states that has been searched
+     */
     public int getStates() {
         return search.getStates();
     }
 
+    /**
+     * Check whether the thread is finished running
+     */
     public boolean isDone() {
         return done;
     }
