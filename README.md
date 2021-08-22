@@ -1,7 +1,7 @@
 # Team 3 - Sonic Schedulers
 
 ## Project description
-The project is about using artificial intelligence and parallel processing to solve a difficult NP scheduling problem for Big-As Parallel Computing Centre.
+The project is about using sequential and parallel processing to solve a difficult NP scheduling problem for Big-As Parallel Computing Centre.
 
 This release is for `MILESTONE 2`
 
