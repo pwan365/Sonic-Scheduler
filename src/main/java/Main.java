@@ -36,7 +36,7 @@ public class Main {
 
         /*
          * Parallel code
-         * TODO Implement Parallel Code by Milestone 2
+         *
          */
         if (commands.contains("-p")){
             int index = commands.indexOf("-p");
@@ -48,7 +48,7 @@ public class Main {
 
         /*
          * Visualization Code
-         * TODO Implement Visualization by Milestone 2
+         *
          */
         ScheduleThread scheduleThread = new ScheduleThread(fileName,outputFileName,numberOfProcessors,parallel,numberOfCores);
 
