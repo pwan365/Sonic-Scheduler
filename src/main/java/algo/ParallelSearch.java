@@ -65,18 +65,17 @@ public class ParallelSearch extends RecursiveSearch implements VisualiseSearch {
         int candidateTask = 0;
         int candidateProcessor = 0;
         int commCost = 0;
+
+        // Initialization of thread pool and invoking
+        ForkJoinPool pool = new ForkJoinPool(numOfCores);
         for (int i = 0; i < numTasks; i++) {
             if (startTasks[i]) {
                 candidateTask = i;
                 commCost = original_state.commCost(candidateTask, candidateProcessor);
-                break;
+                ParallelRecursiveSearch re = new ParallelRecursiveSearch(original_state, candidateTask, candidateProcessor, commCost);
+                pool.invoke(re);
             }
         }
-
-        // Initialization of thread pool and invoking
-        ForkJoinPool pool = new ForkJoinPool(numOfCores);
-        ParallelRecursiveSearch re = new ParallelRecursiveSearch(original_state, candidateTask, candidateProcessor, commCost);
-        pool.invoke(re);
     }
 
     /**
