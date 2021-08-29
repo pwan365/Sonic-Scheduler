@@ -75,7 +75,7 @@ public class SequentialSearch extends RecursiveSearch implements VisualiseSearch
         updateBestSchedule(bestSchedule, schedule);
 
         // Get a list of the candidate tasks, sorted to be recursively called.
-        PriorityQueue<DLS> lowestCost = getCandidateTasks(schedule);
+        PriorityQueue<DLS> lowestCost = getCandidateTasks(schedule,bestSchedule);
 
         // Recursively call the child tasks.
         recursiveCall(lowestCost,task,processor,cost);

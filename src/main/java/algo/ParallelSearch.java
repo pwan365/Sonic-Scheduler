@@ -50,7 +50,6 @@ public class ParallelSearch extends RecursiveSearch implements VisualiseSearch {
         for (int weight : weights) {
             graphWeight += weight;
         }
-//        equivalentList = original_state.getEquivalentNodes();
         numTasks = graph.tasks.length;
     }
 
@@ -137,7 +136,7 @@ public class ParallelSearch extends RecursiveSearch implements VisualiseSearch {
             updateBestSchedule(bestSchedule, scheduleState);
 
             //Get a list of candidate tasks to be called, sorted by their DLS
-            PriorityQueue<DLS> lowestCost = getCandidateTasks(scheduleState);
+            PriorityQueue<DLS> lowestCost = getCandidateTasks(scheduleState,bestSchedule);
 
             ArrayList<ParallelRecursiveSearch> list = new ArrayList<>();
             while (!lowestCost.isEmpty()) {

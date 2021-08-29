@@ -83,7 +83,7 @@ public abstract class RecursiveSearch {
      * @param schedule The current schedule
      * @return A Priority Queue of tasks to be recursively called, ordered by their DLS level non-increasingly.
      */
-    protected PriorityQueue<DLS>  getCandidateTasks(ScheduleState schedule) {
+    protected PriorityQueue<DLS>  getCandidateTasks(ScheduleState schedule,BestSchedule bestSchedule) {
         PriorityQueue<DLS> lowestCost = new PriorityQueue<>();
         HashSet<Integer> seenTasks = new HashSet<>();
 
@@ -118,6 +118,10 @@ public abstract class RecursiveSearch {
                     }
                     int commCost = schedule.commCost(i,j);
                     int bottomLevel = BottomLevel.returnBLevel(i);
+                    boolean pruned = prune(schedule,i,commCost,j,bestSchedule);
+                    if (pruned) {
+                        continue;
+                    }
                     DLS DLS = new DLS(bottomLevel,commCost,schedule.processorTimes[j],i,j);
                     lowestCost.add(DLS);
                 }

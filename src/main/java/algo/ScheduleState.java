@@ -18,9 +18,9 @@ import algo.helpers.pruning.HashCodeStorage;
 public class ScheduleState {
     //Graph
     protected IntGraph intGraph;
-    int numProcessors;
-    int numTasks;
-    int scheduled = 0;
+    protected int numProcessors;
+    protected int numTasks;
+    protected int scheduled = 0;
     //Schedule information
     protected Stack<Integer> time;
     //Idle time of the schedule
@@ -33,7 +33,7 @@ public class ScheduleState {
     protected int[] processorTimes;
 
     //Task information
-    protected int[] taskProcessors;
+    protected int[] taskProcessors ;
     //Index 0 is StartTime, Index 1 is Weight, Index 2 is Finish Time, Index 3 is communication cost.
     protected int[][] taskInformation;
 

@@ -293,7 +293,6 @@ public class SpeedTester {
 
         assertEquals(best, 63);
     }
-//
     @Test
     public void test16_2() {
         String inputFileName = "Join_Nodes_16_CCR_10.00_WeightType_Random#1_Homogeneous-4.gxl.dot";
@@ -690,7 +689,7 @@ public class SpeedTester {
         assertEquals(best, 83);
     }
 
-    @Test
+//    @Test
     public void test21_8() {
         String inputFileName = "Random_Nodes_21_Density_2.29_CCR_0.10_WeightType_Random_Homogeneous-6.gxl.dot";
         int numProc = 6;
