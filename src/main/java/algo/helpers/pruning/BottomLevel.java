@@ -9,7 +9,7 @@ import java.util.LinkedList;
  * @author Luxman Jeyarajah
  */
 public class BottomLevel {
-    static int [] bottomLevel;
+    private static int [] bottomLevel;
 
 
     /**

@@ -17,25 +17,25 @@ import algo.helpers.pruning.HashCodeStorage;
  */
 public class ScheduleState {
     //Graph
-    IntGraph intGraph;
+    protected IntGraph intGraph;
     int numProcessors;
     int numTasks;
     int scheduled = 0;
     //Schedule information
-    public Stack<Integer> time;
+    protected Stack<Integer> time;
     //Idle time of the schedule
-    public int idle;
-    public boolean[] scheduledTasks;
-    public boolean[] unscheduledTasks;
+    protected int idle;
+    protected boolean[] scheduledTasks;
+    protected boolean[] unscheduledTasks;
 
 
     //Processor information
-    public int[] processorTimes;
+    protected int[] processorTimes;
 
     //Task information
-    public int[] taskProcessors;
+    protected int[] taskProcessors;
     //Index 0 is StartTime, Index 1 is Weight, Index 2 is Finish Time, Index 3 is communication cost.
-    public int[][] taskInformation;
+    protected int[][] taskInformation;
 
     public ScheduleState(IntGraph graph, int numberOfProcessors, boolean init) {
         intGraph = graph;

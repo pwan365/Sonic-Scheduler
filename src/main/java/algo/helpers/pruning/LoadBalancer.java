@@ -9,7 +9,7 @@ package algo.helpers.pruning;
 public class LoadBalancer {
 
     //Total weight of all nodes.
-    static int graphWeight ;
+    private static int graphWeight ;
 
 
     /**

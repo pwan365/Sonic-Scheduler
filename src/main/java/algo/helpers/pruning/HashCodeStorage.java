@@ -13,7 +13,7 @@ import java.util.Set;
  */
 public class HashCodeStorage {
 
-    public static HashSet<Integer> seenStates;
+    private static HashSet<Integer> seenStates;
 
     public static void initHashCodeStorage() {
         seenStates = new HashSet<>();

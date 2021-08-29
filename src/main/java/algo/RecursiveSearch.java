@@ -10,7 +10,7 @@ import java.util.PriorityQueue;
 /**
  * Abstract class that defines methods that both the Sequential and Parallel Search will use.
  *
- * @author Luxman Jeyarajah, Wayne Yao, John Jia, Jason Wang
+ * @author Luxman Jeyarajah, Wayne Yao
  */
 public abstract class RecursiveSearch {
 

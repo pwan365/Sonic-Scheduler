@@ -31,6 +31,10 @@ public class FixedTaskOrder {
 
         LinkedList<Integer> fto = FixedTaskOrder.getFTO(candidateTasks,taskProcessors,taskInformation,
                 outEdges, inEdges);
+        int [] copy = new int[candidateTasks.length];
+        for (int i=0; i < candidateTasks.length; i ++) {
+            copy[i] = 0;
+        }
 
         if (fto != null) {
             int first = fto.poll();

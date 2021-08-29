@@ -16,7 +16,7 @@ public class SequentialSearch extends RecursiveSearch implements VisualiseSearch
 
     //Number of states examined.
     private int states = 0;
-    public BestSchedule bestSchedule;
+    private BestSchedule bestSchedule;
     private Graph inputGraph;
     private ScheduleState schedule;
 
@@ -136,6 +136,4 @@ public class SequentialSearch extends RecursiveSearch implements VisualiseSearch
         bestSchedule.setGraphAttributes(inputGraph);
         return bestSchedule.bestTime;
     }
-
-
 }
