@@ -25,13 +25,14 @@ public class ParallelSearch extends RecursiveSearch implements VisualiseSearch {
     private final int numProcessors;
 
     // Initial SearchState class for initialization.
-    private final ScheduleState original_state;
+    private ScheduleState original_state;
 
     int graphWeight = 0;
     private final Graph inputGraph;
     private int state = 0;
     public int numOfCores;
     private final int numTasks;
+    private IntGraph intGraph;
 
     /**
      *
@@ -42,6 +43,7 @@ public class ParallelSearch extends RecursiveSearch implements VisualiseSearch {
         this.numOfCores = numOfCores;
         this.inputGraph = inputGraph;
         this.numProcessors = processors;
+        this.intGraph = graph;
         bestSchedule = new BestSchedule();
         original_state = new ScheduleState(graph, processors, true);
         int [] weights = graph.weights;
@@ -75,6 +77,7 @@ public class ParallelSearch extends RecursiveSearch implements VisualiseSearch {
                 ParallelRecursiveSearch re = new ParallelRecursiveSearch(original_state, candidateTask, candidateProcessor, commCost);
                 pool.invoke(re);
             }
+            original_state = new ScheduleState(intGraph, numProcessors, true);
         }
     }
 
